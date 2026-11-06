@@ -5,3 +5,8 @@ node_modules/
 
 # Real vet documents for testing Boo (personal data, never commit)
 boo-tests/
+
+# Build output and local files
+dist/
+*.local
+*.log
