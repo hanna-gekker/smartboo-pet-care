@@ -10,7 +10,8 @@ SmartBoo is an iOS app for US pet owners: everything about your pets in one plac
 - First-version screens: Welcome, Today, Schedule, Boo (bottom sheet), Pet folder (+ pet list), Share.
 - Main flow: a paper → Boo creates the pet and its vaccines → review card "Looks right" → reminder.
 - Boo's rules: never makes things up; simple records are saved right away with Undo, important ones (documents, meds, symptoms, plans, a new pet) go through a review card; never guesses which pet; no diagnoses or doses.
-- Until the demo (Dec 1): no household sharing, no accounts, no backend. Data lives on the phone behind a single storage module. The only server piece is one function for Boo.
+- Until the demo (Wed Dec 2): no household sharing, no accounts, no backend. Data lives on the phone behind a single storage module. The only server piece is one function for Boo.
+- Components to start with: TabBar (with the Boo button), TaskRow, PetAvatar, BooSheet (bottom sheet), Card and Button.
 - Bundle ID: `com.hannagekker.smartboo`. UI copy and sample data are in English.
 - Full details: `docs/PRODUCT.md`.
 
@@ -19,7 +20,7 @@ SmartBoo is an iOS app for US pet owners: everything about your pets in one plac
 - Vite + React + TypeScript + Tailwind, mobile-first.
 - App: Capacitor 8 → iOS (TestFlight); web version on Cloudflare Pages. Android is not a focus.
 - Boo's server function: Cloudflare Pages Functions (`functions/api/boo`); the AI key is a Cloudflare secret.
-- Data on the phone via `@capacitor/filesystem`, always through `src/data/store`.
+- Data on the phone, always through `src/data/store`. For now the store uses the browser's localStorage; at step P4 (Capacitor) it switches to `@capacitor/filesystem`.
 - iOS plugins via Swift Package Manager only, never CocoaPods.
 - Storybook for components.
 - Architecture details: `docs/ARCHITECTURE.md`.
@@ -39,12 +40,24 @@ Testing data: the first launch loads sample pets (Rocky, Milo, Cleo, Tank). Sett
 ## Design
 
 - Mockups and Variables live in Figma (file "Smartboo - Pet care app": screen Today · V17, page Design system).
+- Tokens come from the Figma Variables collections "SmartBoo · Color" and "SmartBoo · Layout", light and dark themes. The "Legacy · …" collections are an archive — ignore them. Until the Figma tokens step, `src/styles/tokens.css` holds temporary values. Figma has no Dark mode yet: until it does, Claude proposes the dark values and I approve them.
 - Colors, spacing, radii and fonts only through CSS variables from `src/styles/tokens.css`. No hex values in components.
-- `design/` holds early HTML sketches — don't touch.
+- Text contrast at least 4.5:1 (3:1 for large text and icons), in both themes.
+- No made-up copy: UI texts come from `docs/PRODUCT.md` or the Figma mockups. If a text is missing, ask me.
+- `design/` holds early HTML sketches — don't touch them. The one exception: `design/figma-variables.json`, the raw Variables export from Figma, is replaced with each new export.
 - Mobile UI rules: works from 360px wide, checked at 390px; safe areas via `viewport-fit=cover` and `env(safe-area-inset-*)`; touch targets at least 44px; no hover-only states; no text selection or tap highlight on buttons; the page never scrolls sideways (swipeable rows like chips and Your Pack are fine); light and dark themes follow the phone.
 
 ## Working with me
 
 - I'm a designer and this is my first app. Explain in plain words, one step at a time.
-- Plan first, then wait for my "ok". Commits follow Conventional Commits, after my "ok".
+- Chat with me in Russian. Code, files, docs and commits are in English (the repo is a public portfolio).
+- Plan first, then wait for my "ok".
+- After each step, tell me what to check and where (which screen, which file).
 - Don't change `README.md`, `docs/` or `design/` unless the task is about them.
+
+## Git
+
+- Commits follow Conventional Commits (`feat:`, `fix:`, `docs:`, `chore:`, `refactor:`), in English, only after my "ok".
+- `main` is the stable version. Until the first push to GitHub, work goes straight to `main`; after that, each new feature gets its own branch and a pull request.
+- Never push or merge without my "ok".
+- No passwords, API keys or access tokens in the repo. The AI key lives only as a Cloudflare secret; `.env` files are ignored. Real vet documents for testing Boo stay in `boo-tests/` (ignored) and never get committed.

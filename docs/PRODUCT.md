@@ -101,7 +101,7 @@ Tab bar: a floating black capsule with **Today · Schedule · Pets**, and the ro
 
 ## Not now
 
-- Household sharing, "who did it", double-dose protection — after the demo (Dec 1).
+- Household sharing, "who did it", double-dose protection — after the demo (Wed Dec 2).
 - Backend, accounts and sign-in — after the demo, together with backup and in-app account deletion.
 - Expiring share links for boarding (need a backend) — PDF only for now.
 - Terrarium and aquarium logs as a separate "habitat", water parameters.
