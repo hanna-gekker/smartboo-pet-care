@@ -17,15 +17,19 @@ SmartBoo is an iOS app for US pet owners: everything about your pets in one plac
 ## Stack
 
 - Vite + React + TypeScript + Tailwind, mobile-first.
-- Capacitor 8 → iOS (TestFlight); web version on Cloudflare Pages.
+- App: Capacitor 8 → iOS (TestFlight); web version on Cloudflare Pages. Android is not a focus.
+- Boo's server function: Cloudflare Pages Functions (`functions/api/boo`); the AI key is a Cloudflare secret.
+- Data on the phone via `@capacitor/filesystem`, always through `src/data/store`.
+- iOS plugins via Swift Package Manager only, never CocoaPods.
 - Storybook for components.
-- Architecture details: `docs/ARCHITECTURE.md` (added at step P2).
+- Architecture details: `docs/ARCHITECTURE.md`.
 
 ## Design
 
 - Mockups and Variables live in Figma (file "Smartboo - Pet care app": screen Today · V17, page Design system).
 - Colors, spacing, radii and fonts only through CSS variables from `src/styles/tokens.css`. No hex values in components.
 - `design/` holds early HTML sketches — don't touch.
+- Mobile UI rules: works from 360px wide, checked at 390px; safe areas via `viewport-fit=cover` and `env(safe-area-inset-*)`; touch targets at least 44px; no hover-only states; no text selection or tap highlight on buttons; no horizontal scroll; light and dark themes follow the phone.
 
 ## Working with me
 
