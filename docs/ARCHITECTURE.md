@@ -114,7 +114,7 @@ All of them support Capacitor 8 and Swift Package Manager (no CocoaPods). `@capa
 - **Touch targets** at least **44×44px**.
 - **No hover-only states**; pressed states instead.
 - **No text selection** on buttons, tabs and cards; no tap highlight.
-- **No horizontal scrolling** anywhere.
+- **The page never scrolls sideways** as a whole. Rows built to swipe sideways inside a screen are fine — e.g. the filter chips and the Your Pack row.
 - Boo's text field stays visible above the keyboard.
 - Light and dark themes follow the phone setting.
 

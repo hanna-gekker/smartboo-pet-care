@@ -29,7 +29,7 @@ SmartBoo is an iOS app for US pet owners: everything about your pets in one plac
 - Mockups and Variables live in Figma (file "Smartboo - Pet care app": screen Today · V17, page Design system).
 - Colors, spacing, radii and fonts only through CSS variables from `src/styles/tokens.css`. No hex values in components.
 - `design/` holds early HTML sketches — don't touch.
-- Mobile UI rules: works from 360px wide, checked at 390px; safe areas via `viewport-fit=cover` and `env(safe-area-inset-*)`; touch targets at least 44px; no hover-only states; no text selection or tap highlight on buttons; no horizontal scroll; light and dark themes follow the phone.
+- Mobile UI rules: works from 360px wide, checked at 390px; safe areas via `viewport-fit=cover` and `env(safe-area-inset-*)`; touch targets at least 44px; no hover-only states; no text selection or tap highlight on buttons; the page never scrolls sideways (swipeable rows like chips and Your Pack are fine); light and dark themes follow the phone.
 
 ## Working with me
 
