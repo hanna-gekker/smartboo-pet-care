@@ -1,42 +1,42 @@
 # SmartBoo
 
-**Say it once. Your whole household knows.**
+**Just hand it to Boo.**
 
-SmartBoo is an AI pet care companion for US pet owners. Instead of filling in forms, you just say what happened ("Gave Luna her heartworm pill, she ate half her dinner"), and SmartBoo turns it into care records you confirm with a tap. Everyone in the household sees the same up-to-date picture.
+SmartBoo is an iOS app for US pet owners that keeps everything about your pets in one place. Hand Boo, the built-in assistant, a paper from the vet or tell it what happened. Boo files it in the right pet's folder, remembers what's due and when, and pulls up the record you need in seconds — ready to share as a PDF.
 
-> Less tracking. More caring.
+Building in the [UX Hero](https://uxhero.design) Design Engineer cohort.
 
 ## Why
 
-Pet owners juggle meds, feedings, vet visits and weigh-ins across notes apps, paper and memory. Existing trackers ask for too much manual input, are built for dogs and cats only, and keep the records locked inside the app or the vet's system.
+Pet records are scattered across clinic emails, PDFs, paper and memory. Vaccine and recheck dates slip, and when a boarding place or a new vet asks for the shots, owners can't pull them together quickly. Most owners don't want to log every day — so SmartBoo works from the papers they already get.
 
-## Core ideas
+## What's in the first version
 
-- **Capture** — log care by voice or text; AI turns it into cards you review and confirm.
-- **Care together** — invite a household member so meds and feedings aren't doubled or missed.
-- **Own the record** — your pet's history belongs to you; export it as PDF or CSV anytime.
-- **Every species** — dogs and cats, but also birds, reptiles, fish and small pets, including tanks, enclosures and weights in grams.
+- **Snap a vet paper** — Boo reads it, creates the pet and its vaccines, and shows a review card before saving anything.
+- **Reminders** — "Remind you 2 weeks before each one?" One tap.
+- **Today and Schedule** — what's due for every pet, with simple checkboxes.
+- **Pet folders** — papers, vaccines, meds and notes for each pet, any species.
+- **Share** — a clean PDF of the record via the iOS share sheet.
+- **Talk to Boo** — by voice or text. Boo never makes things up, never guesses which pet, and doesn't give diagnoses or doses.
 
-## MVP scope
-
-- Voice and text capture covering several pets at once
-- Tasks and reminders with simple checkboxes
-- Household sharing (one invited member)
-- PDF / CSV export
-- Sign in with Apple
-
-Coming next: document scanning and sitter links.
+Until the demo, data stays on the phone: no accounts, no sign-in.
 
 ## Tech stack
 
-- Vite + React + TypeScript + Tailwind CSS
-- Storybook for UI components
-- Progressive Web App (add to Home Screen on iOS)
-- Supabase (database, auth, Edge Functions)
-- Web Speech API for voice, with server transcription as a fallback
-- LLM via Supabase Edge Function
-- Hosting on Cloudflare Pages / Vercel
+- Vite + React + TypeScript + Tailwind CSS, design tokens from Figma Variables
+- Capacitor → iOS (TestFlight); web version on Cloudflare Pages
+- Boo's AI runs in one Cloudflare Pages Function
+- Storybook for components
+
+## Run it locally
+
+```bash
+npm install
+npm run dev
+```
+
+Opens at http://localhost:5173 with sample pets. Boo is simulated for now.
 
 ## Status
 
-Early development. Public beta planned for December 2026.
+Early development. Demo on December 2, 2026.
