@@ -44,7 +44,7 @@ flowchart TD
 
 - **Welcome** shows only until the first pet exists.
 - **Share** is a 3-step stack: set → pets → PDF preview → iOS share sheet. It opens from the pet folder, from Boo, or from the menu on Today.
-- **Settings** is a stack screen opened from the gear icon on Today (vet contacts, notification timing, about).
+- **Settings** is a stack screen opened from the gear icon on Today (vet contacts, notification timing, AI consent, privacy policy, about — including "Boo isn't a vet").
 
 ## 2. Folder structure
 

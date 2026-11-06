@@ -66,6 +66,7 @@ Boo takes three kinds of input:
 - Replies as text in the sheet + a light haptic on save. Spoken replies come later.
 - Never makes things up: missing data stays empty or becomes a question.
 - No diagnoses, no medication or dose advice. For red-flag signs from a fixed list: "That sounds worth a call to your vet today" + a button to call the vet.
+- Boo says plainly that it isn't a vet: on the first-use screen and in Settings → About ("Boo keeps your pet's records. It isn't a vet.").
 - There is always a non-AI path: manual add and edit.
 
 ## Screens in the first version
@@ -138,6 +139,21 @@ Without these the app would be a website; here they are the core of the flows:
 Secondary: ≥ 80% of review cards are confirmed with "Looks right" without edits — Boo's accuracy.
 
 How we measure before there is a backend: usability tests + an anonymous event counter in Boo's server function (no personal data). Details at the architecture step.
+
+## App Store and privacy
+
+What the app needs so Apple approves it and people trust it:
+
+- **Not a website in a wrapper.** The core flows use the phone: camera, Files, on-device storage, local notifications, speech, share sheet, haptics (see Native features).
+- **AI consent before the first send.** The first time Boo is about to read a paper or a phrase, a one-time screen explains: "Boo sends your photo or words to an AI service to read them. Nothing is kept after that." [Continue] [Not now]. "Not now" leaves manual add and edit fully working. The choice can be changed in Settings.
+- **Permissions only at the moment of use**, each with a plain reason:
+  - Camera — "to snap vet papers and pet photos";
+  - Photo library — "to pick a vet paper or a pet photo";
+  - Microphone and Speech recognition — "so you can tell Boo what happened";
+  - Notifications — asked only after "Remind you…? → Yes".
+- **Privacy policy** on a public page (with the web version), linked from Settings and App Store Connect. The App Privacy label says honestly: records stay on the phone; photos and text go to the AI service only to be read, are not stored, not linked to the person and not used for tracking.
+- **Ready for review:** no placeholders or dead buttons; Boo's server is running; review notes explain how to try Boo, with a sample vet paper.
+- **Path to the store:** TestFlight for internal testers needs no review (course release, Nov 25); external testers need a short beta review; the full App Store review comes when SmartBoo goes public.
 
 ## Name and bundle ID
 
