@@ -1,0 +1,361 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SmartBoo — Today</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400..700&display=swap" rel="stylesheet"> <!-- fallback only; Apple devices use SF Pro -->
+<style>
+  :root{
+    /* ── Color ─────────────────────────────────────────── */
+    --bg:#FAFCFA;            /* sage paper — white cards stand out without shadows */
+    --surface:#FFFFFF;
+    --ink:#0B1F1D;           /* near-black, green undertone */
+    --ink-2:#55635F;
+    --ink-3:#97A39F;
+    --line:#ECEFEA;
+    --deep:#0B2B28;          /* hero surface */
+    --teal:#0E9784;          /* brand */
+    --mint:#8EEBCB;          /* glow / highlight */
+    --mint-soft:#E1F5EC;
+    --coral:#FF6F4D;         /* attention */
+    --coral-soft:#FFE9E2;
+    --lilac:#8F7CFF;
+    --track:#E1E7E2; --hero-ink:#FFFFFF; --hero-glow:142,235,203; --hero-accent:var(--mint);
+
+    /* ── Type ──────────────────────────────────────────── */
+    --display:-apple-system,"SF Pro Display",system-ui,"Inter",sans-serif;   /* SF Pro, like set.do */
+    --ui:-apple-system,"SF Pro Text",system-ui,"Inter",sans-serif;
+
+    /* ── Space (4-pt) ──────────────────────────────────── */
+    --s1:4px;--s2:8px;--s3:12px;--s4:16px;--s5:20px;--s6:24px;--s7:28px;--s8:32px;
+    --gutter:20px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:#E3E8E3;font-family:var(--ui);color:var(--ink);display:flex;justify-content:center;
+       padding:40px 16px;min-height:100vh;-webkit-font-smoothing:antialiased;}
+  svg{display:block}
+
+  .phone{width:390px;height:844px;background:var(--bg);border-radius:52px;overflow:hidden;position:relative;
+         box-shadow:0 0 0 10px #0B1F1D,0 40px 90px rgba(11,31,29,.25)}
+  /* ambient tint behind the header */
+  .phone::before{content:"";position:absolute;top:-140px;right:-120px;width:380px;height:380px;border-radius:50%;
+         background:radial-gradient(circle,rgba(191,240,220,.6),rgba(191,240,220,0) 70%);pointer-events:none}
+  .scroll{position:relative;height:100%;overflow-y:auto;padding-bottom:130px;scrollbar-width:none}
+  .scroll::-webkit-scrollbar{display:none}
+
+  /* ── Status bar ── */
+  .status{height:54px;font-family:var(--display);display:flex;align-items:center;justify-content:space-between;padding:0 32px 0 38px;font-weight:600;font-size:16px}
+  .status .icons{display:flex;gap:6px;align-items:center}
+
+  /* ── Header ── */
+  .header{padding:var(--s3) var(--gutter) 0;display:flex;justify-content:space-between;align-items:flex-start}
+  .date{font-size:13px;line-height:18px;font-weight:500;color:var(--ink-2);display:flex;align-items:center;gap:6px}
+  .date .sun{width:6px;height:6px;border-radius:50%;background:var(--coral);box-shadow:0 0 0 3px var(--coral-soft)}
+  .hello{font-family:var(--display);font-weight:600;font-size:32px;line-height:38px;letter-spacing:-.6px;margin-top:4px}
+  .hello em{font-style:normal;color:var(--teal)}
+  .faces{display:flex;align-items:center;margin-top:2px;padding:4px 4px 4px 4px;background:#FFFFFF;border-radius:999px;border:1px solid #E3EAE5}
+  .face{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:600;color:#fff;border:2px solid #fff}
+  .face+.face{margin-left:-8px}
+  .face.add{background:var(--bg);color:var(--ink-2);border:2px solid #fff}
+
+  /* day progress — segmented */
+  .day{display:flex;align-items:center;gap:var(--s3);margin:var(--s4) var(--gutter) 0}
+  .segs{flex:1;display:flex;gap:3px}
+  .segs i{flex:1;height:3px;border-radius:2px;background:var(--track)}
+  .segs i.done{background:var(--teal)}
+  .segs i.late{background:var(--coral)}
+  .day b{font-size:13px;font-weight:600;color:var(--ink-2);white-space:nowrap}
+  .day b span{color:var(--ink)}
+
+  /* ── Pets ── */
+  .pets{display:flex;justify-content:space-between;padding:var(--s6) var(--gutter) 0}
+  .pet{display:flex;flex-direction:column;align-items:center;width:72px}
+  .ava{width:68px;height:68px;position:relative}
+  .ava img{position:absolute;inset:5px;width:58px;height:58px;border-radius:50%;object-fit:cover}
+  .ava svg{position:absolute;inset:0}
+  .ava .tag{position:absolute;right:-2px;bottom:0;height:20px;min-width:20px;padding:0 6px;border-radius:10px;font-size:11px;font-weight:700;
+            display:grid;place-items:center;color:#fff;border:2px solid var(--bg)}
+  .pet .nm{font-family:var(--display);font-size:14px;line-height:18px;font-weight:600;margin-top:6px}
+  .pet .st{font-size:12px;line-height:16px;font-weight:500;color:var(--ink-3)}
+  .pet .st.late{color:var(--coral)}
+
+  /* ── Capture hero ── */
+  .hero{margin:var(--s6) 12px 0;border-radius:36px;padding:var(--s6) var(--s5) var(--s5);position:relative;overflow:hidden;color:var(--hero-ink);
+        background:
+          radial-gradient(60% 55% at 50% 38%,rgba(var(--hero-glow),.42),transparent 70%),
+          radial-gradient(45% 50% at 100% 0%,rgba(var(--hero-glow),.22),transparent 70%),
+          radial-gradient(70% 60% at 0% 100%,var(--hero-corner,rgba(14,151,132,.6)),transparent 70%),
+          var(--deep)}
+  .hero::after{content:"";position:absolute;inset:0;opacity:.18;mix-blend-mode:overlay;pointer-events:none;
+        background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+  .hero-top{display:flex;justify-content:space-between;align-items:center;position:relative;z-index:1}
+  .live{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:600;letter-spacing:.6px;text-transform:uppercase;color:rgba(255,255,255,.7)}
+  .live i{width:6px;height:6px;border-radius:50%;background:var(--mint);box-shadow:0 0 10px var(--mint)}
+  .kbd{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.1);
+       border:1px solid rgba(255,255,255,.14);backdrop-filter:blur(10px)}
+
+  .stage{position:relative;z-index:1;display:flex;align-items:center;justify-content:center;gap:14px;height:136px;margin-top:0}
+  .bars{display:flex;align-items:center;gap:4px;height:60px}
+  .bars i{width:3px;border-radius:2px;background:linear-gradient(var(--mint),rgba(142,235,203,.35));animation:eq 1.2s ease-in-out infinite}
+  @keyframes eq{0%,100%{transform:scaleY(.45)}50%{transform:scaleY(1)}}
+  .mic{position:relative;width:96px;height:96px;border-radius:50%;display:grid;place-items:center;flex:none;
+       background:radial-gradient(circle at 35% 30%,#FFFFFF 0%,var(--mic-2,#DFFBF0) 55%,var(--mic-3,#A9F0D6) 100%);
+       box-shadow:0 18px 40px rgba(0,0,0,.35),inset 0 -6px 14px rgba(14,151,132,.25)}
+  .mic::before,.mic::after{content:"";position:absolute;inset:-14px;border-radius:50%;border:1px solid rgba(142,235,203,.35);animation:ping 2.6s ease-out infinite}
+  .mic::after{inset:-30px;border-color:rgba(142,235,203,.18);animation-delay:.6s}
+  @keyframes ping{0%{transform:scale(.92);opacity:1}100%{transform:scale(1.12);opacity:0}}
+
+  .hero h2{position:relative;z-index:1;text-align:center;font-family:var(--display);font-weight:600;font-size:26px;line-height:32px;letter-spacing:-.4px}
+  .hero h2 em{font-style:normal;color:var(--hero-accent)}
+  .hero p{position:relative;z-index:1;text-align:center;font-size:14px;line-height:20px;color:rgba(255,255,255,.62);margin-top:6px}
+  .chips{position:relative;z-index:1;display:flex;gap:8px;margin:var(--s5) -20px 0;padding:0 20px;overflow:hidden}
+  .chip{flex:none;height:36px;padding:0 14px;border-radius:18px;display:flex;align-items:center;gap:6px;font-size:13px;font-weight:500;
+        background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);color:rgba(255,255,255,.9)}
+  .chip img{width:20px;height:20px;border-radius:50%;object-fit:cover}
+
+  /* ── Lists ── */
+  .sec{padding:var(--s8) var(--gutter) 0}
+  .sec-h{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:var(--s3);padding:0 4px}
+  .sec-h h3{font-family:var(--display);font-weight:600;font-size:20px;line-height:26px;letter-spacing:-.3px}
+  .sec-h span{font-size:13px;font-weight:500;color:var(--ink-3)}
+  .card{background:var(--surface);border-radius:28px;padding:6px;border:1px solid #E3EAE5}
+  .row{display:flex;align-items:center;gap:var(--s3);padding:10px 10px;border-radius:22px;position:relative}
+  .row+.row::before{content:"";position:absolute;top:0;left:66px;right:14px;height:1px;background:var(--line)}
+  .row.late{background:linear-gradient(90deg,var(--coral-soft),rgba(255,233,226,0) 85%)}
+  .thumb{width:46px;height:46px;border-radius:16px;object-fit:cover;flex:none}
+  .row .body{flex:1;min-width:0}
+  .row .ttl{font-size:16px;line-height:21px;font-weight:600;letter-spacing:-.2px}
+  .row .meta{font-size:13px;line-height:18px;color:var(--ink-2);margin-top:2px;display:flex;align-items:center;gap:6px}
+  .row .meta .late{color:var(--coral);font-weight:600}
+  .dot{width:3px;height:3px;border-radius:50%;background:var(--ink-3)}
+  .who{width:16px;height:16px;border-radius:50%;display:inline-grid;place-items:center;font-size:9px;font-weight:700;color:#fff}
+  .check{width:32px;height:32px;border-radius:50%;border:1.75px solid #DDE4E0;flex:none;margin-right:2px}
+  .row.late .check{border-color:#FF9C82}
+  .check.on{border:none;background:var(--teal);display:grid;place-items:center}
+  .done .ttl{color:var(--ink-2)}
+  .done .thumb{filter:saturate(.6);opacity:.85}
+
+  /* ── Tab bar: navigation pill + separate voice button ── */
+  .dockwrap{position:absolute;left:16px;right:16px;bottom:24px;display:flex;align-items:center;gap:10px}
+  .tabs{flex:1;height:62px;border-radius:31px;display:flex;padding:5px;
+        background:rgba(255,255,255,.88);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid #DCE6E0}
+  .tab{flex:1;height:52px;border-radius:26px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
+       font-family:var(--display);font-size:11px;font-weight:600;letter-spacing:-.1px;color:var(--ink-3);transition:background .2s,color .2s}
+  .tab.on{background:var(--mint-soft);color:var(--teal)}
+  .voice{flex:none;width:62px;height:62px;border-radius:50%;display:grid;place-items:center;border:0;cursor:pointer;
+         background:radial-gradient(circle at 35% 25%,#5AD6C0,#17A390 55%,#0F8E7C);
+         box-shadow:0 10px 24px -8px rgba(14,151,132,.4),inset 0 1px 0 rgba(255,255,255,.35);
+         transition:width .35s cubic-bezier(.3,1.4,.5,1),opacity .25s,transform .35s cubic-bezier(.3,1.4,.5,1),margin .35s}
+  .dockwrap.hero-on .voice{width:0;opacity:0;transform:scale(.4);margin-left:-10px}
+  .homebar{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);width:134px;height:5px;border-radius:3px;background:var(--ink)}
+
+  /* ── Light hero option (?hero=light) ── */
+  html.embed body{padding:24px;background:transparent}
+  /* ?figma — clean 390×844 frame for html.to.design import */
+  html.figma body{padding:0;background:var(--bg);display:block}
+  html.figma .phone{border-radius:0;box-shadow:none}
+  html.figma *{animation:none!important}
+  .hero-light .hero{color:var(--ink);background:
+      radial-gradient(60% 55% at 50% 40%,rgba(255,255,255,.85),transparent 70%),
+      radial-gradient(60% 60% at 100% 0%,rgba(189,239,255,.7),transparent 70%),
+      linear-gradient(165deg,#EEFAF5 0%,#D9F4E9 100%);border:1px solid rgba(14,151,132,.22)}
+  .hero-light .hero::after{opacity:.05}
+  .hero-light .live{color:var(--ink-2)}
+  .hero-light .live i{background:var(--teal);box-shadow:none}
+  .hero-light .kbd{background:rgba(255,255,255,.7);border-color:#fff}
+  .hero-light .kbd svg{stroke:var(--ink)}
+  .hero-light .bars i{background:linear-gradient(var(--teal),rgba(14,151,132,.3))}
+  .hero-light .mic{background:radial-gradient(circle at 35% 25%,#5AD6C0,#17A390 55%,#0F8E7C);box-shadow:0 16px 32px -10px rgba(14,151,132,.38),inset 0 1px 0 rgba(255,255,255,.35)}
+  .hero-light .mic svg{stroke:#fff !important}
+  .hero-light .mic::before{border-color:rgba(14,151,132,.28)}
+  .hero-light .mic::after{border-color:rgba(14,151,132,.14)}
+  .hero-light .hero h2 em{color:var(--teal)}
+  .hero-light .hero p{color:var(--ink-2)}
+  .hero-light .chip{background:rgba(255,255,255,.75);border-color:#fff;color:var(--ink)}
+  /* ── Options: ?glow=soft|none · ?bar=light ── */
+  html.glow-soft .phone::before{opacity:.3}
+  html.glow-none .phone::before{display:none}
+  html.bar-light .tabs{background:#FFFFFF;backdrop-filter:none;-webkit-backdrop-filter:none;border:1px solid #DCE3DD}
+  html.bar-light .tab{color:var(--ink-3)}
+  html.bar-light .tab.on{background:var(--ink);color:#FFFFFF}
+</style>
+
+<script>
+(function(){
+  var q=new URLSearchParams(location.search),h=document.documentElement;
+  if(q.get("hero")!=="dark")h.classList.add("hero-light");  /* light hero is the default; ?hero=dark for the old one */
+  if(q.has("embed"))h.classList.add("embed");
+  if(q.has("figma"))h.classList.add("figma");
+  if(q.get("glow"))h.classList.add("glow-"+q.get("glow"));
+  if(q.get("bar"))h.classList.add("bar-"+q.get("bar"));
+  addEventListener("DOMContentLoaded",function(){
+    var sc=document.querySelector(".scroll"),mic=document.querySelector(".hero .mic"),dock=document.querySelector(".dockwrap");
+    function upd(){var m=mic.getBoundingClientRect(),r=sc.getBoundingClientRect();
+      dock.classList.toggle("hero-on",(m.top+m.height/2)-r.top>64);}  /* big mic still visible below the status bar */
+    sc.addEventListener("scroll",upd,{passive:true});upd();
+  });
+})();
+</script>
+</head>
+<body>
+<div class="phone" data-name="Today">
+  <div class="scroll">
+
+    <div class="status">
+      <span>9:41</span>
+      <div class="icons">
+        <svg width="18" height="12" viewBox="0 0 18 12"><rect x="0" y="8" width="3" height="4" rx="1" fill="#0B1F1D"/><rect x="5" y="5.5" width="3" height="6.5" rx="1" fill="#0B1F1D"/><rect x="10" y="3" width="3" height="9" rx="1" fill="#0B1F1D"/><rect x="15" y="0" width="3" height="12" rx="1" fill="#0B1F1D"/></svg>
+        <svg width="16" height="12" viewBox="0 0 16 12"><path d="M8 11.5 5.6 9a3.4 3.4 0 0 1 4.8 0L8 11.5Zm-4.2-4.3L2.3 5.7a8 8 0 0 1 11.4 0l-1.5 1.5a5.9 5.9 0 0 0-8.4 0ZM.8 4.2-.7 2.7a12.3 12.3 0 0 1 17.4 0l-1.5 1.5a10.2 10.2 0 0 0-14.4 0Z" fill="#0B1F1D"/></svg>
+        <svg width="27" height="13" viewBox="0 0 27 13"><rect x=".5" y=".5" width="22" height="12" rx="3.5" stroke="#0B1F1D" opacity=".4" fill="none"/><rect x="2" y="2" width="19" height="9" rx="2" fill="#0B1F1D"/><path d="M24.5 4.5v4a2 2 0 0 0 0-4Z" fill="#0B1F1D" opacity=".4"/></svg>
+      </div>
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+      <div>
+        <div class="date"><span class="sun"></span>Wednesday, Nov 4</div>
+        <h1 class="hello">Morning, <em>Anna</em></h1>
+      </div>
+      <div class="faces" aria-label="Household">
+        <div class="face" style="background:var(--teal)">A</div>
+        <div class="face" style="background:var(--lilac)">J</div>
+      </div>
+    </header>
+
+    <div class="day">
+      <div class="segs"><i class="done"></i><i class="done"></i><i class="late"></i><i></i><i></i></div>
+      <b><span>2</span> of 5 done</b>
+    </div>
+
+    <!-- Pets -->
+    <div class="pets">
+      <div class="pet">
+        <div class="ava">
+          <svg width="68" height="68" viewBox="0 0 68 68"><circle cx="34" cy="34" r="32" fill="none" style="stroke:var(--track)" stroke-width="3"/><circle cx="34" cy="34" r="32" fill="none" style="stroke:var(--coral)" stroke-width="3" stroke-linecap="round" stroke-dasharray="201" stroke-dashoffset="100" transform="rotate(-90 34 34)"/></svg>
+          <img src="../assets/rocky.jpg" alt="Rocky">
+        </div>
+        <div class="nm">Rocky</div><div class="st late">1 overdue</div>
+      </div>
+      <div class="pet">
+        <div class="ava">
+          <svg width="68" height="68" viewBox="0 0 68 68"><circle cx="34" cy="34" r="32" fill="none" style="stroke:var(--teal)" stroke-width="3"/></svg>
+          <img src="../assets/milo.jpg" alt="Milo">
+          <span class="tag" style="background:var(--teal);padding:0"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>
+        </div>
+        <div class="nm">Milo</div><div class="st">All done</div>
+      </div>
+      <div class="pet">
+        <div class="ava">
+          <svg width="68" height="68" viewBox="0 0 68 68"><circle cx="34" cy="34" r="32" fill="none" style="stroke:var(--track)" stroke-width="3"/><circle cx="34" cy="34" r="32" fill="none" style="stroke:var(--teal)" stroke-width="3" stroke-linecap="round" stroke-dasharray="201" stroke-dashoffset="100" transform="rotate(-90 34 34)"/></svg>
+          <img src="../assets/cleo.jpg" alt="Cleo">
+        </div>
+        <div class="nm">Cleo</div><div class="st">1 left</div>
+      </div>
+      <div class="pet">
+        <div class="ava">
+          <svg width="68" height="68" viewBox="0 0 68 68"><circle cx="34" cy="34" r="32" fill="none" style="stroke:var(--track)" stroke-width="3"/></svg>
+          <img src="../assets/tank.jpg" alt="Tank">
+        </div>
+        <div class="nm">Tank</div><div class="st">Tonight</div>
+      </div>
+    </div>
+
+    <!-- Capture hero -->
+    <section class="hero">
+      <div class="hero-top">
+        <div class="live"><i></i>Voice log</div>
+        <div class="kbd" aria-label="Type instead">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="3"/><path d="M6 9h.01M10 9h.01M14 9h.01M18 9h.01M7 15h10"/></svg>
+        </div>
+      </div>
+      <div class="stage">
+        <div class="bars">
+          <i style="height:14px;animation-delay:-.1s"></i><i style="height:26px;animation-delay:-.5s"></i><i style="height:40px;animation-delay:-.3s"></i><i style="height:22px;animation-delay:-.8s"></i><i style="height:52px;animation-delay:-.2s"></i><i style="height:30px;animation-delay:-.6s"></i><i style="height:18px;animation-delay:-.4s"></i>
+        </div>
+        <div class="mic">
+          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" style="stroke:var(--deep)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2.5" width="6" height="12" rx="3"/><path d="M19 10.5v.5a7 7 0 0 1-14 0v-.5"/><path d="M12 18v3.5"/></svg>
+        </div>
+        <div class="bars">
+          <i style="height:18px;animation-delay:-.7s"></i><i style="height:30px;animation-delay:-.2s"></i><i style="height:52px;animation-delay:-.9s"></i><i style="height:22px;animation-delay:-.4s"></i><i style="height:40px;animation-delay:-.1s"></i><i style="height:26px;animation-delay:-.6s"></i><i style="height:14px;animation-delay:-.3s"></i>
+        </div>
+      </div>
+      <h2>What <em>happened?</em></h2>
+      <p>Tap and talk. We’ll turn it into records.</p>
+      <div class="chips">
+        <div class="chip"><img src="../assets/rocky.jpg" alt="">Gave Rocky his pill</div>
+        <div class="chip"><img src="../assets/cleo.jpg" alt="">Fed both cats</div>
+        <div class="chip"><img src="../assets/tank.jpg" alt="">Changed the water</div>
+      </div>
+    </section>
+
+    <!-- Due today -->
+    <section class="sec">
+      <div class="sec-h"><h3>Due today</h3><span>3 left</span></div>
+      <div class="card">
+        <div class="row late">
+          <img class="thumb" src="../assets/rocky.jpg" alt="">
+          <div class="body">
+            <div class="ttl">Give Apoquel 16 mg</div>
+            <div class="meta"><span class="late">Overdue · 8:00 AM</span></div>
+          </div>
+          <div class="check"></div>
+        </div>
+        <div class="row">
+          <img class="thumb" src="../assets/cleo.jpg" alt="">
+          <div class="body">
+            <div class="ttl">Clean litter box</div>
+            <div class="meta">Cleo<i class="dot"></i>12:00 PM</div>
+          </div>
+          <div class="check"></div>
+        </div>
+        <div class="row">
+          <img class="thumb" src="../assets/tank.jpg" alt="">
+          <div class="body">
+            <div class="ttl">Change 25% of water</div>
+            <div class="meta">Tank<i class="dot"></i>7:00 PM<i class="dot"></i><span class="who" style="background:var(--lilac)">J</span>Jordan</div>
+          </div>
+          <div class="check"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Done -->
+    <section class="sec">
+      <div class="sec-h"><h3>Done</h3><span>2 today</span></div>
+      <div class="card">
+        <div class="row done">
+          <img class="thumb" src="../assets/milo.jpg" alt="">
+          <div class="body">
+            <div class="ttl">Fed breakfast</div>
+            <div class="meta">Milo, Cleo<i class="dot"></i><span class="who" style="background:var(--lilac)">J</span>Jordan · 7:40 AM</div>
+          </div>
+          <div class="check on"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></div>
+        </div>
+        <div class="row done">
+          <img class="thumb" src="../assets/rocky.jpg" alt="">
+          <div class="body">
+            <div class="ttl">Morning walk · 25 min</div>
+            <div class="meta">Rocky<i class="dot"></i><span class="who" style="background:var(--teal)">A</span>You · 7:15 AM</div>
+          </div>
+          <div class="check on"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Tab bar: 4 destinations + voice button (appears once the big mic scrolls away) -->
+  <div class="dockwrap hero-on">
+    <nav class="tabs">
+      <div class="tab on"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>Today</div>
+      <div class="tab"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="4" r="2"/><circle cx="18" cy="8" r="2"/><circle cx="20" cy="16" r="2"/><path d="M9 10a5 5 0 0 1 5 5v3.5a3.5 3.5 0 0 1-6.84 1.05Q6.52 17.48 4.46 16.84A3.5 3.5 0 0 1 5.5 10Z"/></svg>Pets</div>
+      <div class="tab"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="4"/><path d="M8 2.5v3M16 2.5v3M3 10h18"/></svg>Plan</div>
+      <div class="tab"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3.5l9 7V19a2 2 0 0 1-2 2h-4v-6H9v6H5a2 2 0 0 1-2-2Z"/></svg>Home</div>
+    </nav>
+    <button class="voice" aria-label="Voice log"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2.5" width="6" height="12" rx="3"/><path d="M19 10.5v.5a7 7 0 0 1-14 0v-.5"/><path d="M12 18v3.5"/></svg></button>
+  </div>
+  <div class="homebar"></div>
+</div>
+</body>
+</html>
