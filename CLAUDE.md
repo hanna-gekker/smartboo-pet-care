@@ -24,6 +24,18 @@ SmartBoo is an iOS app for US pet owners: everything about your pets in one plac
 - Storybook for components.
 - Architecture details: `docs/ARCHITECTURE.md`.
 
+## Commands
+
+Run them in the project folder. The first time, run `npm install`.
+
+- `npm install` — downloads the libraries the app needs into `node_modules/`. Run again after `package.json` changes.
+- `npm run dev` — starts the app on your computer at http://localhost:5173. Changes show up right away; stop it with Ctrl+C. In the Claude app it starts from the Browser panel ("app" in `.claude/launch.json`).
+- `npm run build` — checks the TypeScript code for errors, then makes the finished app in `dist/`. This is what goes to the iPhone (Capacitor) and to Cloudflare Pages.
+- `npm run preview` — opens the finished app from `dist/` to check the build before shipping.
+- `npm run lint` — looks for common mistakes in the code (oxlint).
+
+Testing data: the first launch loads sample pets (Rocky, Milo, Cleo, Tank). Settings → "Start fresh" shows the real first launch (Welcome); "Load sample pets" brings them back. Boo is faked in `src/lib/boo.ts` until the Boo spike.
+
 ## Design
 
 - Mockups and Variables live in Figma (file "Smartboo - Pet care app": screen Today · V17, page Design system).
