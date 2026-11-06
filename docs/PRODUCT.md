@@ -43,7 +43,7 @@ If a pet with the same name already exists, the paper goes into that pet's folde
 
 ## Boo — how it works
 
-Tap Boo in the center of the tab bar → a **bottom sheet** over the current screen (not a chat, no conversation history). Three actions: 🎙️ **Talk** · 📷 **Snap a paper** · ⌨️ **Type**. The result appears right in the sheet.
+Tap the round Boo button next to the tab bar → a **bottom sheet** over the current screen (not a chat, no conversation history). Three actions: 🎙️ **Talk** · 📷 **Snap a paper** · ⌨️ **Type**. The result appears right in the sheet.
 
 Boo takes three kinds of input:
 
@@ -70,24 +70,30 @@ Boo takes three kinds of input:
 
 ## Screens in the first version
 
-Tab bar: **Today · Boo · Pets** (Boo in the center). Settings: icon in the top-right corner of Today.
+Tab bar: a floating black capsule with **Today · Schedule · Pets**, and the round **Boo button** to the right of it. Settings: icon in the top-right corner of Today.
 
 1. **Welcome** — two ways in: Snap a vet paper / Add your pet (+ No papers right now).
 2. **Today** — what's due soon:
    - Boo card with a text field, mic and camera;
    - **Next up** — the single most urgent item with actions [Done] / [Book vet];
-   - **Coming up** — everything in the next 30 days: vaccines, med courses, lab rechecks, insurance deadlines; overdue items on top; daily chores only if the owner set them up;
+   - **Coming up** — the next few items (vaccines, med courses, lab rechecks, insurance deadlines), overdue on top, with "See schedule"; daily chores only if the owner set them up;
    - **Your pack** — avatars with a dot when a pet has something due soon;
    - **Done today** — small, collapsed;
    - empty day: "All good. Next: Rocky's rabies in 3 weeks." + one Boo hint about a gap ("I don't know Milo's shots yet. Snap his last vet paper?"); "Not now" hides it for a week.
-3. **Boo (bottom sheet)** — Talk / Snap / Type → toast, review card, or answer.
-4. **Pet folder**:
+3. **Schedule** — the plan by day:
+   - a week strip at the top (dots under days that have something due); swipe for other weeks;
+   - for the selected day: *Due today*, *Done today*, *Tomorrow*, *Later this week*;
+   - each task: pet avatar, what (with dose), pet name and time; overdue shows "waiting since 8 AM";
+   - tapping a task's circle crosses it out and moves it to Done (tap again to undo);
+   - past days show what was done — the answer to "did anyone give the pill yesterday?".
+4. **Boo (bottom sheet)** — Talk / Snap / Type → toast, review card, or answer.
+5. **Pet folder**:
    - header: photo in the flower frame, name, species and breed, age, **Share** button;
    - **Key facts** tiles: Vaccines · Meds now · Weight (sparkline) · Allergies · Vet (call); the Vaccines tile is hidden for species that don't need vaccines;
    - **History** — one timeline by date with filters All · Health · Meds · Vaccines · Weight · Documents, plus search; documents sit in the timeline on the visit date, and records extracted from a document link back to it;
    - profile (species, breed, date of birth, microchip, insurance, vet) — editable;
    - plus the pet list (Pets tab) and adding a pet.
-5. **Share** — from the pet folder, via Boo ("send Rocky's shots to the boarding"), or from the menu on Today:
+6. **Share** — from the pet folder, via Boo ("send Rocky's shots to the boarding"), or from the menu on Today:
    1. pick a set: 🏨 Boarding & groomer (vaccines, vet, owner contacts) · 🩺 New vet (everything) · 🚨 Emergency (current meds, allergies, symptoms from the last 2 weeks, vet, weight);
    2. pick one or more pets;
    3. PDF preview → the iOS share sheet.

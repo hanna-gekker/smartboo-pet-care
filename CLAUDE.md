@@ -6,8 +6,8 @@ Read this file and `docs/PRODUCT.md` before every task. If a task conflicts with
 
 SmartBoo is an iOS app for US pet owners: everything about your pets in one place. The assistant **Boo** takes vet papers (photo, PDF), events and questions by voice or text, files everything into each pet's folder, sets reminders, and makes records quick to share (PDF via the iOS share sheet).
 
-- Tab bar: **Today · Boo · Pets**. Boo opens as a bottom sheet, not a chat.
-- First-version screens: Welcome, Today, Boo (bottom sheet), Pet folder (+ pet list), Share.
+- Tab bar: a floating black capsule **Today · Schedule · Pets** + the round **Boo button** to its right. Boo opens as a bottom sheet, not a chat.
+- First-version screens: Welcome, Today, Schedule, Boo (bottom sheet), Pet folder (+ pet list), Share.
 - Main flow: a paper → Boo creates the pet and its vaccines → review card "Looks right" → reminder.
 - Boo's rules: never makes things up; simple records are saved right away with Undo, important ones (documents, meds, symptoms, plans, a new pet) go through a review card; never guesses which pet; no diagnoses or doses.
 - Until the demo (Dec 1): no household sharing, no accounts, no backend. Data lives on the phone behind a single storage module. The only server piece is one function for Boo.

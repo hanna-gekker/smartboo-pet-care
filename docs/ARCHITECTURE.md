@@ -4,7 +4,9 @@ How the first version is put together: screens and navigation, folders, data, na
 
 ## 1. Screen map and navigation
 
-A **tab bar** with three tabs — **Today · Boo · Pets** — and a **stack** inside Today and Pets (screens open "deeper" with a back arrow at the top left). **Boo is not a screen**: it is a bottom sheet that opens over whatever screen you are on and closes with a swipe down.
+A floating **tab bar**: a black capsule with three tabs — **Today · Schedule · Pets** — plus the **Boo button** to the right of it. Today and Pets have a **stack** inside (screens open "deeper" with a back arrow at the top left). **Boo is not a screen**: it is a bottom sheet that opens over whatever screen you are on and closes with a swipe down.
+
+**Schedule** is the plan view: a week strip at the top, then *Due today*, *Done today*, *Tomorrow* and *Later this week*. Tapping a task's circle crosses it out and moves it to Done (tap again to undo).
 
 ```mermaid
 flowchart TD
@@ -15,16 +17,19 @@ flowchart TD
 
     subgraph Tabs[Tab bar]
         T[Today]
-        BT((Boo))
+        SC[Schedule]
         P[Pets]
+        BT((Boo button))
     end
 
+    SC -->|tap the circle| CK[Task crossed out<br/>moves to Done]
     BT --> B[Boo sheet<br/>Talk · Snap · Type]
     B --> R{Result}
     R -->|simple record| Toast[Saved · Undo toast]
     R -->|document, meds, symptom, plan, new pet| RC[Review card<br/>Looks right]
     R -->|question| A[Answer + source link]
     RC --> T
+    RC --> SC
 
     T -->|tap an item or avatar| F[Pet folder]
     T -->|gear icon| S[Settings]
@@ -45,7 +50,7 @@ flowchart TD
 
 ```
 src/
-  screens/      one folder per screen: Welcome, Today, PetList, PetFolder, Share, Settings
+  screens/      one folder per screen: Welcome, Today, Schedule, PetList, PetFolder, Share, Settings
   components/   reusable UI: buttons, cards, review card, tiles, task row, tab bar, bottom sheet
   styles/       tokens.css from Figma Variables + base styles
   data/         data types, the storage module (store), and sample data (Rocky, Milo, Cleo, Tank)
