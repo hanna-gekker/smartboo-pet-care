@@ -17,7 +17,7 @@ SmartBoo is an iOS app for US pet owners: everything about your pets in one plac
 
 ## Stack
 
-- Vite + React + TypeScript + Tailwind, mobile-first.
+- Vite + React + TypeScript + Tailwind, mobile-first. Tailwind takes its values from our tokens, not from its default palette (no `bg-red-500` and the like).
 - App: Capacitor 8 → iOS (TestFlight); web version on Cloudflare Pages. Android is not a focus.
 - Boo's server function: Cloudflare Pages Functions (`functions/api/boo`); the AI key is a Cloudflare secret.
 - Data on the phone, always through `src/data/store`. For now the store uses the browser's localStorage; at step P4 (Capacitor) it switches to `@capacitor/filesystem`.
