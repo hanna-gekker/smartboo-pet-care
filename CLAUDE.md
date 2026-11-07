@@ -40,8 +40,12 @@ Testing data: the first launch loads sample pets (Rocky, Milo, Cleo, Tank). Sett
 ## Design
 
 - Mockups and Variables live in Figma (file "Smartboo - Pet care app": screen Today · V17, page Design system).
-- Tokens come from the Figma Variables collections "SmartBoo · Color" and "SmartBoo · Layout", light and dark themes. The "Legacy · …" collections are an archive — ignore them. Until the Figma tokens step, `src/styles/tokens.css` holds temporary values. Figma has no Dark mode yet: until it does, Claude proposes the dark values and I approve them.
-- Colors, spacing, radii and fonts only through CSS variables from `src/styles/tokens.css`. No hex values in components.
+- Tokens come from the Figma Variables collections "SmartBoo · Primitives" (raw colors), "SmartBoo · Color" (roles, Light and Dark, pointing to primitives) and "SmartBoo · Layout" (spacing, radii, sizes, fonts). The "Legacy · …" collections are an archive — ignore them.
+- How tokens get into code: Figma → `design/figma-variables.json` (raw export, as is) → `npm run tokens` → `tokens.json` (W3C DTCG) → `src/styles/tokens.css` (Style Dictionary). CSS names are the Figma names: `accent/primary` → `--accent-primary`.
+- To update tokens: change them in Figma, re-run the export, replace `design/figma-variables.json`, run `npm run tokens`. Never edit `tokens.json` or `tokens.css` by hand, and never rename tokens that come from Figma.
+- Components use the semantic tokens (`--surface-*`, `--text-*`, `--accent-*`…), not primitives like `--blue-700`. Text and icons on an `accent/primary` fill use `text/on-accent`.
+- `src/styles/legacy-tokens.css` holds the early teal colors the screens still use until step 07 (P6). Don't add to it.
+- Colors, spacing, radii and fonts only through CSS variables. No hex values in components.
 - Text contrast at least 4.5:1 (3:1 for large text and icons), in both themes.
 - No made-up copy: UI texts come from `docs/PRODUCT.md` or the Figma mockups. If a text is missing, ask me.
 - `design/` holds early HTML sketches — don't touch them. The one exception: `design/figma-variables.json`, the raw Variables export from Figma, is replaced with each new export.

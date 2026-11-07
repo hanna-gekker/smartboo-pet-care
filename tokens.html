@@ -1,0 +1,305 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>SmartBoo tokens</title>
+    <!--
+      Token preview for designers. Open with `npm run dev` at http://localhost:5173/tokens.html.
+      Everything is read from src/styles/tokens.css, so it updates after `npm run tokens`.
+      Not part of the app build.
+    -->
+    <style>
+      * { box-sizing: border-box; }
+      html { -webkit-text-size-adjust: 100%; }
+      body {
+        margin: 0;
+        background: var(--surface-canvas);
+        color: var(--text-primary);
+        font-family: var(--font-family-text);
+        font-size: var(--font-size-14);
+        line-height: var(--font-line-height-20);
+        padding: max(var(--space-24), env(safe-area-inset-top)) max(var(--space-16), env(safe-area-inset-right))
+          max(var(--space-48), env(safe-area-inset-bottom)) max(var(--space-16), env(safe-area-inset-left));
+      }
+      main { max-width: 1040px; margin: 0 auto; }
+      h1 { font-size: var(--font-size-24); line-height: var(--font-line-height-32); font-weight: var(--font-weight-medium); margin: 0 0 var(--space-4); }
+      h2 { font-size: var(--font-size-18); line-height: var(--font-line-height-24); font-weight: var(--font-weight-medium); margin: var(--space-48) 0 var(--space-4); }
+      h3 { font-size: var(--font-size-14); line-height: var(--font-line-height-20); font-weight: var(--font-weight-medium); color: var(--text-secondary); margin: var(--space-24) 0 var(--space-8); text-transform: capitalize; }
+      p.note { color: var(--text-secondary); margin: 0 0 var(--space-16); }
+      code, .mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: var(--font-size-12); line-height: var(--font-line-height-16); }
+      .muted { color: var(--text-secondary); }
+
+      /* Theme switch */
+      .switch { display: inline-flex; gap: var(--space-4); padding: var(--space-4); background: var(--surface-subtle); border-radius: var(--radius-full); margin-top: var(--space-16); }
+      .switch button {
+        min-height: var(--size-control-44); padding: 0 var(--space-16); border: 0; border-radius: var(--radius-full);
+        background: transparent; color: var(--text-primary); font: inherit; cursor: pointer;
+        -webkit-tap-highlight-color: transparent; user-select: none;
+      }
+      .switch button[aria-pressed="true"] { background: var(--accent-primary); color: var(--text-on-accent); }
+
+      /* Primitives */
+      .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: var(--space-12); }
+      .chip { background: var(--surface-card); border-radius: var(--radius-16); overflow: hidden; border: 1px solid var(--surface-subtle); }
+      .chip .fill { height: 64px; border-bottom: 1px solid var(--surface-subtle); }
+      .chip .label { padding: var(--space-8) var(--space-12); display: grid; gap: var(--space-2); }
+
+      /* Semantic */
+      .roles { display: grid; gap: var(--space-8); }
+      .role { background: var(--surface-card); border-radius: var(--radius-16); padding: var(--space-12); display: grid; gap: var(--space-8); }
+      .role .head { display: flex; flex-wrap: wrap; gap: var(--space-4) var(--space-12); align-items: baseline; }
+      .role .modes { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-8); }
+      .mode { display: flex; gap: var(--space-8); align-items: center; min-width: 0; }
+      .mode .dot { flex: none; width: var(--size-control-40); height: var(--size-control-40); border-radius: var(--radius-8); border: 1px solid var(--border-control); }
+      .mode div { min-width: 0; overflow-wrap: anywhere; }
+      .colhead { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-8); padding: 0 var(--space-12); color: var(--text-secondary); }
+
+      /* Contrast */
+      .pairs { display: grid; gap: var(--space-8); }
+      .pair { background: var(--surface-card); border-radius: var(--radius-16); padding: var(--space-12); display: grid; gap: var(--space-8); }
+      .pair .modes { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-8); }
+      .sample {
+        border-radius: var(--radius-8); padding: var(--space-8) var(--space-12); display: flex; justify-content: space-between;
+        align-items: center; gap: var(--space-8); min-height: var(--size-control-56);
+      }
+      .sample .aa { font-size: var(--font-size-16); font-weight: var(--font-weight-medium); }
+      .sample .icon { width: var(--size-icon-16); height: var(--size-icon-16); border-radius: var(--radius-full); }
+      .result { display: flex; gap: var(--space-8); align-items: center; flex-wrap: wrap; }
+      .badge { border-radius: var(--radius-full); padding: var(--space-2) var(--space-8); font-size: var(--font-size-12); line-height: var(--font-line-height-16); font-weight: var(--font-weight-medium); }
+      .badge.pass { background: var(--accent-primary-subtle); color: var(--text-primary); }
+      .badge.fail { background: var(--status-waiting-bg); color: var(--status-waiting-text); }
+      .summary { margin: 0 0 var(--space-16); }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>SmartBoo tokens</h1>
+      <p class="note">Read live from <code>src/styles/tokens.css</code> (Figma Variables). Run <code>npm run tokens</code> after a new export and reload.</p>
+      <div class="switch" role="group" aria-label="Theme">
+        <button type="button" data-theme-choice="system">System</button>
+        <button type="button" data-theme-choice="light">Light</button>
+        <button type="button" data-theme-choice="dark">Dark</button>
+      </div>
+
+      <h2>Contrast</h2>
+      <p class="note">Text needs at least 4.5:1, icons and control borders at least 3:1 (WCAG AA). Semi-transparent colors are measured over the background they sit on.</p>
+      <p class="summary" id="summary"></p>
+      <div class="pairs" id="pairs"></div>
+
+      <h2>Semantic colors</h2>
+      <p class="note">SmartBoo · Color. Each role points to a primitive, Light and Dark side by side.</p>
+      <div class="colhead"><span>Light</span><span>Dark</span></div>
+      <div class="roles" id="roles"></div>
+
+      <h2>Primitives</h2>
+      <p class="note">SmartBoo · Primitives. Raw colors; components never use them directly.</p>
+      <div id="primitives"></div>
+    </main>
+
+    <script type="module">
+      import '/src/styles/tokens.css'
+      import css from '/src/styles/tokens.css?raw'
+
+      // ---------- Read tokens.css ----------
+      const between = (start, end) => {
+        const from = css.indexOf(start)
+        if (from < 0) throw new Error(`tokens.css has no "${start}"`)
+        const to = css.indexOf(end, from + start.length)
+        return css.slice(from + start.length, to < 0 ? undefined : to)
+      }
+      const parse = (text) => {
+        const out = []
+        for (const m of text.matchAll(/^\s*--([\w-]+):\s*([^;]+);(?:\s*\/\*\s*(.*?)\s*\*\/)?/gm)) {
+          out.push({ name: m[1], value: m[2].trim(), note: m[3] ?? '' })
+        }
+        return out
+      }
+      const primitives = parse(between('/* Primitives */', '/* Layout */'))
+      const light = parse(between('/* Colors — light */', '\n}'))
+      const dark = parse(between('[data-theme="dark"] {', '\n}'))
+
+      const primitiveHex = Object.fromEntries(primitives.map((t) => [t.name, t.value]))
+      const refOf = (value) => value.match(/^var\(--([\w-]+)\)$/)?.[1] ?? null
+      const resolve = (theme, name) => {
+        const token = theme.find((t) => t.name === name)
+        if (!token) throw new Error(`No --${name} in tokens.css`)
+        const ref = refOf(token.value)
+        return { ref, hex: ref ? primitiveHex[ref] : token.value }
+      }
+
+      // ---------- Color math (WCAG 2.x) ----------
+      const rgba = (hex) => {
+        const h = hex.replace('#', '')
+        const n = (i) => parseInt(h.slice(i, i + 2), 16)
+        return { r: n(0), g: n(2), b: n(4), a: h.length === 8 ? n(6) / 255 : 1 }
+      }
+      const over = (top, bottom) => ({
+        r: top.r * top.a + bottom.r * (1 - top.a),
+        g: top.g * top.a + bottom.g * (1 - top.a),
+        b: top.b * top.a + bottom.b * (1 - top.a),
+        a: 1,
+      })
+      const lum = ({ r, g, b }) => {
+        const c = (v) => ((v /= 255) <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4)
+        return 0.2126 * c(r) + 0.7152 * c(g) + 0.0722 * c(b)
+      }
+      const ratio = (fgHex, bgHex, canvasHex) => {
+        const bg = over(rgba(bgHex), rgba(canvasHex))
+        const fg = over(rgba(fgHex), bg)
+        const [hi, lo] = [lum(fg), lum(bg)].sort((a, b) => b - a)
+        return (hi + 0.05) / (lo + 0.05)
+      }
+
+      // ---------- DOM helpers ----------
+      const el = (tag, props = {}, ...kids) => {
+        const node = Object.assign(document.createElement(tag), props)
+        node.append(...kids)
+        return node
+      }
+      const fillOf = (ref, hex) => (ref ? `var(--${ref})` : hex)
+
+      // ---------- Contrast pairs used in the mockups ----------
+      // Taken from the Figma screens. pet/* and avatar/yellow are decorative (petals behind
+      // a pet photo, swatches) with no text on them, so they are not checked.
+      const TEXT = 4.5
+      const UI = 3
+      const pairs = [
+        ...['text-primary', 'text-secondary'].flatMap((fg) =>
+          ['surface-canvas', 'surface-card', 'surface-subtle'].map((bg) => [fg, bg, TEXT]),
+        ),
+        ['text-tertiary', 'surface-card', TEXT],
+        ['text-on-dark', 'surface-nav', TEXT],
+        ['text-on-dark-muted', 'surface-nav', TEXT],
+        ['text-on-accent', 'accent-primary', TEXT],
+        ['accent-primary', 'surface-canvas', TEXT],
+        ['accent-primary', 'surface-card', TEXT],
+        ['status-waiting-text', 'status-waiting-bg', TEXT],
+        ...['ai-card-mint', 'ai-card-blue', 'ai-card-lilac', 'ai-card-pink'].map((bg) => ['text-primary', bg, TEXT]),
+        ['status-waiting-dot', 'surface-card', UI],
+        ['status-due-dot', 'surface-card', UI],
+        ['status-done-dot', 'surface-card', UI],
+        ['border-control', 'surface-card', UI],
+        ['accent-primary', 'surface-subtle', UI],
+      ]
+
+      let failing = 0
+      let checks = 0
+      const pairsBox = document.getElementById('pairs')
+      for (const [fgName, bgName, min] of pairs) {
+        const modes = [
+          ['Light', light],
+          ['Dark', dark],
+        ].map(([label, theme]) => {
+          const fg = resolve(theme, fgName)
+          const bg = resolve(theme, bgName)
+          const canvas = resolve(theme, 'surface-canvas')
+          const value = ratio(fg.hex, bg.hex, canvas.hex)
+          const pass = value >= min
+          checks++
+          if (!pass) failing++
+          const sample = el('div', { className: 'sample' })
+          sample.style.background = fillOf(bg.ref, bg.hex)
+          sample.style.color = fillOf(fg.ref, fg.hex)
+          if (min === UI) {
+            const icon = el('span', { className: 'icon' })
+            icon.style.background = fillOf(fg.ref, fg.hex)
+            sample.append(el('span', { className: 'mono' }, label), icon)
+          } else {
+            sample.append(el('span', { className: 'mono' }, label), el('span', { className: 'aa' }, 'Aa'))
+          }
+          return el(
+            'div',
+            {},
+            sample,
+            el(
+              'div',
+              { className: 'result' },
+              el('strong', {}, `${value.toFixed(2)}:1`),
+              el('span', { className: `badge ${pass ? 'pass' : 'fail'}` }, pass ? 'AA' : 'Below AA'),
+            ),
+          )
+        })
+        pairsBox.append(
+          el(
+            'div',
+            { className: 'pair' },
+            el(
+              'div',
+              { className: 'head' },
+              el('code', {}, `--${fgName}`),
+              el('span', { className: 'muted' }, ' on '),
+              el('code', {}, `--${bgName}`),
+              el('span', { className: 'muted' }, min === UI ? '  · icon / border, 3:1' : '  · text, 4.5:1'),
+            ),
+            el('div', { className: 'modes' }, ...modes),
+          ),
+        )
+      }
+      document.getElementById('summary').textContent =
+        failing === 0 ? `All ${checks} checks pass AA.` : `${failing} of ${checks} checks are below AA.`
+
+      // ---------- Semantic roles ----------
+      const rolesBox = document.getElementById('roles')
+      for (const token of light) {
+        const mode = (theme) => {
+          const { ref, hex } = resolve(theme, token.name)
+          const dot = el('span', { className: 'dot' })
+          dot.style.background = fillOf(ref, hex)
+          return el(
+            'div',
+            { className: 'mode' },
+            dot,
+            el('div', {}, el('div', { className: 'mono' }, ref ? `--${ref}` : ''), el('div', { className: 'mono muted' }, hex)),
+          )
+        }
+        rolesBox.append(
+          el(
+            'div',
+            { className: 'role' },
+            el('div', { className: 'head' }, el('code', {}, `--${token.name}`), el('span', { className: 'muted' }, token.note)),
+            el('div', { className: 'modes' }, mode(light), mode(dark)),
+          ),
+        )
+      }
+
+      // ---------- Primitives ----------
+      const primBox = document.getElementById('primitives')
+      const groups = Map.groupBy(primitives, (t) => (t.name.startsWith('alpha-') ? 'alpha' : t.name.split('-')[0]))
+      for (const [group, tokens] of groups) {
+        primBox.append(el('h3', {}, group))
+        const grid = el('div', { className: 'grid' })
+        for (const t of tokens) {
+          const fill = el('div', { className: 'fill' })
+          fill.style.background = `var(--${t.name})`
+          grid.append(
+            el(
+              'div',
+              { className: 'chip' },
+              fill,
+              el('div', { className: 'label' }, el('span', { className: 'mono' }, `--${t.name}`), el('span', { className: 'mono muted' }, t.value)),
+            ),
+          )
+        }
+        primBox.append(grid)
+      }
+
+      // ---------- Theme switch (same mechanism as the app: data-theme on <html>) ----------
+      const KEY = 'tokens-preview-theme'
+      const apply = (choice) => {
+        if (choice === 'system') delete document.documentElement.dataset.theme
+        else document.documentElement.dataset.theme = choice
+        for (const b of document.querySelectorAll('[data-theme-choice]')) {
+          b.setAttribute('aria-pressed', String(b.dataset.themeChoice === choice))
+        }
+        try { localStorage.setItem(KEY, choice) } catch {}
+      }
+      let saved = 'system'
+      try { saved = localStorage.getItem(KEY) ?? 'system' } catch {}
+      apply(saved)
+      for (const b of document.querySelectorAll('[data-theme-choice]')) {
+        b.addEventListener('click', () => apply(b.dataset.themeChoice))
+      }
+    </script>
+  </body>
+</html>

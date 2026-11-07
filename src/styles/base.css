@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import "./tokens.css";
+@import "./legacy-tokens.css";
 
 /* Map tokens to Tailwind utilities: bg-surface, text-ink, rounded-md, font-display… */
 @theme inline {
