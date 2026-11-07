@@ -194,237 +194,237 @@
       "surface": {
         "canvas": {
           "$type": "color",
-          "$value": "#F8FAFD",
+          "$value": "{gray.50}",
           "$description": "Page background"
         },
         "card": {
           "$type": "color",
-          "$value": "#FFFFFF",
+          "$value": "{base.white}",
           "$description": "Cards, input bar, chips"
         },
         "subtle": {
           "$type": "color",
-          "$value": "#F2F2F4",
+          "$value": "{gray.100}",
           "$description": "Dividers, list rows, ring track"
         },
         "nav": {
           "$type": "color",
-          "$value": "#111111",
+          "$value": "{gray.950}",
           "$description": "Floating menu capsule"
         },
         "scrim": {
           "$type": "color",
-          "$value": "#0A0D1A66",
+          "$value": "{alpha.ink-40}",
           "$description": "Dim behind bottom sheets and modals"
         },
         "canvas-clear": {
           "$type": "color",
-          "$value": "#F8FAFD00",
+          "$value": "{alpha.gray-50-0}",
           "$description": "Canvas at 0% — top stop of the bottom fade behind the tab bar."
         }
       },
       "text": {
         "primary": {
           "$type": "color",
-          "$value": "#111111",
+          "$value": "{gray.950}",
           "$description": "Main text and icons (also done checks, home indicator)"
         },
         "secondary": {
           "$type": "color",
-          "$value": "#5E5E63",
+          "$value": "{gray.600}",
           "$description": "Supporting text (AA on white)"
         },
         "on-dark": {
           "$type": "color",
-          "$value": "#FFFFFF",
+          "$value": "{base.white}",
           "$description": "Text/icons on dark or accent"
         },
         "on-dark-muted": {
           "$type": "color",
-          "$value": "#FFFFFFB2"
+          "$value": "{alpha.white-70}"
         },
         "tertiary": {
           "$type": "color",
-          "$value": "#6E6E75",
+          "$value": "{gray.500}",
           "$description": "Completed / disabled text (crossed-out tasks). Not for essential info."
         },
         "on-accent": {
           "$type": "color",
-          "$value": "#FFFFFF",
+          "$value": "{base.white}",
           "$description": "Text and icons on accent/primary fills (buttons, badges). White in light, near-black in dark."
         }
       },
       "border": {
         "control": {
           "$type": "color",
-          "$value": "#8A8A90",
+          "$value": "{gray.400}",
           "$description": "Unchecked check circle"
         }
       },
       "accent": {
         "primary": {
           "$type": "color",
-          "$value": "#2A55C4",
+          "$value": "{blue.700}",
           "$description": "Buttons, active states, progress, mic"
         },
         "primary-soft": {
           "$type": "color",
-          "$value": "#C3D3F8",
+          "$value": "{blue.200}",
           "$description": "Soft accent fills (avatars)"
         },
         "primary-subtle": {
           "$type": "color",
-          "$value": "#E6EDFC",
+          "$value": "{blue.50}",
           "$description": "Very light accent tint — backgrounds of icons in circles, soft buttons, selected rows"
         }
       },
       "status": {
         "waiting-bg": {
           "$type": "color",
-          "$value": "#FDECE7",
+          "$value": "{coral.50}",
           "$description": "Coral — background of things that need attention (overdue, needs check)"
         },
         "waiting-dot": {
           "$type": "color",
-          "$value": "#F26B4F",
+          "$value": "{coral.500}",
           "$description": "Status dot"
         },
         "waiting-text": {
           "$type": "color",
-          "$value": "#A33A22",
+          "$value": "{coral.700}",
           "$description": "Coral text on white or waiting-bg (≈6:1)"
         },
         "due-dot": {
           "$type": "color",
-          "$value": "#8B63E6",
+          "$value": "{violet.600}",
           "$description": "Scheduled / due — calendar dots"
         },
         "done-dot": {
           "$type": "color",
-          "$value": "#2FA36B",
+          "$value": "{green.600}",
           "$description": "Completed — calendar dots"
         }
       },
       "avatar": {
         "yellow": {
           "$type": "color",
-          "$value": "#FFE14D",
+          "$value": "{yellow.300}",
           "$description": "Household member A"
         }
       },
       "ai": {
         "card-mint": {
           "$type": "color",
-          "$value": "#DFF2EE",
+          "$value": "{green.50}",
           "$description": "Assistant card gradient 1"
         },
         "card-blue": {
           "$type": "color",
-          "$value": "#E4EEF9",
+          "$value": "{blue.50}",
           "$description": "Assistant card gradient 2"
         },
         "card-lilac": {
           "$type": "color",
-          "$value": "#EDE8F8",
+          "$value": "{violet.50}",
           "$description": "Assistant card gradient 3"
         },
         "card-pink": {
           "$type": "color",
-          "$value": "#F8E6F0",
+          "$value": "{pink.50}",
           "$description": "Assistant card gradient 4"
         },
         "petal-light": {
           "$type": "color",
-          "$value": "#D9E5FB",
+          "$value": "{blue.100}",
           "$description": "Boo petals 1"
         },
         "petal": {
           "$type": "color",
-          "$value": "#BCD3F5",
+          "$value": "{blue.200}",
           "$description": "Boo petals 2"
         },
         "petal-tint": {
           "$type": "color",
-          "$value": "#E3D4F0",
+          "$value": "{violet.100}",
           "$description": "Boo petals 3"
         },
         "core-light": {
           "$type": "color",
-          "$value": "#8FB3F0",
+          "$value": "{blue.400}",
           "$description": "Boo core 1"
         },
         "core": {
           "$type": "color",
-          "$value": "#2F6FD8",
+          "$value": "{blue.600}",
           "$description": "Boo core 2"
         },
         "core-edge": {
           "$type": "color",
-          "$value": "#4F62CC",
+          "$value": "{indigo.600}",
           "$description": "Boo core 3"
         },
         "glow": {
           "$type": "color",
-          "$value": "#9DB8FF",
+          "$value": "{blue.300}",
           "$description": "Boo glow"
         },
         "spark-pink": {
           "$type": "color",
-          "$value": "#E07BB5",
+          "$value": "{pink.400}",
           "$description": "Pink end of AI sparkle gradient"
         },
         "halo": {
           "$type": "color",
-          "$value": "#FFFFFF",
+          "$value": "{base.white}",
           "$description": "Soft halo around the Boo character"
         },
         "highlight": {
           "$type": "color",
-          "$value": "#FFFFFF",
+          "$value": "{base.white}",
           "$description": "Gloss and inner light on the Boo core"
         }
       },
       "pet": {
         "lavender": {
           "$type": "color",
-          "$value": "#D2C4F6",
+          "$value": "{violet.200}",
           "$description": "Pet colour — owner picks one per pet"
         },
         "mint": {
           "$type": "color",
-          "$value": "#B4E3CC",
+          "$value": "{green.200}",
           "$description": "Pet colour — owner picks one per pet"
         },
         "pink": {
           "$type": "color",
-          "$value": "#F7C3D8",
+          "$value": "{pink.200}",
           "$description": "Pet colour — owner picks one per pet"
         },
         "butter": {
           "$type": "color",
-          "$value": "#F7DD86",
+          "$value": "{yellow.200}",
           "$description": "Pet colour — owner picks one per pet"
         },
         "ocean": {
           "$type": "color",
-          "$value": "#9FBDF2",
+          "$value": "{blue.300}",
           "$description": "Pet colour — owner picks one per pet"
         },
         "slate": {
           "$type": "color",
-          "$value": "#C3CCDB",
+          "$value": "{gray.200}",
           "$description": "Pet colour — owner picks one per pet"
         }
       },
       "overlay": {
         "photo-clear": {
           "$type": "color",
-          "$value": "#0A0D1A00",
+          "$value": "{alpha.ink-0}",
           "$description": "Top of the photo gradient"
         },
         "photo-dark": {
           "$type": "color",
-          "$value": "#0A0D1A8C",
+          "$value": "{alpha.ink-55}",
           "$description": "Bottom of the photo gradient — keeps white text readable on photos"
         }
       }
@@ -433,237 +433,237 @@
       "surface": {
         "canvas": {
           "$type": "color",
-          "$value": "#0F1115",
+          "$value": "{gray.950}",
           "$description": "Page background"
         },
         "card": {
           "$type": "color",
-          "$value": "#1B1E24",
+          "$value": "{gray.900}",
           "$description": "Cards, input bar, chips"
         },
         "subtle": {
           "$type": "color",
-          "$value": "#272A31",
+          "$value": "{gray.800}",
           "$description": "Dividers, list rows, ring track"
         },
         "nav": {
           "$type": "color",
-          "$value": "#2C3039",
+          "$value": "{gray.700}",
           "$description": "Floating menu capsule"
         },
         "scrim": {
           "$type": "color",
-          "$value": "#00000099",
+          "$value": "{alpha.black-60}",
           "$description": "Dim behind bottom sheets and modals"
         },
         "canvas-clear": {
           "$type": "color",
-          "$value": "#0F111500",
+          "$value": "{alpha.gray-950-0}",
           "$description": "Canvas at 0% — top stop of the bottom fade behind the tab bar."
         }
       },
       "text": {
         "primary": {
           "$type": "color",
-          "$value": "#F2F3F5",
+          "$value": "{gray.100}",
           "$description": "Main text and icons (also done checks, home indicator)"
         },
         "secondary": {
           "$type": "color",
-          "$value": "#A6A9B1",
+          "$value": "{gray.300}",
           "$description": "Supporting text (AA on white)"
         },
         "on-dark": {
           "$type": "color",
-          "$value": "#FFFFFF",
+          "$value": "{base.white}",
           "$description": "Text/icons on dark or accent"
         },
         "on-dark-muted": {
           "$type": "color",
-          "$value": "#FFFFFFB2"
+          "$value": "{alpha.white-70}"
         },
         "tertiary": {
           "$type": "color",
-          "$value": "#8C9099",
+          "$value": "{gray.400}",
           "$description": "Completed / disabled text (crossed-out tasks). Not for essential info."
         },
         "on-accent": {
           "$type": "color",
-          "$value": "#0F1115",
+          "$value": "{gray.950}",
           "$description": "Text and icons on accent/primary fills (buttons, badges). White in light, near-black in dark."
         }
       },
       "border": {
         "control": {
           "$type": "color",
-          "$value": "#666B77",
+          "$value": "{gray.500}",
           "$description": "Unchecked check circle"
         }
       },
       "accent": {
         "primary": {
           "$type": "color",
-          "$value": "#7A9CF5",
+          "$value": "{blue.500}",
           "$description": "Buttons, active states, progress, mic"
         },
         "primary-soft": {
           "$type": "color",
-          "$value": "#34487A",
+          "$value": "{blue.800}",
           "$description": "Soft accent fills (avatars)"
         },
         "primary-subtle": {
           "$type": "color",
-          "$value": "#1F2B47",
+          "$value": "{blue.900}",
           "$description": "Very light accent tint — backgrounds of icons in circles, soft buttons, selected rows"
         }
       },
       "status": {
         "waiting-bg": {
           "$type": "color",
-          "$value": "#3A2019",
+          "$value": "{coral.950}",
           "$description": "Coral — background of things that need attention (overdue, needs check)"
         },
         "waiting-dot": {
           "$type": "color",
-          "$value": "#FF7A5C",
+          "$value": "{coral.400}",
           "$description": "Status dot"
         },
         "waiting-text": {
           "$type": "color",
-          "$value": "#FFA48C",
+          "$value": "{coral.300}",
           "$description": "Coral text on white or waiting-bg (≈6:1)"
         },
         "due-dot": {
           "$type": "color",
-          "$value": "#A88AF2",
+          "$value": "{violet.400}",
           "$description": "Scheduled / due — calendar dots"
         },
         "done-dot": {
           "$type": "color",
-          "$value": "#3FC487",
+          "$value": "{green.400}",
           "$description": "Completed — calendar dots"
         }
       },
       "avatar": {
         "yellow": {
           "$type": "color",
-          "$value": "#FFE14D",
+          "$value": "{yellow.300}",
           "$description": "Household member A"
         }
       },
       "ai": {
         "card-mint": {
           "$type": "color",
-          "$value": "#15302A",
+          "$value": "{green.950}",
           "$description": "Assistant card gradient 1"
         },
         "card-blue": {
           "$type": "color",
-          "$value": "#172638",
+          "$value": "{blue.950}",
           "$description": "Assistant card gradient 2"
         },
         "card-lilac": {
           "$type": "color",
-          "$value": "#231F38",
+          "$value": "{violet.950}",
           "$description": "Assistant card gradient 3"
         },
         "card-pink": {
           "$type": "color",
-          "$value": "#301D2A",
+          "$value": "{pink.950}",
           "$description": "Assistant card gradient 4"
         },
         "petal-light": {
           "$type": "color",
-          "$value": "#A9BDE6",
+          "$value": "{blue.300}",
           "$description": "Boo petals 1"
         },
         "petal": {
           "$type": "color",
-          "$value": "#8AA6DC",
+          "$value": "{blue.400}",
           "$description": "Boo petals 2"
         },
         "petal-tint": {
           "$type": "color",
-          "$value": "#B9A2D4",
+          "$value": "{violet.300}",
           "$description": "Boo petals 3"
         },
         "core-light": {
           "$type": "color",
-          "$value": "#8FB3F0",
+          "$value": "{blue.400}",
           "$description": "Boo core 1"
         },
         "core": {
           "$type": "color",
-          "$value": "#2F6FD8",
+          "$value": "{blue.600}",
           "$description": "Boo core 2"
         },
         "core-edge": {
           "$type": "color",
-          "$value": "#4F62CC",
+          "$value": "{indigo.600}",
           "$description": "Boo core 3"
         },
         "glow": {
           "$type": "color",
-          "$value": "#B48CF02E",
+          "$value": "{alpha.violet-400-18}",
           "$description": "Boo glow"
         },
         "spark-pink": {
           "$type": "color",
-          "$value": "#E07BB5",
+          "$value": "{pink.400}",
           "$description": "Pink end of AI sparkle gradient"
         },
         "halo": {
           "$type": "color",
-          "$value": "#E07BB514",
+          "$value": "{alpha.pink-400-8}",
           "$description": "Soft halo around the Boo character"
         },
         "highlight": {
           "$type": "color",
-          "$value": "#FFFFFF99",
+          "$value": "{alpha.white-60}",
           "$description": "Gloss and inner light on the Boo core"
         }
       },
       "pet": {
         "lavender": {
           "$type": "color",
-          "$value": "#D2C4F6",
+          "$value": "{violet.200}",
           "$description": "Pet colour — owner picks one per pet"
         },
         "mint": {
           "$type": "color",
-          "$value": "#B4E3CC",
+          "$value": "{green.200}",
           "$description": "Pet colour — owner picks one per pet"
         },
         "pink": {
           "$type": "color",
-          "$value": "#F7C3D8",
+          "$value": "{pink.200}",
           "$description": "Pet colour — owner picks one per pet"
         },
         "butter": {
           "$type": "color",
-          "$value": "#F7DD86",
+          "$value": "{yellow.200}",
           "$description": "Pet colour — owner picks one per pet"
         },
         "ocean": {
           "$type": "color",
-          "$value": "#9FBDF2",
+          "$value": "{blue.300}",
           "$description": "Pet colour — owner picks one per pet"
         },
         "slate": {
           "$type": "color",
-          "$value": "#C3CCDB",
+          "$value": "{gray.200}",
           "$description": "Pet colour — owner picks one per pet"
         }
       },
       "overlay": {
         "photo-clear": {
           "$type": "color",
-          "$value": "#0A0D1A00",
+          "$value": "{alpha.ink-0}",
           "$description": "Top of the photo gradient"
         },
         "photo-dark": {
           "$type": "color",
-          "$value": "#0A0D1A8C",
+          "$value": "{alpha.ink-55}",
           "$description": "Bottom of the photo gradient — keeps white text readable on photos"
         }
       }
@@ -850,6 +850,270 @@
             "$type": "dimension",
             "$value": "40px"
           }
+        }
+      }
+    }
+  },
+  "SmartBoo · Primitives": {
+    "Value": {
+      "base": {
+        "white": {
+          "$type": "color",
+          "$value": "#FFFFFF"
+        },
+        "black": {
+          "$type": "color",
+          "$value": "#000000"
+        },
+        "ink": {
+          "$type": "color",
+          "$value": "#0A0D1A"
+        }
+      },
+      "gray": {
+        "50": {
+          "$type": "color",
+          "$value": "#F8FAFD"
+        },
+        "100": {
+          "$type": "color",
+          "$value": "#F2F3F5"
+        },
+        "200": {
+          "$type": "color",
+          "$value": "#C3CCDB"
+        },
+        "300": {
+          "$type": "color",
+          "$value": "#A6A9B1"
+        },
+        "400": {
+          "$type": "color",
+          "$value": "#8A8A90"
+        },
+        "500": {
+          "$type": "color",
+          "$value": "#6E6E75"
+        },
+        "600": {
+          "$type": "color",
+          "$value": "#5E5E63"
+        },
+        "700": {
+          "$type": "color",
+          "$value": "#2C3039"
+        },
+        "800": {
+          "$type": "color",
+          "$value": "#272A31"
+        },
+        "900": {
+          "$type": "color",
+          "$value": "#1B1E24"
+        },
+        "950": {
+          "$type": "color",
+          "$value": "#0F1115"
+        }
+      },
+      "blue": {
+        "50": {
+          "$type": "color",
+          "$value": "#E6EDFC"
+        },
+        "100": {
+          "$type": "color",
+          "$value": "#D9E5FB"
+        },
+        "200": {
+          "$type": "color",
+          "$value": "#C3D3F8"
+        },
+        "300": {
+          "$type": "color",
+          "$value": "#9FBDF2"
+        },
+        "400": {
+          "$type": "color",
+          "$value": "#8FB3F0"
+        },
+        "500": {
+          "$type": "color",
+          "$value": "#7A9CF5"
+        },
+        "600": {
+          "$type": "color",
+          "$value": "#2F6FD8"
+        },
+        "700": {
+          "$type": "color",
+          "$value": "#2A55C4"
+        },
+        "800": {
+          "$type": "color",
+          "$value": "#34487A"
+        },
+        "900": {
+          "$type": "color",
+          "$value": "#1F2B47"
+        },
+        "950": {
+          "$type": "color",
+          "$value": "#172638"
+        }
+      },
+      "indigo": {
+        "600": {
+          "$type": "color",
+          "$value": "#4F62CC"
+        }
+      },
+      "violet": {
+        "50": {
+          "$type": "color",
+          "$value": "#EDE8F8"
+        },
+        "100": {
+          "$type": "color",
+          "$value": "#E3D4F0"
+        },
+        "200": {
+          "$type": "color",
+          "$value": "#D2C4F6"
+        },
+        "300": {
+          "$type": "color",
+          "$value": "#B9A2D4"
+        },
+        "400": {
+          "$type": "color",
+          "$value": "#A88AF2"
+        },
+        "600": {
+          "$type": "color",
+          "$value": "#8B63E6"
+        },
+        "950": {
+          "$type": "color",
+          "$value": "#231F38"
+        }
+      },
+      "pink": {
+        "50": {
+          "$type": "color",
+          "$value": "#F8E6F0"
+        },
+        "200": {
+          "$type": "color",
+          "$value": "#F7C3D8"
+        },
+        "400": {
+          "$type": "color",
+          "$value": "#E07BB5"
+        },
+        "950": {
+          "$type": "color",
+          "$value": "#301D2A"
+        }
+      },
+      "green": {
+        "50": {
+          "$type": "color",
+          "$value": "#DFF2EE"
+        },
+        "200": {
+          "$type": "color",
+          "$value": "#B4E3CC"
+        },
+        "400": {
+          "$type": "color",
+          "$value": "#3FC487"
+        },
+        "600": {
+          "$type": "color",
+          "$value": "#2FA36B"
+        },
+        "950": {
+          "$type": "color",
+          "$value": "#15302A"
+        }
+      },
+      "coral": {
+        "50": {
+          "$type": "color",
+          "$value": "#FDECE7"
+        },
+        "300": {
+          "$type": "color",
+          "$value": "#FFA48C"
+        },
+        "400": {
+          "$type": "color",
+          "$value": "#FF7A5C"
+        },
+        "500": {
+          "$type": "color",
+          "$value": "#F26B4F"
+        },
+        "700": {
+          "$type": "color",
+          "$value": "#A33A22"
+        },
+        "950": {
+          "$type": "color",
+          "$value": "#3A2019"
+        }
+      },
+      "yellow": {
+        "200": {
+          "$type": "color",
+          "$value": "#F7DD86"
+        },
+        "300": {
+          "$type": "color",
+          "$value": "#FFE14D"
+        }
+      },
+      "alpha": {
+        "white-60": {
+          "$type": "color",
+          "$value": "#FFFFFF99"
+        },
+        "white-70": {
+          "$type": "color",
+          "$value": "#FFFFFFB2"
+        },
+        "black-60": {
+          "$type": "color",
+          "$value": "#00000099"
+        },
+        "ink-0": {
+          "$type": "color",
+          "$value": "#0A0D1A00"
+        },
+        "ink-40": {
+          "$type": "color",
+          "$value": "#0A0D1A66"
+        },
+        "ink-55": {
+          "$type": "color",
+          "$value": "#0A0D1A8C"
+        },
+        "gray-50-0": {
+          "$type": "color",
+          "$value": "#F8FAFD00"
+        },
+        "gray-950-0": {
+          "$type": "color",
+          "$value": "#0F111500"
+        },
+        "pink-400-8": {
+          "$type": "color",
+          "$value": "#E07BB514"
+        },
+        "violet-400-18": {
+          "$type": "color",
+          "$value": "#A88AF22E"
         }
       }
     }
