@@ -165,6 +165,9 @@
   --overlay-photo-clear: var(--alpha-ink-0); /* Top of the photo gradient */
   --overlay-photo-dark: var(--alpha-ink-55); /* Bottom of the photo gradient — keeps white text readable on photos */
   --brand-logo-core: var(--blue-700); /* Core of the SmartBoo logo mark */
+  --nav-active-label: var(--indigo-600); /* Icon and label of the active tab (indigo in light, light grey in dark) */
+  --nav-active-ring: var(--base-white); /* Ring of the active tab pill (invisible in light, soft grey in dark) */
+  --icon-circle-ring: var(--indigo-50); /* Ring around soft icon circles (invisible in light, soft indigo in dark) */
 }
 
 /* Colors — dark, following the phone */
@@ -218,6 +221,9 @@
     --overlay-photo-clear: var(--alpha-ink-0); /* Top of the photo gradient */
     --overlay-photo-dark: var(--alpha-ink-55); /* Bottom of the photo gradient — keeps white text readable on photos */
     --brand-logo-core: var(--blue-700); /* Core of the SmartBoo logo mark */
+    --nav-active-label: var(--gray-100); /* Icon and label of the active tab (indigo in light, light grey in dark) */
+    --nav-active-ring: var(--gray-500); /* Ring of the active tab pill (invisible in light, soft grey in dark) */
+    --icon-circle-ring: var(--indigo-800); /* Ring around soft icon circles (invisible in light, soft indigo in dark) */
   }
 }
 
@@ -271,4 +277,7 @@
   --overlay-photo-clear: var(--alpha-ink-0); /* Top of the photo gradient */
   --overlay-photo-dark: var(--alpha-ink-55); /* Bottom of the photo gradient — keeps white text readable on photos */
   --brand-logo-core: var(--blue-700); /* Core of the SmartBoo logo mark */
+  --nav-active-label: var(--gray-100); /* Icon and label of the active tab (indigo in light, light grey in dark) */
+  --nav-active-ring: var(--gray-500); /* Ring of the active tab pill (invisible in light, soft grey in dark) */
+  --icon-circle-ring: var(--indigo-800); /* Ring around soft icon circles (invisible in light, soft indigo in dark) */
 }
