@@ -48,7 +48,7 @@ Testing data: the first launch loads sample pets (Rocky, Milo, Cleo, Tank). Sett
 - How tokens get into code: Figma → `design/figma-variables.json` (raw export, as is) → `npm run tokens` → `tokens.json` (W3C DTCG) → `src/styles/tokens.css` (Style Dictionary). CSS names are the Figma names: `accent/primary` → `--accent-primary`.
 - To update tokens: change them in Figma, re-run the export, replace `design/figma-variables.json`, run `npm run tokens`. Never edit `tokens.json` or `tokens.css` by hand, and never rename tokens that come from Figma.
 - Components use the semantic tokens (`--surface-*`, `--text-*`, `--accent-*`…), not primitives like `--blue-700`. Text and icons on an `accent/primary` fill use `text/on-accent`.
-- `src/styles/legacy-tokens.css` holds the early teal colors the screens still use until step 07 (P6). Don't add to it.
+- Tailwind utilities carry the Figma names (mapped in `src/styles/base.css`): `bg-surface-card`, `text-text-primary`, `p-16`, `size-control-44`, `rounded-24`, `text-caption` … `text-display` (the SB/* text styles), `font-regular` / `font-medium`. Tailwind's own palette and scales are switched off. A value Figma has no token for (a size, the room for the tab bar) is written as an exact arbitrary value, e.g. `size-[48px]`.
 - Colors, spacing, radii and fonts only through CSS variables. No hex values in components.
 - Text contrast at least 4.5:1 (3:1 for large text and icons), in both themes.
 - No made-up copy: UI texts come from `docs/PRODUCT.md` or the Figma mockups. If a text is missing, ask me.

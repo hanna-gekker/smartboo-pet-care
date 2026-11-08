@@ -29,7 +29,7 @@ export function BooSheet() {
   const { booOpen, booSession, closeBoo } = useUi()
   return (
     <BottomSheet open={booOpen} onClose={closeBoo} label="Boo">
-      <div className="pb-4">
+      <div className="pb-16">
         <BooFlow key={booSession} />
       </div>
     </BottomSheet>
@@ -96,17 +96,17 @@ function StepView({ step, setStep, text, setText }: { step: Step; setStep: (s: S
     case 'menu':
       return (
         <div>
-          <div className="flex items-center gap-3 pt-1 pb-4">
-            <span className="flex size-11 items-center justify-center rounded-full bg-accent text-on-accent">
+          <div className="flex items-center gap-12 pt-4 pb-16">
+            <span className="flex size-control-44 items-center justify-center rounded-full bg-accent-primary text-text-on-accent">
               <BooFace size={26} />
             </span>
             <div>
-              <p className="font-display text-[20px] font-semibold">What happened?</p>
-              <p className="text-[14px] text-ink-2">Tell me, or hand me a vet paper.</p>
+              <p className="font-display text-title font-medium">What happened?</p>
+              <p className="text-body-s text-text-secondary">Tell me, or hand me a vet paper.</p>
             </div>
           </div>
           <form
-            className="flex items-center gap-2 rounded-full bg-bg py-1 pr-1 pl-4 ring-1 ring-line"
+            className="flex items-center gap-8 rounded-full bg-surface-canvas py-4 pr-4 pl-16 ring-1 ring-surface-subtle"
             onSubmit={(e) => {
               e.preventDefault()
               send(text)
@@ -117,20 +117,20 @@ function StepView({ step, setStep, text, setText }: { step: Step; setStep: (s: S
               onChange={(e) => setText(e.target.value)}
               placeholder="“Cleo weighs 3.9 kg”"
               aria-label="Type to Boo"
-              className="min-h-11 flex-1 bg-transparent text-[16px] outline-none placeholder:text-ink-3"
+              className="min-h-control-44 flex-1 bg-transparent text-body outline-none placeholder:text-text-tertiary"
             />
-            <button type="submit" aria-label="Send" disabled={!text.trim()} className="press flex size-11 items-center justify-center rounded-full bg-bar text-on-bar disabled:opacity-30">
+            <button type="submit" aria-label="Send" disabled={!text.trim()} className="press flex size-control-44 items-center justify-center rounded-full bg-surface-nav text-text-on-dark disabled:opacity-30">
               <Icon name="send" size={20} />
             </button>
           </form>
-          <div className="mt-4 grid grid-cols-3 gap-2">
+          <div className="mt-16 grid grid-cols-3 gap-8">
             <BigAction icon="mic" label="Talk" onClick={() => setStep({ name: 'talk' })} />
             <BigAction icon="camera" label="Snap a paper" onClick={() => setStep({ name: 'snap' })} />
             <BigAction icon="keyboard" label="Type" onClick={() => (document.querySelector('[aria-label="Type to Boo"]') as HTMLInputElement | null)?.focus()} />
           </div>
-          <div className="swipe-row -mx-gutter mt-4 flex gap-2 px-gutter">
+          <div className="swipe-row -mx-16 mt-16 flex gap-8 px-16">
             {['Cleo weighs 3.9 kg', 'Rocky threw up', "When is Rocky's rabies due?", 'Ear drops twice a day for 10 days'].map((s) => (
-              <button key={s} type="button" onClick={() => send(s)} className="press min-h-11 shrink-0 rounded-full bg-accent-soft px-4 text-[14px] text-accent">
+              <button key={s} type="button" onClick={() => send(s)} className="press min-h-control-44 shrink-0 rounded-full bg-accent-primary-subtle px-16 text-body-s text-accent-primary">
                 {s}
               </button>
             ))}
@@ -140,13 +140,13 @@ function StepView({ step, setStep, text, setText }: { step: Step; setStep: (s: S
 
     case 'consent':
       return (
-        <div className="pt-2">
-          <h2 className="font-display text-[22px] font-semibold">Before Boo reads anything</h2>
-          <p className="mt-3 text-[15px] leading-relaxed text-ink-2">
+        <div className="pt-8">
+          <h2 className="font-display text-title font-medium">Before Boo reads anything</h2>
+          <p className="mt-12 text-body leading-24 text-text-secondary">
             Boo sends your photo or words to an AI service to read them. Nothing is kept after that. Your records stay on this phone.
           </p>
-          <p className="mt-3 text-[14px] text-ink-2">Boo keeps your pet’s records. It isn’t a vet.</p>
-          <div className="mt-6 flex flex-col gap-2">
+          <p className="mt-12 text-body-s text-text-secondary">Boo keeps your pet’s records. It isn’t a vet.</p>
+          <div className="mt-24 flex flex-col gap-8">
             <Button
               full
               onClick={() => {
@@ -165,15 +165,15 @@ function StepView({ step, setStep, text, setText }: { step: Step; setStep: (s: S
 
     case 'snap':
       return (
-        <div className="pt-1">
-          <h2 className="font-display text-[22px] font-semibold">Snap a vet paper</h2>
-          <p className="mt-1 text-[15px] text-ink-2">Vaccine certificate, invoice, discharge notes — a photo or a PDF.</p>
-          <div className="mt-5 flex flex-col gap-2">
+        <div className="pt-4">
+          <h2 className="font-display text-title font-medium">Snap a vet paper</h2>
+          <p className="mt-4 text-body text-text-secondary">Vaccine certificate, invoice, discharge notes — a photo or a PDF.</p>
+          <div className="mt-16 flex flex-col gap-8">
             <FilePick icon="camera" label="Take a photo" accept="image/*" capture onPick={startReading} />
             <FilePick icon="doc" label="Choose from Photos" accept="image/*" onPick={startReading} />
             <FilePick icon="doc" label="PDF from Files" accept="application/pdf" onPick={startReading} />
           </div>
-          <button type="button" onClick={startReading} className="press mt-3 min-h-11 w-full text-[15px] font-medium text-accent">
+          <button type="button" onClick={startReading} className="press mt-12 min-h-control-44 w-full text-body font-medium text-accent-primary">
             No paper at hand? Try a sample one
           </button>
         </div>
@@ -185,12 +185,12 @@ function StepView({ step, setStep, text, setText }: { step: Step; setStep: (s: S
     case 'reading':
     case 'thinking':
       return (
-        <div className="flex flex-col items-center py-10 text-center">
-          <span className="animate-pulse-dot flex size-16 items-center justify-center rounded-full bg-accent text-on-accent">
+        <div className="flex flex-col items-center py-32 text-center">
+          <span className="animate-pulse-dot flex size-control-64 items-center justify-center rounded-full bg-accent-primary text-text-on-accent">
             <BooFace />
           </span>
-          <p className="mt-4 font-display text-[20px] font-semibold">{step.name === 'reading' ? 'Reading…' : 'Thinking…'}</p>
-          {step.name === 'reading' && <p className="mt-1 text-[14px] text-ink-2">Finding the pet, vaccines and dates</p>}
+          <p className="mt-16 font-display text-title font-medium">{step.name === 'reading' ? 'Reading…' : 'Thinking…'}</p>
+          {step.name === 'reading' && <p className="mt-4 text-body-s text-text-secondary">Finding the pet, vaccines and dates</p>}
         </div>
       )
 
@@ -207,10 +207,10 @@ function StepView({ step, setStep, text, setText }: { step: Step; setStep: (s: S
 
     case 'remind':
       return (
-        <div className="pt-2">
-          <h2 className="font-display text-[22px] font-semibold">Remind you 2 weeks before each one?</h2>
-          <p className="mt-2 text-[15px] text-ink-2">I’ll nudge you before {step.petName}’s vaccines are due.</p>
-          <div className="mt-6 flex flex-col gap-2">
+        <div className="pt-8">
+          <h2 className="font-display text-title font-medium">Remind you 2 weeks before each one?</h2>
+          <p className="mt-8 text-body text-text-secondary">I’ll nudge you before {step.petName}’s vaccines are due.</p>
+          <div className="mt-24 flex flex-col gap-8">
             <Button
               full
               onClick={() => {
@@ -236,12 +236,12 @@ function StepView({ step, setStep, text, setText }: { step: Step; setStep: (s: S
       }
       const pet = petById(app.pets, step.petId)
       return (
-        <div className="pt-2">
-          <div className="flex justify-center py-2">
+        <div className="pt-8">
+          <div className="flex justify-center py-8">
             <PetAvatar pet={pet} size={88} />
           </div>
-          <h2 className="mt-3 text-center font-display text-[22px] font-semibold">Add a photo of {step.petName}?</h2>
-          <div className="mt-6 flex flex-col gap-2">
+          <h2 className="mt-12 text-center font-display text-title font-medium">Add a photo of {step.petName}?</h2>
+          <div className="mt-24 flex flex-col gap-8">
             {pet?.photo ? (
               <Button full onClick={finish}>
                 Done
@@ -274,8 +274,8 @@ function StepView({ step, setStep, text, setText }: { step: Step; setStep: (s: S
 
 function BigAction({ icon, label, onClick }: { icon: 'mic' | 'camera' | 'keyboard'; label: string; onClick: () => void }) {
   return (
-    <button type="button" onClick={onClick} className="press flex min-h-22 flex-col items-center justify-center gap-1.5 rounded-md bg-bg text-[13px] font-medium ring-1 ring-line">
-      <span className="flex size-10 items-center justify-center rounded-full bg-accent text-on-accent">
+    <button type="button" onClick={onClick} className="press flex min-h-[88px] flex-col items-center justify-center gap-4 rounded-24 bg-surface-canvas text-body-s font-medium ring-1 ring-surface-subtle">
+      <span className="flex size-control-40 items-center justify-center rounded-full bg-accent-primary text-text-on-accent">
         <Icon name={icon} size={20} />
       </span>
       {label}
@@ -329,19 +329,19 @@ function PaperReview({ paper, onConfirm }: { paper: ParsedPaper; onConfirm: (pet
 
   return (
     <div>
-      <p className="text-[13px] font-medium text-accent">Boo found</p>
-      <h2 className="font-display text-[22px] font-semibold">
+      <p className="text-body-s font-medium text-accent-primary">Boo found</p>
+      <h2 className="font-display text-title font-medium">
         {paper.title} · {formatDay(paper.date)}
       </h2>
-      <p className="text-[14px] text-ink-2">{paper.clinic}</p>
+      <p className="text-body-s text-text-secondary">{paper.clinic}</p>
 
       {existing ? (
-        <p className="mt-4 rounded-sm bg-accent-soft p-3 text-[14px] text-accent">This goes into {existing.name}’s folder.</p>
+        <p className="mt-16 rounded-16 bg-accent-primary-subtle p-12 text-body-s text-accent-primary">This goes into {existing.name}’s folder.</p>
       ) : (
-        <p className="mt-4 text-[14px] text-ink-2">New pet — I’ll create a folder.</p>
+        <p className="mt-16 text-body-s text-text-secondary">New pet — I’ll create a folder.</p>
       )}
 
-      <div className="mt-3 grid grid-cols-2 gap-2">
+      <div className="mt-12 grid grid-cols-2 gap-8">
         <Field label="Name">
           <input className={inputClass} value={name} onChange={(e) => setName(e.target.value)} />
         </Field>
@@ -356,23 +356,23 @@ function PaperReview({ paper, onConfirm }: { paper: ParsedPaper; onConfirm: (pet
         </Field>
       </div>
 
-      <Card className="mt-3 !p-0">
-        <div className="flex px-4 pt-3 pb-1 text-[12px] font-medium text-ink-2">
+      <Card className="mt-12 !p-0">
+        <div className="flex px-16 pt-12 pb-4 text-caption font-medium text-text-secondary">
           <span className="flex-1">Vaccine</span>
-          <span className="w-20 text-right">Given</span>
-          <span className="w-28 text-right">Due</span>
+          <span className="w-[80px] text-right">Given</span>
+          <span className="w-[112px] text-right">Due</span>
         </div>
         {paper.vaccines.map((v) => (
-          <div key={v.name} className="flex border-t border-line px-4 py-2.5 text-[14px]">
+          <div key={v.name} className="flex border-t border-surface-subtle px-16 py-8 text-body-s">
             <span className="flex-1 font-medium">{v.name}</span>
-            <span className="w-20 text-right text-ink-2">{formatDay(v.given)}</span>
-            <span className="w-28 text-right">{formatDay(v.due, { month: 'short', day: 'numeric', year: 'numeric' })}</span>
+            <span className="w-[80px] text-right text-text-secondary">{formatDay(v.given)}</span>
+            <span className="w-[112px] text-right">{formatDay(v.due, { month: 'short', day: 'numeric', year: 'numeric' })}</span>
           </div>
         ))}
       </Card>
-      <p className="mt-2 text-[13px] text-ink-2">Amount: {paper.amount}</p>
+      <p className="mt-8 text-body-s text-text-secondary">Amount: {paper.amount}</p>
 
-      <div className="mt-5">
+      <div className="mt-16">
         <Button full icon="check" onClick={confirm} disabled={!name.trim()}>
           Looks right
         </Button>
@@ -389,14 +389,14 @@ function ResultView({ result, onBack, onPick }: { result: BooResult; onBack: () 
   if (result.kind === 'which-pet') {
     const pets = result.candidates.map((id) => petById(app.pets, id)).filter(Boolean) as Pet[]
     return (
-      <div className="pt-2">
-        <h2 className="font-display text-[20px] font-semibold">Which pet?</h2>
-        <p className="mt-1 text-[14px] text-ink-2">“{result.text}”</p>
-        <div className="mt-4 flex flex-wrap gap-2">
+      <div className="pt-8">
+        <h2 className="font-display text-title font-medium">Which pet?</h2>
+        <p className="mt-4 text-body-s text-text-secondary">“{result.text}”</p>
+        <div className="mt-16 flex flex-wrap gap-8">
           {pets.map((p) => (
-            <button key={p.id} type="button" onClick={() => onPick(p.id)} className="press flex min-h-12 items-center gap-2 rounded-full bg-bg py-1 pr-4 pl-1 ring-1 ring-line">
+            <button key={p.id} type="button" onClick={() => onPick(p.id)} className="press flex min-h-[48px] items-center gap-8 rounded-full bg-surface-canvas py-4 pr-16 pl-4 ring-1 ring-surface-subtle">
               <PetAvatar pet={p} size={36} />
-              <span className="text-[15px] font-medium">{p.name}</span>
+              <span className="text-body font-medium">{p.name}</span>
             </button>
           ))}
         </div>
@@ -406,8 +406,8 @@ function ResultView({ result, onBack, onPick }: { result: BooResult; onBack: () 
 
   if (result.kind === 'answer') {
     return (
-      <div className="pt-2">
-        <p className="text-[17px] leading-relaxed">{result.text}</p>
+      <div className="pt-8">
+        <p className="text-body-l leading-24">{result.text}</p>
         {result.source && (
           <button
             type="button"
@@ -415,13 +415,13 @@ function ResultView({ result, onBack, onPick }: { result: BooResult; onBack: () 
               closeBoo()
               navigate(`/pets/${result.source!.petId}`)
             }}
-            className="press mt-3 flex min-h-11 items-center gap-1 text-[15px] font-medium text-accent"
+            className="press mt-12 flex min-h-control-44 items-center gap-4 text-body font-medium text-accent-primary"
           >
             {result.source.label}
             <Icon name="chevron" size={18} />
           </button>
         )}
-        <Button variant="ghost" onClick={onBack} className="mt-4 -ml-5">
+        <Button variant="ghost" onClick={onBack} className="mt-16 -ml-16">
           Ask something else
         </Button>
       </div>
@@ -441,10 +441,10 @@ function ResultView({ result, onBack, onPick }: { result: BooResult; onBack: () 
           closeBoo()
         }}
       >
-        <p className="mt-3 text-[15px]">{result.question}</p>
-        <div className="mt-2 flex gap-2">
-          <span className="rounded-full bg-bg px-3 py-1.5 text-[13px] ring-1 ring-line">Once</span>
-          <span className="rounded-full bg-bg px-3 py-1.5 text-[13px] ring-1 ring-line">Eating fine</span>
+        <p className="mt-12 text-body">{result.question}</p>
+        <div className="mt-8 flex gap-8">
+          <span className="rounded-full bg-surface-canvas px-12 py-4 text-body-s ring-1 ring-surface-subtle">Once</span>
+          <span className="rounded-full bg-surface-canvas px-12 py-4 text-body-s ring-1 ring-surface-subtle">Eating fine</span>
         </div>
       </ReviewShell>
     )
@@ -475,7 +475,7 @@ function ResultView({ result, onBack, onPick }: { result: BooResult; onBack: () 
           closeBoo()
         }}
       >
-        <p className="mt-2 text-[15px] text-ink-2">
+        <p className="mt-8 text-body text-text-secondary">
           {result.dose} · {result.days} days · until {formatDay(until)}
         </p>
       </ReviewShell>
@@ -483,9 +483,9 @@ function ResultView({ result, onBack, onPick }: { result: BooResult; onBack: () 
   }
 
   return (
-    <div className="pt-2">
-      <p className="text-[17px] leading-relaxed">I’m not sure what to do with that yet. Try “Cleo weighs 3.9 kg” or “When is Rocky’s rabies due?”.</p>
-      <Button variant="ghost" onClick={onBack} className="mt-4 -ml-5">
+    <div className="pt-8">
+      <p className="text-body-l leading-24">I’m not sure what to do with that yet. Try “Cleo weighs 3.9 kg” or “When is Rocky’s rabies due?”.</p>
+      <Button variant="ghost" onClick={onBack} className="mt-16 -ml-16">
         Back
       </Button>
     </div>
@@ -494,16 +494,16 @@ function ResultView({ result, onBack, onPick }: { result: BooResult; onBack: () 
 
 function ReviewShell({ pet, kind, title, children, onConfirm }: { pet: Pet; kind: string; title: string; children: ReactNode; onConfirm: () => void }) {
   return (
-    <div className="pt-1">
-      <div className="flex items-center gap-3">
+    <div className="pt-4">
+      <div className="flex items-center gap-12">
         <PetAvatar pet={pet} size={44} />
         <div>
-          <p className="text-[13px] font-medium text-accent">{kind}</p>
-          <h2 className="font-display text-[20px] font-semibold">{title}</h2>
+          <p className="text-body-s font-medium text-accent-primary">{kind}</p>
+          <h2 className="font-display text-title font-medium">{title}</h2>
         </div>
       </div>
       {children}
-      <div className="mt-5">
+      <div className="mt-16">
         <Button full icon="check" onClick={onConfirm}>
           Looks right
         </Button>
@@ -533,15 +533,15 @@ function Talk({ onDone }: { onDone: (text: string) => void }) {
   }, [])
 
   return (
-    <div className="flex flex-col items-center py-6 text-center">
-      <span className={`flex size-20 items-center justify-center rounded-full bg-accent text-on-accent ${supported ? 'animate-pulse-dot' : ''}`}>
+    <div className="flex flex-col items-center py-24 text-center">
+      <span className={`flex size-[80px] items-center justify-center rounded-full bg-accent-primary text-text-on-accent ${supported ? 'animate-pulse-dot' : ''}`}>
         <Icon name="mic" size={34} />
       </span>
       {supported ? (
         <>
-          <p className="mt-4 font-display text-[20px] font-semibold">Listening…</p>
-          <p className="mt-2 min-h-12 text-[16px] text-ink-2">{heard || 'Say something like “Rocky threw up this morning”'}</p>
-          <div className="mt-4 flex gap-2">
+          <p className="mt-16 font-display text-title font-medium">Listening…</p>
+          <p className="mt-8 min-h-[48px] text-body text-text-secondary">{heard || 'Say something like “Rocky threw up this morning”'}</p>
+          <div className="mt-16 flex gap-8">
             <Button variant="ghost" onClick={() => onDone('')}>
               Cancel
             </Button>
@@ -558,9 +558,9 @@ function Talk({ onDone }: { onDone: (text: string) => void }) {
         </>
       ) : (
         <>
-          <p className="mt-4 font-display text-[20px] font-semibold">Voice works in the iPhone app</p>
-          <p className="mt-2 text-[15px] text-ink-2">This browser can’t listen. Type to Boo instead.</p>
-          <Button variant="secondary" onClick={() => onDone('')} className="mt-4">
+          <p className="mt-16 font-display text-title font-medium">Voice works in the iPhone app</p>
+          <p className="mt-8 text-body text-text-secondary">This browser can’t listen. Type to Boo instead.</p>
+          <Button variant="secondary" onClick={() => onDone('')} className="mt-16">
             Type instead
           </Button>
         </>
