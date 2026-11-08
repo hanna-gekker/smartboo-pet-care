@@ -8,6 +8,7 @@ SmartBoo is an iOS app for US pet owners: everything about your pets in one plac
 
 - Tab bar: a floating black capsule **Today · Schedule · Pets** + the round **Boo button** to its right. Boo opens as a bottom sheet, not a chat.
 - First-version screens: Welcome, Today, Schedule, Boo (bottom sheet), Pet folder (+ pet list), Share.
+- Main screen: **Today** (first tab, Figma "Today · V17"): Boo card, Next up, Coming up, Your pack, Done today.
 - Main flow: a paper → Boo creates the pet and its vaccines → review card "Looks right" → reminder.
 - Boo's rules: never makes things up; simple records are saved right away with Undo, important ones (documents, meds, symptoms, plans, a new pet) go through a review card; never guesses which pet; no diagnoses or doses.
 - Until the demo (Wed Dec 2): no household sharing, no accounts, no backend. Data lives on the phone behind a single storage module. The only server piece is one function for Boo.
@@ -62,6 +63,6 @@ Testing data: the first launch loads sample pets (Rocky, Milo, Cleo, Tank). Sett
 ## Git
 
 - Commits follow Conventional Commits (`feat:`, `fix:`, `docs:`, `chore:`, `refactor:`), in English, only after my "ok".
-- `main` is the stable version. Until the first push to GitHub, work goes straight to `main`; after that, each new feature gets its own branch and a pull request.
+- `main` is the stable version. Each change gets its own branch and a pull request into `main`.
 - Never push or merge without my "ok".
 - No passwords, API keys or access tokens in the repo. The AI key lives only as a Cloudflare secret; `.env` files are ignored. Real vet documents for testing Boo stay in `boo-tests/` (ignored) and never get committed.
