@@ -30,7 +30,12 @@
   --blue-800: #34487A;
   --blue-900: #1F2B47;
   --blue-950: #172638;
+  --indigo-50: #ECEEFB;
+  --indigo-200: #C9CEF6;
+  --indigo-400: #8F98F5;
   --indigo-600: #4F62CC;
+  --indigo-800: #353B7A;
+  --indigo-900: #23264A;
   --violet-50: #EDE8F8;
   --violet-100: #E3D4F0;
   --violet-200: #D2C4F6;
@@ -53,8 +58,13 @@
   --coral-500: #F26B4F;
   --coral-700: #A33A22;
   --coral-950: #3A2019;
+  --yellow-50: #FDF6D8;
   --yellow-200: #F7DD86;
   --yellow-300: #FFE14D;
+  --yellow-500: #D9A800;
+  --yellow-600: #A88200;
+  --yellow-800: #7A5A00;
+  --yellow-950: #2E2608;
   --alpha-white-60: #FFFFFF99;
   --alpha-white-70: #FFFFFFB2;
   --alpha-black-60: #00000099;
@@ -91,6 +101,7 @@
   --font-family-display: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", system-ui, sans-serif;
   --font-family-text: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", system-ui, sans-serif;
   --font-size-12: 12px;
+  --font-size-13: 13px;
   --font-size-14: 14px;
   --font-size-16: 16px;
   --font-size-18: 18px;
@@ -99,6 +110,7 @@
   --font-weight-regular: 400;
   --font-weight-medium: 500;
   --font-line-height-16: 16px;
+  --font-line-height-18: 18px;
   --font-line-height-20: 20px;
   --font-line-height-24: 24px;
   --font-line-height-32: 32px;
@@ -118,14 +130,17 @@
   --text-tertiary: var(--gray-500); /* Completed / disabled text (crossed-out tasks). Not for essential info. */
   --text-on-accent: var(--base-white); /* Text and icons on accent/primary fills (buttons, badges). White in light, near-black in dark. */
   --border-control: var(--gray-400); /* Unchecked check circle */
-  --accent-primary: var(--blue-700); /* Buttons, active states, progress, mic */
-  --accent-primary-soft: var(--blue-200); /* Soft accent fills (avatars) */
-  --accent-primary-subtle: var(--blue-50); /* Very light accent tint — backgrounds of icons in circles, soft buttons, selected rows */
+  --accent-primary: var(--indigo-600); /* Buttons, active states, progress, mic */
+  --accent-primary-soft: var(--indigo-200); /* Soft accent fills (avatars) */
+  --accent-primary-subtle: var(--indigo-50); /* Very light accent tint — backgrounds of icons in circles, soft buttons, selected rows */
   --status-waiting-bg: var(--coral-50); /* Coral — background of things that need attention (overdue, needs check) */
   --status-waiting-dot: var(--coral-500); /* Status dot */
   --status-waiting-text: var(--coral-700); /* Coral text on white or waiting-bg (≈6:1) */
   --status-due-dot: var(--violet-600); /* Scheduled / due — calendar dots */
   --status-done-dot: var(--green-600); /* Completed — calendar dots */
+  --status-check-bg: var(--yellow-50); /* Boo is not sure — tap to check */
+  --status-check-text: var(--yellow-800); /* Boo is not sure — tap to check */
+  --status-check-border: var(--yellow-600); /* Boo is not sure — tap to check */
   --avatar-yellow: var(--yellow-300); /* Household member A */
   --ai-card-mint: var(--green-50); /* Assistant card gradient 1 */
   --ai-card-blue: var(--blue-50); /* Assistant card gradient 2 */
@@ -149,6 +164,7 @@
   --pet-slate: var(--gray-200); /* Pet colour — owner picks one per pet */
   --overlay-photo-clear: var(--alpha-ink-0); /* Top of the photo gradient */
   --overlay-photo-dark: var(--alpha-ink-55); /* Bottom of the photo gradient — keeps white text readable on photos */
+  --brand-logo-core: var(--blue-700); /* Core of the SmartBoo logo mark */
 }
 
 /* Colors — dark, following the phone */
@@ -167,14 +183,17 @@
     --text-tertiary: var(--gray-400); /* Completed / disabled text (crossed-out tasks). Not for essential info. */
     --text-on-accent: var(--gray-950); /* Text and icons on accent/primary fills (buttons, badges). White in light, near-black in dark. */
     --border-control: var(--gray-500); /* Unchecked check circle */
-    --accent-primary: var(--blue-500); /* Buttons, active states, progress, mic */
-    --accent-primary-soft: var(--blue-800); /* Soft accent fills (avatars) */
-    --accent-primary-subtle: var(--blue-900); /* Very light accent tint — backgrounds of icons in circles, soft buttons, selected rows */
+    --accent-primary: var(--indigo-400); /* Buttons, active states, progress, mic */
+    --accent-primary-soft: var(--indigo-800); /* Soft accent fills (avatars) */
+    --accent-primary-subtle: var(--indigo-900); /* Very light accent tint — backgrounds of icons in circles, soft buttons, selected rows */
     --status-waiting-bg: var(--coral-950); /* Coral — background of things that need attention (overdue, needs check) */
     --status-waiting-dot: var(--coral-400); /* Status dot */
     --status-waiting-text: var(--coral-300); /* Coral text on white or waiting-bg (≈6:1) */
     --status-due-dot: var(--violet-400); /* Scheduled / due — calendar dots */
     --status-done-dot: var(--green-400); /* Completed — calendar dots */
+    --status-check-bg: var(--yellow-950); /* Boo is not sure — tap to check */
+    --status-check-text: var(--yellow-300); /* Boo is not sure — tap to check */
+    --status-check-border: var(--yellow-500); /* Boo is not sure — tap to check */
     --avatar-yellow: var(--yellow-300); /* Household member A */
     --ai-card-mint: var(--green-950); /* Assistant card gradient 1 */
     --ai-card-blue: var(--blue-950); /* Assistant card gradient 2 */
@@ -198,6 +217,7 @@
     --pet-slate: var(--gray-200); /* Pet colour — owner picks one per pet */
     --overlay-photo-clear: var(--alpha-ink-0); /* Top of the photo gradient */
     --overlay-photo-dark: var(--alpha-ink-55); /* Bottom of the photo gradient — keeps white text readable on photos */
+    --brand-logo-core: var(--blue-700); /* Core of the SmartBoo logo mark */
   }
 }
 
@@ -216,14 +236,17 @@
   --text-tertiary: var(--gray-400); /* Completed / disabled text (crossed-out tasks). Not for essential info. */
   --text-on-accent: var(--gray-950); /* Text and icons on accent/primary fills (buttons, badges). White in light, near-black in dark. */
   --border-control: var(--gray-500); /* Unchecked check circle */
-  --accent-primary: var(--blue-500); /* Buttons, active states, progress, mic */
-  --accent-primary-soft: var(--blue-800); /* Soft accent fills (avatars) */
-  --accent-primary-subtle: var(--blue-900); /* Very light accent tint — backgrounds of icons in circles, soft buttons, selected rows */
+  --accent-primary: var(--indigo-400); /* Buttons, active states, progress, mic */
+  --accent-primary-soft: var(--indigo-800); /* Soft accent fills (avatars) */
+  --accent-primary-subtle: var(--indigo-900); /* Very light accent tint — backgrounds of icons in circles, soft buttons, selected rows */
   --status-waiting-bg: var(--coral-950); /* Coral — background of things that need attention (overdue, needs check) */
   --status-waiting-dot: var(--coral-400); /* Status dot */
   --status-waiting-text: var(--coral-300); /* Coral text on white or waiting-bg (≈6:1) */
   --status-due-dot: var(--violet-400); /* Scheduled / due — calendar dots */
   --status-done-dot: var(--green-400); /* Completed — calendar dots */
+  --status-check-bg: var(--yellow-950); /* Boo is not sure — tap to check */
+  --status-check-text: var(--yellow-300); /* Boo is not sure — tap to check */
+  --status-check-border: var(--yellow-500); /* Boo is not sure — tap to check */
   --avatar-yellow: var(--yellow-300); /* Household member A */
   --ai-card-mint: var(--green-950); /* Assistant card gradient 1 */
   --ai-card-blue: var(--blue-950); /* Assistant card gradient 2 */
@@ -247,4 +270,5 @@
   --pet-slate: var(--gray-200); /* Pet colour — owner picks one per pet */
   --overlay-photo-clear: var(--alpha-ink-0); /* Top of the photo gradient */
   --overlay-photo-dark: var(--alpha-ink-55); /* Bottom of the photo gradient — keeps white text readable on photos */
+  --brand-logo-core: var(--blue-700); /* Core of the SmartBoo logo mark */
 }
