@@ -1,33 +1,113 @@
 @import "tailwindcss";
 @import "./tokens.css";
-@import "./legacy-tokens.css";
 
-/* Map tokens to Tailwind utilities: bg-surface, text-ink, rounded-md, font-display… */
+/*
+ * Tailwind takes every value from the Figma tokens in tokens.css. Its own palette, spacing scale,
+ * radii and font sizes are switched off, so only these utilities exist. Names are the Figma names:
+ *   colors   bg-surface-card, text-text-primary, ring-border-control, bg-status-waiting-bg…
+ *   spacing  p-16, gap-8, mt-24 (space/*); sizes size-control-44, size-icon-24 (size/*)
+ *   radii    rounded-8, rounded-16, rounded-24, rounded-full (radius/*)
+ *   type     text-caption … text-display (Figma text styles), font-regular / font-medium
+ */
 @theme inline {
-  --color-bg: var(--bg);
-  --color-surface: var(--surface);
-  --color-ink: var(--ink);
-  --color-ink-2: var(--ink-2);
-  --color-ink-3: var(--ink-3);
-  --color-line: var(--line);
-  --color-accent: var(--accent);
-  --color-accent-soft: var(--accent-soft);
-  --color-on-accent: var(--on-accent);
-  --color-warn: var(--warn);
-  --color-warn-soft: var(--warn-soft);
-  --color-bar: var(--bar);
-  --color-on-bar: var(--on-bar);
-  --color-scrim: var(--scrim);
+  --color-*: initial;
+  --color-surface-canvas: var(--surface-canvas);
+  --color-surface-card: var(--surface-card);
+  --color-surface-subtle: var(--surface-subtle);
+  --color-surface-nav: var(--surface-nav);
+  --color-surface-scrim: var(--surface-scrim);
+  --color-surface-canvas-clear: var(--surface-canvas-clear);
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-tertiary: var(--text-tertiary);
+  --color-text-on-dark: var(--text-on-dark);
+  --color-text-on-dark-muted: var(--text-on-dark-muted);
+  --color-text-on-accent: var(--text-on-accent);
+  --color-border-control: var(--border-control);
+  --color-accent-primary: var(--accent-primary);
+  --color-accent-primary-soft: var(--accent-primary-soft);
+  --color-accent-primary-subtle: var(--accent-primary-subtle);
+  --color-status-waiting-bg: var(--status-waiting-bg);
+  --color-status-waiting-dot: var(--status-waiting-dot);
+  --color-status-waiting-text: var(--status-waiting-text);
+  --color-status-check-bg: var(--status-check-bg);
+  --color-status-check-text: var(--status-check-text);
+  --color-status-check-border: var(--status-check-border);
+  --color-status-due-dot: var(--status-due-dot);
+  --color-status-done-dot: var(--status-done-dot);
+  --color-nav-active-label: var(--nav-active-label);
+  --color-nav-active-ring: var(--nav-active-ring);
+  --color-icon-circle-ring: var(--icon-circle-ring);
+  --color-avatar-yellow: var(--avatar-yellow);
+  --color-pet-lavender: var(--pet-lavender);
+  --color-pet-mint: var(--pet-mint);
+  --color-pet-pink: var(--pet-pink);
+  --color-pet-butter: var(--pet-butter);
+  --color-pet-ocean: var(--pet-ocean);
+  --color-pet-slate: var(--pet-slate);
 
-  --spacing: var(--space);
-  --spacing-gutter: var(--gutter);
+  --spacing-*: initial;
+  --spacing: initial;
+  --spacing-0: var(--space-0);
+  --spacing-2: var(--space-2);
+  --spacing-4: var(--space-4);
+  --spacing-8: var(--space-8);
+  --spacing-12: var(--space-12);
+  --spacing-16: var(--space-16);
+  --spacing-24: var(--space-24);
+  --spacing-32: var(--space-32);
+  --spacing-48: var(--space-48);
+  --spacing-icon-16: var(--size-icon-16);
+  --spacing-icon-20: var(--size-icon-20);
+  --spacing-icon-24: var(--size-icon-24);
+  --spacing-control-32: var(--size-control-32);
+  --spacing-control-40: var(--size-control-40);
+  --spacing-control-44: var(--size-control-44);
+  --spacing-control-56: var(--size-control-56);
+  --spacing-control-64: var(--size-control-64);
 
-  --radius-sm: var(--round-sm);
-  --radius-md: var(--round-md);
-  --radius-lg: var(--round-lg);
+  --radius-*: initial;
+  --radius-8: var(--radius-8);
+  --radius-16: var(--radius-16);
+  --radius-24: var(--radius-24);
+  --radius-full: var(--radius-full);
 
-  --font-display: var(--type-display);
-  --font-sans: var(--type-text);
+  --font-*: initial;
+  --font-display: var(--font-family-display);
+  --font-sans: var(--font-family-text);
+
+  --font-weight-*: initial;
+  --font-weight-regular: var(--font-weight-regular);
+  --font-weight-medium: var(--font-weight-medium);
+
+  --leading-*: initial;
+  --leading-16: var(--font-line-height-16);
+  --leading-18: var(--font-line-height-18);
+  --leading-20: var(--font-line-height-20);
+  --leading-24: var(--font-line-height-24);
+  --leading-32: var(--font-line-height-32);
+  --leading-40: var(--font-line-height-40);
+
+  /* Figma text styles (SB/*). Letter spacing is not a Figma Variable yet, so it comes from the styles. */
+  --text-*: initial;
+  --text-caption: var(--font-size-13);
+  --text-caption--line-height: var(--font-line-height-18);
+  --text-caption--letter-spacing: 0px;
+  --text-body-s: var(--font-size-14);
+  --text-body-s--line-height: var(--font-line-height-20);
+  --text-body-s--letter-spacing: -0.15px;
+  --text-body: var(--font-size-16);
+  --text-body--line-height: var(--font-line-height-20);
+  --text-body--letter-spacing: -0.31px;
+  --text-body-l: var(--font-size-18);
+  --text-body-l--line-height: var(--font-line-height-24);
+  --text-body-l--letter-spacing: -0.44px;
+  --text-title: var(--font-size-24);
+  --text-title--line-height: var(--font-line-height-32);
+  --text-title--letter-spacing: 0.07px;
+  --text-display: var(--font-size-36);
+  --text-display--line-height: var(--font-line-height-40);
+  --text-display--letter-spacing: 0.37px;
 }
 
 html,
@@ -38,9 +118,11 @@ body,
 
 body {
   margin: 0;
-  background: var(--bg);
-  color: var(--ink);
-  font-family: var(--type-text);
+  background: var(--surface-canvas);
+  color: var(--text-primary);
+  font-family: var(--font-family-text);
+  font-size: var(--font-size-16);
+  line-height: var(--font-line-height-20);
   -webkit-font-smoothing: antialiased;
   -webkit-tap-highlight-color: transparent;
   -webkit-text-size-adjust: 100%;
@@ -77,10 +159,10 @@ button {
 
 /* Safe areas: content never sits under the notch or the home indicator */
 .pt-safe {
-  padding-top: max(env(safe-area-inset-top), 12px);
+  padding-top: max(env(safe-area-inset-top), var(--space-12));
 }
 .pb-safe {
-  padding-bottom: max(env(safe-area-inset-bottom), 12px);
+  padding-bottom: max(env(safe-area-inset-bottom), var(--space-12));
 }
 
 /* Status bar backdrop: scrolled content slides under it, not under the clock.
@@ -90,7 +172,7 @@ body::before {
   position: fixed;
   inset: 0 0 auto;
   height: env(safe-area-inset-top);
-  background: var(--bg);
+  background: var(--surface-canvas);
   z-index: 20;
   pointer-events: none;
 }

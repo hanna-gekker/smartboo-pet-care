@@ -17,14 +17,14 @@ export function TaskRow({ task, pet, onToggle, showDate }: { task: Task; pet?: P
   }
 
   return (
-    <div className="flex items-center gap-3 py-2">
+    <div className="flex items-center gap-12 py-8">
       <PetAvatar pet={pet} size={40} />
       <div className={`min-w-0 flex-1 ${done ? 'opacity-50' : ''}`}>
-        <p className={`truncate text-[15px] font-medium ${done ? 'line-through' : ''}`}>
+        <p className={`truncate text-body font-medium ${done ? 'line-through' : ''}`}>
           {task.title}
-          {task.detail && <span className="font-normal text-ink-2"> · {task.detail}</span>}
+          {task.detail && <span className="font-regular text-text-secondary"> · {task.detail}</span>}
         </p>
-        <p className={`truncate text-[13px] ${overdue ? 'font-medium text-warn' : 'text-ink-2'}`}>
+        <p className={`truncate text-body-s ${overdue ? 'font-medium text-status-waiting-text' : 'text-text-secondary'}`}>
           {pet?.name}
           {when && ` · ${when}`}
         </p>
@@ -35,9 +35,9 @@ export function TaskRow({ task, pet, onToggle, showDate }: { task: Task; pet?: P
         aria-checked={done}
         aria-label={done ? `Undo: ${task.title}` : `Mark done: ${task.title}`}
         onClick={onToggle}
-        className="press -mr-1.5 flex size-11 shrink-0 items-center justify-center"
+        className="press -mr-4 flex size-control-44 shrink-0 items-center justify-center"
       >
-        <span className={`flex size-7 items-center justify-center rounded-full ${done ? 'bg-accent text-on-accent' : overdue ? 'ring-2 ring-warn' : 'ring-2 ring-line'}`}>
+        <span className={`flex size-[28px] items-center justify-center rounded-full ${done ? 'bg-accent-primary text-text-on-accent' : overdue ? 'ring-2 ring-status-waiting-text' : 'ring-2 ring-border-control'}`}>
           {done && <Icon name="check" size={16} />}
         </span>
       </button>

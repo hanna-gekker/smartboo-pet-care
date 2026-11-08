@@ -28,10 +28,10 @@ export function Share() {
 
   return (
     <StackScreen title={step === 1 ? 'Share records' : step === 2 ? 'Which pets?' : 'Preview'} withTabBar={false}>
-      <p className="mt-1 text-[13px] font-medium text-ink-2">Step {step} of 3</p>
+      <p className="mt-4 text-body-s font-medium text-text-secondary">Step {step} of 3</p>
 
       {step === 1 && (
-        <div className="mt-4 flex flex-col gap-2">
+        <div className="mt-16 flex flex-col gap-8">
           {SETS.map((s) => (
             <Card
               key={s.key}
@@ -39,16 +39,16 @@ export function Share() {
                 setSet(s.key)
                 setStep(chosen.length ? 3 : 2)
               }}
-              className="flex items-center gap-3"
+              className="flex items-center gap-12"
             >
-              <span className="text-[28px]" aria-hidden="true">
+              <span className="text-display" aria-hidden="true">
                 {s.emoji}
               </span>
               <span className="flex-1">
-                <span className="block text-[16px] font-semibold">{s.title}</span>
-                <span className="block text-[14px] text-ink-2">{s.what}</span>
+                <span className="block text-body font-medium">{s.title}</span>
+                <span className="block text-body-s text-text-secondary">{s.what}</span>
               </span>
-              <Icon name="chevron" size={20} className="text-ink-3" />
+              <Icon name="chevron" size={20} className="text-text-tertiary" />
             </Card>
           ))}
         </div>
@@ -56,7 +56,7 @@ export function Share() {
 
       {step === 2 && (
         <>
-          <div className="mt-4 flex flex-col gap-2">
+          <div className="mt-16 flex flex-col gap-8">
             {app.pets.map((p) => {
               const on = chosen.includes(p.id)
               return (
@@ -66,16 +66,16 @@ export function Share() {
                   role="checkbox"
                   aria-checked={on}
                   onClick={() => toggle(p.id)}
-                  className={`press flex min-h-16 items-center gap-3 rounded-md bg-surface p-3 ring-1 ${on ? 'ring-2 ring-accent' : 'ring-line'}`}
+                  className={`press flex min-h-control-64 items-center gap-12 rounded-24 bg-surface-card p-12 ring-1 ${on ? 'ring-2 ring-accent-primary' : 'ring-surface-subtle'}`}
                 >
                   <PetAvatar pet={p} size={44} />
-                  <span className="flex-1 text-left text-[16px] font-semibold">{p.name}</span>
-                  <span className={`flex size-7 items-center justify-center rounded-full ${on ? 'bg-accent text-on-accent' : 'ring-2 ring-line'}`}>{on && <Icon name="check" size={16} />}</span>
+                  <span className="flex-1 text-left text-body font-medium">{p.name}</span>
+                  <span className={`flex size-[28px] items-center justify-center rounded-full ${on ? 'bg-accent-primary text-text-on-accent' : 'ring-2 ring-surface-subtle'}`}>{on && <Icon name="check" size={16} />}</span>
                 </button>
               )
             })}
           </div>
-          <div className="mt-6">
+          <div className="mt-24">
             <Button full disabled={!chosen.length} onClick={() => setStep(3)}>
               Preview PDF
             </Button>
@@ -86,9 +86,9 @@ export function Share() {
       {step === 3 && (
         <>
           {/* A preview of the PDF. On the phone the PDF is generated with jsPDF and handed to the iOS share sheet. */}
-          <div className="mt-4 rounded-sm bg-surface p-5 text-[13px] shadow-[0_4px_24px_-8px_var(--scrim)] ring-1 ring-line">
-            <p className="text-[11px] font-semibold tracking-wide text-accent uppercase">SmartBoo · {setInfo.title}</p>
-            <p className="text-[11px] text-ink-3">Prepared {formatDay(today(), { month: 'long', day: 'numeric', year: 'numeric' })}</p>
+          <div className="mt-16 rounded-16 bg-surface-card p-16 text-body-s shadow-[0_4px_24px_-8px_var(--surface-scrim)] ring-1 ring-surface-subtle">
+            <p className="text-caption font-medium text-accent-primary uppercase">SmartBoo · {setInfo.title}</p>
+            <p className="text-caption text-text-tertiary">Prepared {formatDay(today(), { month: 'long', day: 'numeric', year: 'numeric' })}</p>
             {chosen.map((id) => {
               const p = app.pets.find((x) => x.id === id)
               if (!p) return null
@@ -97,9 +97,9 @@ export function Share() {
               const weight = app.records.filter((r) => r.petId === id && r.type === 'weight').sort((a, b) => b.date.localeCompare(a.date))[0]
               const symptoms = app.records.filter((r) => r.petId === id && r.type === 'health' && r.date >= addDays(today(), -14))
               return (
-                <div key={id} className="mt-4 border-t border-line pt-3">
-                  <p className="font-display text-[16px] font-bold">{p.name}</p>
-                  <p className="text-ink-2">{[p.species, p.breed, age(p.birthDate), p.microchip && `Chip ${p.microchip}`].filter(Boolean).join(' · ')}</p>
+                <div key={id} className="mt-16 border-t border-surface-subtle pt-12">
+                  <p className="font-display text-body font-medium">{p.name}</p>
+                  <p className="text-text-secondary">{[p.species, p.breed, age(p.birthDate), p.microchip && `Chip ${p.microchip}`].filter(Boolean).join(' · ')}</p>
                   {set !== 'emergency' && (
                     <PdfBlock title="Vaccines">{vax.length ? vax.map((v) => `${v.name} — given ${formatDay(v.given)}${v.due ? `, due ${formatDay(v.due, { month: 'short', day: 'numeric', year: 'numeric' })}` : ''}`) : ['No vaccine records']}</PdfBlock>
                   )}
@@ -112,7 +112,7 @@ export function Share() {
               )
             })}
           </div>
-          <div className="mt-6">
+          <div className="mt-24">
             <Button
               full
               icon="share"
@@ -140,8 +140,8 @@ export function Share() {
 
 function PdfBlock({ title, children }: { title: string; children: string[] }) {
   return (
-    <div className="mt-2">
-      <p className="text-[11px] font-semibold text-ink-2 uppercase">{title}</p>
+    <div className="mt-8">
+      <p className="text-caption font-medium text-text-secondary uppercase">{title}</p>
       {children.map((line) => (
         <p key={line}>{line}</p>
       ))}

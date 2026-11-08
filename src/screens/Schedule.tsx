@@ -25,9 +25,9 @@ export function Schedule() {
 
   const section = (title: string, list: Task[], showDate = false) =>
     list.length > 0 && (
-      <section className="mt-6">
-        <h2 className="mb-2 text-[13px] font-semibold tracking-wide text-ink-2 uppercase">{title}</h2>
-        <Card className="!py-1">
+      <section className="mt-24">
+        <h2 className="mb-8 text-body-s font-medium text-text-secondary uppercase">{title}</h2>
+        <Card className="!py-4">
           {list.map((x) => (
             <TaskRow key={x.id} task={x} pet={petById(pets, x.petId)} onToggle={() => toggleTask(x.id)} showDate={showDate} />
           ))}
@@ -36,25 +36,25 @@ export function Schedule() {
     )
 
   return (
-    <div className="pt-safe min-h-dvh px-gutter pb-36">
-      <header className="flex min-h-12 items-center justify-between">
-        <h1 className="font-display text-[28px] font-bold">Schedule</h1>
+    <div className="pt-safe min-h-dvh px-16 pb-[144px]">
+      <header className="flex min-h-[48px] items-center justify-between">
+        <h1 className="font-display text-display font-medium">Schedule</h1>
         {!isToday && (
-          <button type="button" onClick={() => setSelected(t)} className="press min-h-11 rounded-full px-3 text-[15px] font-medium text-accent">
+          <button type="button" onClick={() => setSelected(t)} className="press min-h-control-44 rounded-full px-12 text-body font-medium text-accent-primary">
             Today
           </button>
         )}
       </header>
 
       {/* Week strip */}
-      <div className="mt-3 flex items-center justify-between">
-        <p className="text-[15px] font-medium">{fromDay(week[0]).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</p>
-        <div className="-mr-2 flex">
+      <div className="mt-12 flex items-center justify-between">
+        <p className="text-body font-medium">{fromDay(week[0]).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</p>
+        <div className="-mr-8 flex">
           <IconButton icon="back" label="Previous week" onClick={() => setSelected(addDays(selected, -7))} />
           <IconButton icon="chevron" label="Next week" onClick={() => setSelected(addDays(selected, 7))} />
         </div>
       </div>
-      <div role="tablist" aria-label="Days" className="mt-1 grid grid-cols-7">
+      <div role="tablist" aria-label="Days" className="mt-4 grid grid-cols-7">
         {week.map((day) => {
           const active = day === selected
           return (
@@ -64,17 +64,17 @@ export function Schedule() {
               role="tab"
               aria-selected={active}
               onClick={() => setSelected(day)}
-              className={`press flex min-h-16 flex-col items-center justify-center gap-0.5 rounded-sm ${active ? 'bg-bar text-on-bar' : day === t ? 'text-accent' : ''}`}
+              className={`press flex min-h-control-64 flex-col items-center justify-center gap-2 rounded-16 ${active ? 'bg-surface-nav text-text-on-dark' : day === t ? 'text-accent-primary' : ''}`}
             >
-              <span className={`text-[11px] font-medium ${active ? '' : 'text-ink-2'}`}>{formatDay(day, { weekday: 'narrow' })}</span>
-              <span className="font-display text-[17px] font-semibold">{fromDay(day).getDate()}</span>
-              <span className={`size-1.5 rounded-full ${hasTasks(day) ? (active ? 'bg-on-bar' : 'bg-warn') : 'bg-transparent'}`} />
+              <span className={`text-caption font-medium ${active ? '' : 'text-text-secondary'}`}>{formatDay(day, { weekday: 'narrow' })}</span>
+              <span className="font-display text-body-l font-medium">{fromDay(day).getDate()}</span>
+              <span className={`size-[6px] rounded-full ${hasTasks(day) ? (active ? 'bg-text-on-dark' : 'bg-status-waiting-dot') : 'bg-transparent'}`} />
             </button>
           )
         })}
       </div>
 
-      {!isToday && <p className="mt-6 font-display text-[20px] font-semibold">{formatDay(selected, { weekday: 'long', month: 'long', day: 'numeric' })}</p>}
+      {!isToday && <p className="mt-24 font-display text-title font-medium">{formatDay(selected, { weekday: 'long', month: 'long', day: 'numeric' })}</p>}
 
       {section(isToday ? 'Due today' : isPast ? 'Not done' : 'Due', due)}
       {section(isToday ? 'Done today' : 'Done', done)}
@@ -82,9 +82,9 @@ export function Schedule() {
       {section('Later this week', later, true)}
 
       {onDay.length === 0 && tomorrow.length === 0 && later.length === 0 && (
-        <div className="mt-12 flex flex-col items-center text-center text-ink-2">
+        <div className="mt-48 flex flex-col items-center text-center text-text-secondary">
           <Icon name="schedule" size={32} />
-          <p className="mt-2 text-[15px]">{isPast ? 'Nothing was logged that day.' : 'Nothing planned for this day.'}</p>
+          <p className="mt-8 text-body">{isPast ? 'Nothing was logged that day.' : 'Nothing planned for this day.'}</p>
         </div>
       )}
     </div>

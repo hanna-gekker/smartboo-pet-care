@@ -44,11 +44,11 @@ export function PetForm() {
           e.preventDefault()
           save()
         }}
-        className="mt-4 flex flex-col gap-2"
+        className="mt-16 flex flex-col gap-8"
       >
-        <button type="button" onClick={() => photoInput.current?.click()} className="press mx-auto mb-2 flex flex-col items-center gap-2">
+        <button type="button" onClick={() => photoInput.current?.click()} className="press mx-auto mb-8 flex flex-col items-center gap-8">
           <PetAvatar pet={pet.name ? pet : undefined} size={96} />
-          <span className="text-[14px] font-medium text-accent">{pet.photo ? 'Change photo' : 'Add a photo'}</span>
+          <span className="text-body-s font-medium text-accent-primary">{pet.photo ? 'Change photo' : 'Add a photo'}</span>
         </button>
         <input
           ref={photoInput}
@@ -100,12 +100,12 @@ export function PetForm() {
           </>
         )}
 
-        <div className="mt-4">
+        <div className="mt-16">
           <Button type="submit" full disabled={!pet.name.trim()}>
             {existing ? 'Save' : `Add ${pet.name.trim() || 'pet'}`}
           </Button>
         </div>
-        {!existing && <p className="text-center text-[13px] text-ink-2">Papers can come later — just hand them to Boo.</p>}
+        {!existing && <p className="text-center text-body-s text-text-secondary">Papers can come later — just hand them to Boo.</p>}
       </form>
     </StackScreen>
   )

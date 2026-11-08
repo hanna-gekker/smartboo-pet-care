@@ -31,32 +31,32 @@ export function Today() {
   const nextBig = important.find((x) => x.date > t)
 
   return (
-    <div className="pt-safe min-h-dvh px-gutter pb-36">
-      <header className="flex min-h-12 items-center justify-between">
+    <div className="pt-safe min-h-dvh px-16 pb-[144px]">
+      <header className="flex min-h-[48px] items-center justify-between">
         <div>
-          <p className="text-[13px] font-medium text-ink-2">{formatDay(t, { weekday: 'long', month: 'long', day: 'numeric' })}</p>
-          <h1 className="font-display text-[28px] font-bold">{greeting()}</h1>
+          <p className="text-body-s font-medium text-text-secondary">{formatDay(t, { weekday: 'long', month: 'long', day: 'numeric' })}</p>
+          <h1 className="font-display text-display font-medium">{greeting()}</h1>
         </div>
-        <div className="-mr-2 flex">
+        <div className="-mr-8 flex">
           <IconButton icon="share" label="Share records" onClick={() => navigate('/share')} />
           <IconButton icon="gear" label="Settings" onClick={() => navigate('/settings')} />
         </div>
       </header>
 
       {/* Boo card */}
-      <div className="mt-4 rounded-lg bg-accent-soft p-4">
-        <div className="flex items-center gap-2 text-accent">
+      <div className="mt-16 rounded-24 bg-accent-primary-subtle p-16">
+        <div className="flex items-center gap-8 text-accent-primary">
           <BooFace size={22} />
-          <p className="text-[14px] font-semibold">Tell Boo what happened</p>
+          <p className="text-body-s font-medium">Tell Boo what happened</p>
         </div>
-        <div className="mt-3 flex items-center gap-2">
-          <button type="button" onClick={() => openBoo('type')} className="press min-h-12 flex-1 rounded-full bg-surface px-4 text-left text-[15px] text-ink-3">
+        <div className="mt-12 flex items-center gap-8">
+          <button type="button" onClick={() => openBoo('type')} className="press min-h-[48px] flex-1 rounded-full bg-surface-card px-16 text-left text-body text-text-tertiary">
             “Rocky threw up”
           </button>
-          <button type="button" aria-label="Talk to Boo" onClick={() => openBoo('talk')} className="press flex size-12 items-center justify-center rounded-full bg-accent text-on-accent">
+          <button type="button" aria-label="Talk to Boo" onClick={() => openBoo('talk')} className="press flex size-[48px] items-center justify-center rounded-full bg-accent-primary text-text-on-accent">
             <Icon name="mic" size={22} />
           </button>
-          <button type="button" aria-label="Snap a vet paper" onClick={() => openBoo('snap')} className="press flex size-12 items-center justify-center rounded-full bg-surface text-accent">
+          <button type="button" aria-label="Snap a vet paper" onClick={() => openBoo('snap')} className="press flex size-[48px] items-center justify-center rounded-full bg-surface-card text-accent-primary">
             <Icon name="camera" size={22} />
           </button>
         </div>
@@ -67,12 +67,12 @@ export function Today() {
           <SectionTitle>Next up</SectionTitle>
           <Card>
             <TaskRow task={nextUp} pet={petById(pets, nextUp.petId)} onToggle={() => toggleTask(nextUp.id)} showDate={nextUp.date !== t} />
-            <div className="mt-2 flex gap-2">
+            <div className="mt-8 flex gap-8">
               <Button variant="dark" icon="check" onClick={() => toggleTask(nextUp.id)} className="flex-1">
                 Done
               </Button>
               {petById(pets, nextUp.petId)?.vet && (
-                <a href={`tel:${petById(pets, nextUp.petId)!.vet!.phone}`} className="press inline-flex min-h-12 flex-1 items-center justify-center gap-2 rounded-full bg-accent-soft text-[15px] font-semibold text-accent">
+                <a href={`tel:${petById(pets, nextUp.petId)!.vet!.phone}`} className="press inline-flex min-h-[48px] flex-1 items-center justify-center gap-8 rounded-full bg-accent-primary-subtle text-body font-medium text-accent-primary">
                   <Icon name="phone" size={20} />
                   Book vet
                 </a>
@@ -81,22 +81,22 @@ export function Today() {
           </Card>
         </>
       ) : (
-        <Card className="mt-7">
-          <p className="font-display text-[20px] font-semibold">All good.</p>
-          <p className="mt-1 text-[15px] text-ink-2">{nextBig ? `Next: ${petById(pets, nextBig.petId)?.name}'s ${nextBig.title.toLowerCase()} ${relative(nextBig.date)}.` : 'Nothing due soon.'}</p>
+        <Card className="mt-24">
+          <p className="font-display text-title font-medium">All good.</p>
+          <p className="mt-4 text-body text-text-secondary">{nextBig ? `Next: ${petById(pets, nextBig.petId)?.name}'s ${nextBig.title.toLowerCase()} ${relative(nextBig.date)}.` : 'Nothing due soon.'}</p>
         </Card>
       )}
 
       {showGap && gapPet && (
-        <div className="mt-3 flex items-start gap-3 rounded-md bg-surface p-4 ring-1 ring-line">
+        <div className="mt-12 flex items-start gap-12 rounded-24 bg-surface-card p-16 ring-1 ring-surface-subtle">
           <PetAvatar pet={gapPet} size={36} />
           <div className="flex-1">
-            <p className="text-[14px]">I don’t know {gapPet.name}’s shots yet. Snap the last vet paper?</p>
-            <div className="mt-1 -ml-2 flex">
-              <button type="button" onClick={() => openBoo('snap')} className="press min-h-11 px-2 text-[14px] font-semibold text-accent">
+            <p className="text-body-s">I don’t know {gapPet.name}’s shots yet. Snap the last vet paper?</p>
+            <div className="mt-4 -ml-8 flex">
+              <button type="button" onClick={() => openBoo('snap')} className="press min-h-control-44 px-8 text-body-s font-medium text-accent-primary">
                 Snap it
               </button>
-              <button type="button" onClick={() => updateSettings({ gapHintHiddenUntil: addDays(t, 7) })} className="press min-h-11 px-2 text-[14px] text-ink-2">
+              <button type="button" onClick={() => updateSettings({ gapHintHiddenUntil: addDays(t, 7) })} className="press min-h-control-44 px-8 text-body-s text-text-secondary">
                 Not now
               </button>
             </div>
@@ -107,7 +107,7 @@ export function Today() {
       {comingUp.length > 0 && (
         <>
           <SectionTitle action={<TextLink onClick={() => navigate('/schedule')}>See schedule</TextLink>}>Coming up</SectionTitle>
-          <Card className="!py-1">
+          <Card className="!py-4">
             {comingUp.map((x) => (
               <TaskRow key={x.id} task={x} pet={petById(pets, x.petId)} onToggle={() => toggleTask(x.id)} showDate={x.date !== t} />
             ))}
@@ -116,28 +116,28 @@ export function Today() {
       )}
 
       <SectionTitle action={<TextLink onClick={() => navigate('/pets')}>All pets</TextLink>}>Your pack</SectionTitle>
-      <div className="swipe-row -mx-gutter flex gap-4 px-gutter pb-1">
+      <div className="swipe-row -mx-16 flex gap-16 px-16 pb-4">
         {pets.map((p) => (
-          <button key={p.id} type="button" onClick={() => navigate(`/pets/${p.id}`)} className="press flex w-16 shrink-0 flex-col items-center gap-1.5">
+          <button key={p.id} type="button" onClick={() => navigate(`/pets/${p.id}`)} className="press flex w-control-64 shrink-0 flex-col items-center gap-4">
             <PetAvatar pet={p} size={64} dot={dueSoon.has(p.id)} />
-            <span className="w-full truncate text-center text-[13px] font-medium">{p.name}</span>
+            <span className="w-full truncate text-center text-body-s font-medium">{p.name}</span>
           </button>
         ))}
-        <button type="button" onClick={() => navigate('/pets/new')} className="press flex w-16 shrink-0 flex-col items-center gap-1.5">
-          <span className="flex size-16 items-center justify-center rounded-full text-ink-2 ring-1 ring-line">
+        <button type="button" onClick={() => navigate('/pets/new')} className="press flex w-control-64 shrink-0 flex-col items-center gap-4">
+          <span className="flex size-control-64 items-center justify-center rounded-full text-text-secondary ring-1 ring-surface-subtle">
             <Icon name="plus" />
           </span>
-          <span className="text-[13px] text-ink-2">Add</span>
+          <span className="text-body-s text-text-secondary">Add</span>
         </button>
       </div>
 
       {doneToday.length > 0 && (
-        <details className="mt-7">
-          <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between text-[15px] font-medium text-ink-2">
+        <details className="mt-24">
+          <summary className="flex min-h-control-44 cursor-pointer list-none items-center justify-between text-body font-medium text-text-secondary">
             Done today · {doneToday.length}
             <Icon name="chevron" size={18} />
           </summary>
-          <Card className="!py-1">
+          <Card className="!py-4">
             {doneToday.map((x) => (
               <TaskRow key={x.id} task={x} pet={petById(pets, x.petId)} onToggle={() => toggleTask(x.id)} />
             ))}
