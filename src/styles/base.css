@@ -83,6 +83,18 @@ button {
   padding-bottom: max(env(safe-area-inset-bottom), 12px);
 }
 
+/* Status bar backdrop: scrolled content slides under it, not under the clock.
+   Below the tab bar (z-30) and bottom sheets (z-40), so a sheet's scrim dims it too. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0 0 auto;
+  height: env(safe-area-inset-top);
+  background: var(--bg);
+  z-index: 20;
+  pointer-events: none;
+}
+
 /* Pressed state instead of hover */
 .press {
   transition: transform 120ms ease, opacity 120ms ease;
