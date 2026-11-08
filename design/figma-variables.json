@@ -264,17 +264,17 @@
       "accent": {
         "primary": {
           "$type": "color",
-          "$value": "{blue.700}",
+          "$value": "{indigo.600}",
           "$description": "Buttons, active states, progress, mic"
         },
         "primary-soft": {
           "$type": "color",
-          "$value": "{blue.200}",
+          "$value": "{indigo.200}",
           "$description": "Soft accent fills (avatars)"
         },
         "primary-subtle": {
           "$type": "color",
-          "$value": "{blue.50}",
+          "$value": "{indigo.50}",
           "$description": "Very light accent tint — backgrounds of icons in circles, soft buttons, selected rows"
         }
       },
@@ -303,6 +303,21 @@
           "$type": "color",
           "$value": "{green.600}",
           "$description": "Completed — calendar dots"
+        },
+        "check-bg": {
+          "$type": "color",
+          "$value": "{yellow.50}",
+          "$description": "Boo is not sure — tap to check"
+        },
+        "check-text": {
+          "$type": "color",
+          "$value": "{yellow.800}",
+          "$description": "Boo is not sure — tap to check"
+        },
+        "check-border": {
+          "$type": "color",
+          "$value": "{yellow.600}",
+          "$description": "Boo is not sure — tap to check"
         }
       },
       "avatar": {
@@ -427,6 +442,32 @@
           "$value": "{alpha.ink-55}",
           "$description": "Bottom of the photo gradient — keeps white text readable on photos"
         }
+      },
+      "brand": {
+        "logo-core": {
+          "$type": "color",
+          "$value": "{blue.700}",
+          "$description": "Core of the SmartBoo logo mark"
+        }
+      },
+      "nav": {
+        "active-label": {
+          "$type": "color",
+          "$value": "{indigo.600}",
+          "$description": "Icon and label of the active tab (indigo in light, light grey in dark)"
+        },
+        "active-ring": {
+          "$type": "color",
+          "$value": "{base.white}",
+          "$description": "Ring of the active tab pill (invisible in light, soft grey in dark)"
+        }
+      },
+      "icon": {
+        "circle-ring": {
+          "$type": "color",
+          "$value": "{indigo.50}",
+          "$description": "Ring around soft icon circles (invisible in light, soft indigo in dark)"
+        }
       }
     },
     "Dark": {
@@ -503,17 +544,17 @@
       "accent": {
         "primary": {
           "$type": "color",
-          "$value": "{blue.500}",
+          "$value": "{indigo.400}",
           "$description": "Buttons, active states, progress, mic"
         },
         "primary-soft": {
           "$type": "color",
-          "$value": "{blue.800}",
+          "$value": "{indigo.800}",
           "$description": "Soft accent fills (avatars)"
         },
         "primary-subtle": {
           "$type": "color",
-          "$value": "{blue.900}",
+          "$value": "{indigo.900}",
           "$description": "Very light accent tint — backgrounds of icons in circles, soft buttons, selected rows"
         }
       },
@@ -542,6 +583,21 @@
           "$type": "color",
           "$value": "{green.400}",
           "$description": "Completed — calendar dots"
+        },
+        "check-bg": {
+          "$type": "color",
+          "$value": "{yellow.950}",
+          "$description": "Boo is not sure — tap to check"
+        },
+        "check-text": {
+          "$type": "color",
+          "$value": "{yellow.300}",
+          "$description": "Boo is not sure — tap to check"
+        },
+        "check-border": {
+          "$type": "color",
+          "$value": "{yellow.500}",
+          "$description": "Boo is not sure — tap to check"
         }
       },
       "avatar": {
@@ -665,6 +721,32 @@
           "$type": "color",
           "$value": "{alpha.ink-55}",
           "$description": "Bottom of the photo gradient — keeps white text readable on photos"
+        }
+      },
+      "brand": {
+        "logo-core": {
+          "$type": "color",
+          "$value": "{blue.700}",
+          "$description": "Core of the SmartBoo logo mark"
+        }
+      },
+      "nav": {
+        "active-label": {
+          "$type": "color",
+          "$value": "{gray.100}",
+          "$description": "Icon and label of the active tab (indigo in light, light grey in dark)"
+        },
+        "active-ring": {
+          "$type": "color",
+          "$value": "{gray.500}",
+          "$description": "Ring of the active tab pill (invisible in light, soft grey in dark)"
+        }
+      },
+      "icon": {
+        "circle-ring": {
+          "$type": "color",
+          "$value": "{indigo.800}",
+          "$description": "Ring around soft icon circles (invisible in light, soft indigo in dark)"
         }
       }
     }
@@ -798,6 +880,10 @@
             "$type": "dimension",
             "$value": "12px"
           },
+          "13": {
+            "$type": "dimension",
+            "$value": "13px"
+          },
           "14": {
             "$type": "dimension",
             "$value": "14px"
@@ -833,6 +919,10 @@
           "16": {
             "$type": "dimension",
             "$value": "16px"
+          },
+          "18": {
+            "$type": "dimension",
+            "$value": "18px"
           },
           "20": {
             "$type": "dimension",
@@ -963,9 +1053,29 @@
         }
       },
       "indigo": {
+        "50": {
+          "$type": "color",
+          "$value": "#ECEEFB"
+        },
+        "200": {
+          "$type": "color",
+          "$value": "#C9CEF6"
+        },
+        "400": {
+          "$type": "color",
+          "$value": "#8F98F5"
+        },
         "600": {
           "$type": "color",
           "$value": "#4F62CC"
+        },
+        "800": {
+          "$type": "color",
+          "$value": "#353B7A"
+        },
+        "900": {
+          "$type": "color",
+          "$value": "#23264A"
         }
       },
       "violet": {
@@ -1065,6 +1175,10 @@
         }
       },
       "yellow": {
+        "50": {
+          "$type": "color",
+          "$value": "#FDF6D8"
+        },
         "200": {
           "$type": "color",
           "$value": "#F7DD86"
@@ -1072,6 +1186,22 @@
         "300": {
           "$type": "color",
           "$value": "#FFE14D"
+        },
+        "500": {
+          "$type": "color",
+          "$value": "#D9A800"
+        },
+        "600": {
+          "$type": "color",
+          "$value": "#A88200"
+        },
+        "800": {
+          "$type": "color",
+          "$value": "#7A5A00"
+        },
+        "950": {
+          "$type": "color",
+          "$value": "#2E2608"
         }
       },
       "alpha": {
