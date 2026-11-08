@@ -21,7 +21,7 @@ SmartBoo is an iOS app for US pet owners: everything about your pets in one plac
 - Vite + React + TypeScript + Tailwind, mobile-first. Tailwind takes its values from our tokens, not from its default palette (no `bg-red-500` and the like).
 - App: Capacitor 8 → iOS (TestFlight); web version on Cloudflare Pages. Android is not a focus.
 - Boo's server function: Cloudflare Pages Functions (`functions/api/boo`); the AI key is a Cloudflare secret.
-- Data on the phone, always through `src/data/store`. For now the store uses the browser's localStorage; at step P4 (Capacitor) it switches to `@capacitor/filesystem`.
+- Data on the phone, always through `src/data/store`. For now the store uses the browser's localStorage; the next step after adding Capacitor switches it to `@capacitor/filesystem`.
 - iOS plugins via Swift Package Manager only, never CocoaPods.
 - Storybook for components.
 - Architecture details: `docs/ARCHITECTURE.md`.
@@ -35,6 +35,9 @@ Run them in the project folder. The first time, run `npm install`.
 - `npm run build` — checks the TypeScript code for errors, then makes the finished app in `dist/`. This is what goes to the iPhone (Capacitor) and to Cloudflare Pages.
 - `npm run preview` — opens the finished app from `dist/` to check the build before shipping.
 - `npm run lint` — looks for common mistakes in the code (oxlint).
+- `npm run ios` — builds the app and copies it into the iOS project (`ios/`, Capacitor). Then open it in the iPhone simulator from Xcode or the Claude simulator panel.
+
+When I write «онови iOS» / «update iOS»: run `npm run ios`, build the Xcode project `ios/App/App.xcodeproj` (scheme App) and launch it in the iPhone 17 Pro simulator, then show me a screenshot.
 
 Testing data: the first launch loads sample pets (Rocky, Milo, Cleo, Tank). Settings → "Start fresh" shows the real first launch (Welcome); "Load sample pets" brings them back. Boo is faked in `src/lib/boo.ts` until the Boo spike.
 
