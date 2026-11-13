@@ -11,7 +11,7 @@ export function PetList() {
   const t = today()
 
   return (
-    <div className="pt-safe min-h-dvh px-16 pb-[144px]">
+    <div className="pt-safe min-h-dvh px-16 pb-tab-bar-room">
       <header className="flex min-h-control-56 items-center">
         <h1 className="font-display text-display font-medium">Pets</h1>
       </header>

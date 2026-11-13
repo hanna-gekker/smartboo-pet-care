@@ -25,7 +25,7 @@ type TabBarProps = {
 
 export function TabBar({ active, onBoo, docked = true }: TabBarProps) {
   const bar = (
-    <div className="pointer-events-auto flex w-full max-w-[420px] items-center gap-12">
+    <div className="pointer-events-auto flex w-full max-w-420 items-center gap-12">
       <nav aria-label="Main" className="flex h-control-64 flex-1 items-center rounded-full bg-surface-nav p-4">
         {tabs.map((t) => {
           const on = t.key === active

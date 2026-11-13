@@ -74,10 +74,10 @@ export function BooCharacter({ state = 'idle', look = 'full', size, animated = t
 
       {full && (
         <>
-          {/* Figma order: glow, two halos (60% fill), then the float shadow on top, so the halo doesn't cut it */}
+          {/* Figma order: glow, two halos (ai/halo, already 60% white in light), then the float shadow on top, so the halo doesn't cut it */}
           <circle className="boo-glow" cx="99" cy="99" r="75" style={{ fill: 'var(--ai-glow)' }} filter={`url(#${id}-blur24)`} />
-          <circle cx="99" cy="99" r="88" fillOpacity="0.6" style={{ fill: 'var(--ai-halo)' }} filter={`url(#${id}-blur6)`} />
-          <circle cx="99" cy="99" r="76" fillOpacity="0.6" style={{ fill: 'var(--ai-halo)' }} filter={`url(#${id}-blur6)`} />
+          <circle cx="99" cy="99" r="88" style={{ fill: 'var(--ai-halo)' }} filter={`url(#${id}-blur6)`} />
+          <circle cx="99" cy="99" r="76" style={{ fill: 'var(--ai-halo)' }} filter={`url(#${id}-blur6)`} />
           <ellipse className="boo-shadow" cx="99" cy="195" rx="48" ry="6" style={{ fill: 'var(--ai-float-shadow)' }} filter={`url(#${id}-blur8)`} />
         </>
       )}

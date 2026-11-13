@@ -17,7 +17,7 @@ export function Toast() {
   if (!toast) return null
   return (
     <div className="pt-safe pointer-events-none fixed inset-x-0 top-0 z-50 flex justify-center px-16">
-      <div role="status" className="animate-fade-in pointer-events-auto flex min-h-control-56 w-full max-w-[420px] items-center gap-12 rounded-full bg-surface-nav py-4 pr-4 pl-16 text-text-on-dark">
+      <div role="status" className="animate-fade-in pointer-events-auto flex min-h-control-56 w-full max-w-420 items-center gap-12 rounded-full bg-surface-nav py-4 pr-4 pl-16 text-text-on-dark">
         <span className="flex size-icon-24 shrink-0 items-center justify-center rounded-full bg-text-on-dark text-surface-nav">
           <Icon name="check" size={16} />
         </span>

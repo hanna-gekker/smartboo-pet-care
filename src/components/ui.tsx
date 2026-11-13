@@ -28,7 +28,7 @@ export function TextLink({ children, onClick }: { children: ReactNode; onClick: 
 export function StackScreen({ title, children, right, withTabBar = true }: { title: string; children: ReactNode; right?: ReactNode; withTabBar?: boolean }) {
   const navigate = useNavigate()
   return (
-    <div className={`pt-safe min-h-dvh px-16 ${withTabBar ? 'pb-[144px]' : 'pb-safe'}`}>
+    <div className={`pt-safe min-h-dvh px-16 ${withTabBar ? 'pb-tab-bar-room' : 'pb-safe'}`}>
       <header className="-mx-2 flex min-h-control-56 items-center gap-4">
         <IconButton icon="chevron-left" label="Back" onClick={() => navigate(-1)} />
         {title ? <h1 className="flex-1 truncate font-display text-body-l font-medium">{title}</h1> : <span className="flex-1" />}

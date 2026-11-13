@@ -41,7 +41,7 @@ export function Today() {
   }
 
   return (
-    <div className="pt-safe min-h-dvh px-16 pb-[144px]">
+    <div className="pt-safe min-h-dvh px-16 pb-tab-bar-room">
       {/* Header: logo and settings, then the date and the greeting */}
       <header>
         <div className="flex h-control-44 items-center justify-between">
