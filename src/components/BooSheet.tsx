@@ -121,7 +121,7 @@ function StepView({ step, setStep, text, setText }: { step: Step; setStep: (s: S
               aria-label="Type to Boo"
               className="min-h-control-44 flex-1 bg-transparent text-body outline-none placeholder:text-text-tertiary"
             />
-            <IconButton type="submit" variant="primary" icon="send" label="Send" disabled={!text.trim()} />
+            <IconButton type="submit" variant="primary" icon="arrow-up" label="Send" disabled={!text.trim()} />
           </form>
           <div className="mt-16 grid grid-cols-3 gap-8">
             <BigAction icon="mic" label="Talk" onClick={() => setStep({ name: 'talk' })} />
@@ -170,8 +170,8 @@ function StepView({ step, setStep, text, setText }: { step: Step; setStep: (s: S
           <p className="mt-4 text-body text-text-secondary">Vaccine certificate, invoice, discharge notes — a photo or a PDF.</p>
           <div className="mt-16 flex flex-col gap-8">
             <FilePick icon="camera" label="Take a photo" accept="image/*" capture onPick={startReading} />
-            <FilePick icon="doc" label="Choose from Photos" accept="image/*" onPick={startReading} />
-            <FilePick icon="doc" label="PDF from Files" accept="application/pdf" onPick={startReading} />
+            <FilePick icon="file-text" label="Choose from Photos" accept="image/*" onPick={startReading} />
+            <FilePick icon="file-text" label="PDF from Files" accept="application/pdf" onPick={startReading} />
           </div>
           <Button full variant="ghost" onClick={startReading} className="mt-12 !text-accent-primary">
             No paper at hand? Try a sample one
@@ -281,7 +281,7 @@ function BigAction({ icon, label, onClick }: { icon: 'mic' | 'camera' | 'keyboar
   )
 }
 
-function FilePick({ icon, label, accept, capture, primary, onPick }: { icon: 'camera' | 'doc'; label: string; accept: string; capture?: boolean; primary?: boolean; onPick: (file?: File) => void }) {
+function FilePick({ icon, label, accept, capture, primary, onPick }: { icon: 'camera' | 'file-text'; label: string; accept: string; capture?: boolean; primary?: boolean; onPick: (file?: File) => void }) {
   const ref = useRef<HTMLInputElement>(null)
   return (
     <>
@@ -414,7 +414,7 @@ function ResultView({ result, onBack, onPick }: { result: BooResult; onBack: () 
             className="press mt-12 flex min-h-control-44 items-center gap-4 text-body font-medium text-accent-primary"
           >
             {result.source.label}
-            <Icon name="chevron" size={20} />
+            <Icon name="chevron-right" size={20} />
           </button>
         )}
         <Button variant="ghost" onClick={onBack} className="mt-16 -ml-16">

@@ -25,7 +25,8 @@ type ButtonProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'children' | 'o
 
 const variants: Record<ButtonVariant, string> = {
   primary: 'bg-accent-primary text-text-on-accent',
-  secondary: 'bg-surface-card text-text-primary ring-1 ring-inset ring-border-control active:bg-surface-subtle data-[state=pressed]:bg-surface-subtle',
+  // Figma: blue outline and blue icon, black label; the disabled one has a grey outline.
+  secondary: 'bg-surface-card text-text-primary ring-1 ring-inset ring-accent-primary disabled:ring-border-control active:bg-surface-subtle data-[state=pressed]:bg-surface-subtle',
   ghost: 'bg-transparent text-text-primary active:bg-surface-subtle data-[state=pressed]:bg-surface-subtle',
 }
 
@@ -65,7 +66,7 @@ export function Button({ children, variant = 'primary', size = 'medium', icon, f
       className={`press inline-flex shrink-0 items-center justify-center gap-8 rounded-full text-body font-medium disabled:opacity-40 ${variants[variant]} ${sizes[size]} ${full ? 'w-full' : ''} ${className}`}
       {...rest}
     >
-      {isLoading ? <Spinner /> : icon && <Icon name={icon} size={20} />}
+      {isLoading ? <Spinner /> : icon && <Icon name={icon} size={20} className={variant === 'secondary' && !disabled ? 'text-accent-primary' : undefined} />}
       {children}
     </button>
   )

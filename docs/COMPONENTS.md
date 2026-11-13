@@ -100,6 +100,29 @@ Every screen is built from `src/components/`; the old Button, IconButton, Card, 
 Still hand-built, for later: Key fact tile and Timeline item (Pet folder), Filter chip (`Chip` in `ui.tsx`), Ask Boo input (Today, Boo sheet), Status pill, Pet avatar petals, Nav bar and Screen title, the Boo sheet's big actions.
 Values without a token left in classes: `pb-[144px]` (room for the tab bar), `max-w-[320px]`, `max-w-[420px]`, `max-w-[560px]`, `max-h-[88dvh]`, `h-[6px]` (sheet handle).
 
+## 8. Today as in Figma (Nov 12, 2026)
+
+Today follows the Figma screen "1 · Today": header with the logo, Next up, the Boo card, Coming up, Your pack, Done today, each a card 16 apart.
+
+| Component | File | Props |
+|---|---|---|
+| Logo (Figma Logo · Horizontal) | `Logo.tsx` | — (colors are tokens: ai/petal-*, brand/logo-core, text/primary) |
+| Status pill | `StatusPill.tsx` | `status` (waiting, upcoming, done) · `label` |
+| Next up card | `NextUpCard.tsx` | `pet` · `title` · `meta` · `status` (pill) · `onDone` · `onBookVet` (only with a vet). Waiting sits on `status/waiting-bg` |
+| Ask Boo input | `AskBooInput.tsx` | `placeholder` · `onType` · `onSnap` · `onTalk` |
+| Pet avatar with petals | `PetAvatar.tsx` | `petals` (ocean, lavender, butter, mint, pink, slate) · `dueSoon`; plus `outlined` for the white ring on Next up |
+
+Decisions (Nov 12, 2026):
+- **No name in the greeting.** There are no accounts, so it's "Good morning" until the app asks for a name.
+- **Share is gone from the Today header.** It stays in Pet folder.
+- **The gap hint ("I don't know Milo's shots yet…") is gone from Today.** It isn't in Figma.
+- **No "Add" in Your pack.** Pets are added from the Pets tab.
+- **Pet colors are given by order** (`src/lib/petColors.ts`) until a color picker exists in the profile.
+- **Next up texts:** the pill and the line come from `src/lib/tasks.ts` (`taskPill`, `nextUpMeta`).
+- **Icons are the Figma set** (`Icon.tsx`, 31 icons from "Icon / …"), with the Figma names (`sun`, `calendar`, `paw`, `settings`, `chevron-left`…). The line stays 1.5px at any size. `search` and `more` aren't in Figma yet and are drawn in the same style.
+- **Icon button "Plain"**: the icon alone, no circle — Settings on Today (Figma turns off the fill and stroke there).
+- **Checkbox ring:** 1.5px, as in Figma (`ring-[1.5px]`; no stroke token).
+
 Forced looks for the board and Storybook: `data-state="pressed"` or `data-state="focus"`.
 
 The screens still use the older versions in `ui.tsx` (Button, IconButton, Card, Field). They move to these components in P10, and the old ones are deleted then.

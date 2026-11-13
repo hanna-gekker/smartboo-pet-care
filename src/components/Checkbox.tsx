@@ -15,7 +15,7 @@ type CheckboxProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'children' | 
 }
 
 export function Checkbox({ checked, label, onChange, tone = 'default', className = '', ...rest }: CheckboxProps) {
-  const empty = tone === 'waiting' ? 'bg-surface-card ring-2 ring-inset ring-status-waiting-text' : 'bg-surface-card ring-2 ring-inset ring-border-control'
+  const empty = tone === 'waiting' ? 'bg-surface-card ring-[1.5px] ring-inset ring-status-waiting-text' : 'bg-surface-card ring-[1.5px] ring-inset ring-border-control'
   const circle = (
     <span className={`flex size-control-32 shrink-0 items-center justify-center rounded-full ${checked ? 'bg-accent-primary text-text-on-accent' : empty}`} aria-hidden={onChange ? undefined : true}>
       {checked && <Icon name="check" size={18} />}

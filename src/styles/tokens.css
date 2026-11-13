@@ -75,6 +75,8 @@
   --alpha-gray-950-0: #0F111500;
   --alpha-pink-400-8: #E07BB514;
   --alpha-violet-400-18: #A88AF22E;
+  --alpha-white-85: #FFFFFFD9;
+  --alpha-indigo-400-50: #8F98F580;
 
   /* Layout */
   --space-0: 0px; /* Spacing 0px — padding & gaps (8pt grid, 4/12 as half-steps, 2 for hairline groups) */
@@ -103,6 +105,10 @@
   --size-avatar-72: 72px; /* Pet photo in Next up */
   --size-avatar-80: 80px; /* Your pack avatar with petals */
   --size-avatar-128: 128px; /* Pet hero in Pet folder */
+  --size-tab-bar-room: 128px; /* Bottom padding of tab screens so the last card clears the floating tab bar */
+  --size-max-width-320: 320px; /* Max width of centred text blocks (Welcome) */
+  --size-max-width-420: 420px; /* Max width of the tab bar and toasts on wide screens */
+  --size-max-width-560: 560px; /* Max width of the app column and bottom sheets on wide screens */
   --font-family-display: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", system-ui, sans-serif;
   --font-family-text: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", system-ui, sans-serif;
   --font-size-12: 12px;
@@ -161,8 +167,17 @@
   --ai-core-edge: var(--indigo-600); /* Boo core 3 */
   --ai-glow: var(--blue-300); /* Boo glow */
   --ai-spark-pink: var(--pink-400); /* Pink end of AI sparkle gradient */
-  --ai-halo: var(--base-white); /* Soft halo around the Boo character */
+  --ai-halo: var(--alpha-white-60); /* Soft halo around the Boo character */
   --ai-highlight: var(--base-white); /* Gloss and inner light on the Boo core */
+  --ai-aura-1: var(--alpha-gray-50-0); /* Soft background glow behind Boo (cool) */
+  --ai-aura-2: var(--alpha-gray-50-0); /* Soft background glow behind Boo (warm) */
+  --ai-backdrop-1: var(--green-50); /* Welcome background gradient (light: pastel, dark: plain canvas) */
+  --ai-backdrop-2: var(--blue-50); /* Welcome background gradient (light: pastel, dark: plain canvas) */
+  --ai-backdrop-3: var(--violet-50); /* Welcome background gradient (light: pastel, dark: plain canvas) */
+  --ai-backdrop-4: var(--pink-50); /* Welcome background gradient (light: pastel, dark: plain canvas) */
+  --ai-sheen: var(--base-white); /* White wash in light, nothing in dark (Welcome background, glass, hint) */
+  --ai-float-shadow: var(--indigo-200); /* Soft shadow under the floating Boo */
+  --ai-boo-backdrop: var(--blue-50); /* Soft blue patch behind Boo on light backgrounds (transparent in dark) */
   --pet-lavender: var(--violet-200); /* Pet colour — owner picks one per pet */
   --pet-mint: var(--green-200); /* Pet colour — owner picks one per pet */
   --pet-pink: var(--pink-200); /* Pet colour — owner picks one per pet */
@@ -220,7 +235,16 @@
     --ai-glow: var(--alpha-violet-400-18); /* Boo glow */
     --ai-spark-pink: var(--pink-400); /* Pink end of AI sparkle gradient */
     --ai-halo: var(--alpha-pink-400-8); /* Soft halo around the Boo character */
-    --ai-highlight: var(--alpha-white-60); /* Gloss and inner light on the Boo core */
+    --ai-highlight: var(--alpha-white-85); /* Gloss and inner light on the Boo core */
+    --ai-aura-1: var(--indigo-900); /* Soft background glow behind Boo (cool) */
+    --ai-aura-2: var(--violet-600); /* Soft background glow behind Boo (warm) */
+    --ai-backdrop-1: var(--gray-950); /* Welcome background gradient (light: pastel, dark: plain canvas) */
+    --ai-backdrop-2: var(--gray-950); /* Welcome background gradient (light: pastel, dark: plain canvas) */
+    --ai-backdrop-3: var(--gray-950); /* Welcome background gradient (light: pastel, dark: plain canvas) */
+    --ai-backdrop-4: var(--gray-950); /* Welcome background gradient (light: pastel, dark: plain canvas) */
+    --ai-sheen: var(--alpha-gray-950-0); /* White wash in light, nothing in dark (Welcome background, glass, hint) */
+    --ai-float-shadow: var(--alpha-indigo-400-50); /* Soft shadow under the floating Boo */
+    --ai-boo-backdrop: var(--alpha-gray-950-0); /* Soft blue patch behind Boo on light backgrounds (transparent in dark) */
     --pet-lavender: var(--violet-200); /* Pet colour — owner picks one per pet */
     --pet-mint: var(--green-200); /* Pet colour — owner picks one per pet */
     --pet-pink: var(--pink-200); /* Pet colour — owner picks one per pet */
@@ -278,7 +302,16 @@
   --ai-glow: var(--alpha-violet-400-18); /* Boo glow */
   --ai-spark-pink: var(--pink-400); /* Pink end of AI sparkle gradient */
   --ai-halo: var(--alpha-pink-400-8); /* Soft halo around the Boo character */
-  --ai-highlight: var(--alpha-white-60); /* Gloss and inner light on the Boo core */
+  --ai-highlight: var(--alpha-white-85); /* Gloss and inner light on the Boo core */
+  --ai-aura-1: var(--indigo-900); /* Soft background glow behind Boo (cool) */
+  --ai-aura-2: var(--violet-600); /* Soft background glow behind Boo (warm) */
+  --ai-backdrop-1: var(--gray-950); /* Welcome background gradient (light: pastel, dark: plain canvas) */
+  --ai-backdrop-2: var(--gray-950); /* Welcome background gradient (light: pastel, dark: plain canvas) */
+  --ai-backdrop-3: var(--gray-950); /* Welcome background gradient (light: pastel, dark: plain canvas) */
+  --ai-backdrop-4: var(--gray-950); /* Welcome background gradient (light: pastel, dark: plain canvas) */
+  --ai-sheen: var(--alpha-gray-950-0); /* White wash in light, nothing in dark (Welcome background, glass, hint) */
+  --ai-float-shadow: var(--alpha-indigo-400-50); /* Soft shadow under the floating Boo */
+  --ai-boo-backdrop: var(--alpha-gray-950-0); /* Soft blue patch behind Boo on light backgrounds (transparent in dark) */
   --pet-lavender: var(--violet-200); /* Pet colour — owner picks one per pet */
   --pet-mint: var(--green-200); /* Pet colour — owner picks one per pet */
   --pet-pink: var(--pink-200); /* Pet colour — owner picks one per pet */
