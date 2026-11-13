@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Icon } from '../components/Icon'
 import { TaskRow } from '../components/TaskRow'
+import { taskMeta, taskState } from '../lib/tasks'
 import { Card, IconButton } from '../components/ui'
 import { petById, useApp } from '../data/useApp'
 import type { Task } from '../data/types'
@@ -27,9 +28,9 @@ export function Schedule() {
     list.length > 0 && (
       <section className="mt-24">
         <h2 className="mb-8 text-body-s font-medium text-text-secondary uppercase">{title}</h2>
-        <Card className="!py-4">
+        <Card className="!p-0">
           {list.map((x) => (
-            <TaskRow key={x.id} task={x} pet={petById(pets, x.petId)} onToggle={() => toggleTask(x.id)} showDate={showDate} />
+            <TaskRow key={x.id} title={x.title} detail={x.detail} meta={taskMeta(x, petById(pets, x.petId)?.name, { showDate })} state={taskState(x)} pet={petById(pets, x.petId)} onToggle={() => toggleTask(x.id)} />
           ))}
         </Card>
       </section>
