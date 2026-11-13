@@ -28,6 +28,12 @@ Until the demo, data stays on the phone: no accounts, no sign-in.
 - Boo's AI runs in one Cloudflare Pages Function
 - Storybook for components
 
+## Components
+
+Every component in every state, light and dark, at iPhone size: **[Storybook](https://main--6af74f44d16cc9fc689d9bef.chromatic.com)**.
+
+It is published to Chromatic on every push to `main`. Locally: `npm run storybook` (http://localhost:6006).
+
 ## Run it locally
 
 ```bash
