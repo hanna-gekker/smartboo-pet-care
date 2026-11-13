@@ -1,51 +1,56 @@
 import { useNavigate } from 'react-router'
-import { Button } from '../components/Button'
 import { Card } from '../components/Card'
+import { IconButton } from '../components/IconButton'
 import { ListRow } from '../components/ListRow'
 import { useApp } from '../data/useApp'
-import { addDays, age, relative, today } from '../lib/dates'
+import { ageShort } from '../lib/dates'
+import { petStatus } from '../lib/tasks'
 
+/** Figma "11 · Pets": "Your pack" with a + button, the pet list with a status on the right, then "Add a pet". */
 export function PetList() {
   const navigate = useNavigate()
   const { pets, tasks } = useApp()
-  const t = today()
+  const addPet = () => navigate('/pets/new')
+
+  const rows = pets.map((p) => ({ pet: p, status: petStatus(tasks, p.id) }))
+  const due = rows.filter((r) => r.status.due).length
+  const caption = [
+    `${pets.length} pet${pets.length === 1 ? '' : 's'}`,
+    due > 0 && `${due} ${due === 1 ? 'has' : 'have'} something due`,
+  ]
+    .filter(Boolean)
+    .join(' · ')
 
   return (
     <div className="pt-safe min-h-dvh px-16 pb-tab-bar-room">
-      <header className="flex min-h-control-56 items-center">
-        <h1 className="font-display text-display font-medium">Pets</h1>
+      {/* Figma "Screen title": caption over the title, the + button on the baseline */}
+      <header className="flex items-end gap-8 pt-32 pb-16">
+        <div className="flex min-w-0 flex-1 flex-col gap-4">
+          <p className="text-body-s text-text-secondary">{caption}</p>
+          <h1 className="font-display text-display font-medium">Your pack</h1>
+        </div>
+        <IconButton variant="primary" icon="plus" label="Add a pet" onClick={addPet} className="-mr-2 -mb-2" />
       </header>
 
-      <Card variant="list" className="mt-16 overflow-hidden">
-        {pets.map((p) => {
-          const next = tasks
-            .filter((x) => x.petId === p.id && !x.doneAt && x.kind !== 'chore' && x.date <= addDays(t, 60))
-            .sort((a, b) => a.date.localeCompare(b.date))[0]
-          return (
+      <div className="flex flex-col gap-16">
+        <Card variant="list" className="overflow-hidden">
+          {rows.map(({ pet, status }) => (
             <ListRow
-              key={p.id}
-              pet={p}
-              title={p.name}
-              subtitle={
-                <>
-                  <span className="block truncate">{[p.breed ?? p.species, age(p.birthDate)].filter(Boolean).join(' · ')}</span>
-                  {next && (
-                    <span className={`block truncate font-medium ${next.date < t ? 'text-status-waiting-text' : 'text-accent-primary'}`}>
-                      {next.title} {relative(next.date)}
-                    </span>
-                  )}
-                </>
-              }
+              key={pet.id}
+              pet={pet}
+              title={pet.name}
+              subtitle={<span className="block truncate">{[pet.breed ?? pet.species, ageShort(pet.birthDate)].filter(Boolean).join(' · ')}</span>}
+              value={<span className={status.overdue ? 'text-status-waiting-text' : undefined}>{status.label}</span>}
               trailing="chevron"
-              onClick={() => navigate(`/pets/${p.id}`)}
+              onClick={() => navigate(`/pets/${pet.id}`)}
             />
-          )
-        })}
-      </Card>
+          ))}
+        </Card>
 
-      <Button full variant="secondary" icon="plus" onClick={() => navigate('/pets/new')} className="mt-12">
-        Add a pet
-      </Button>
+        <Card variant="list" className="overflow-hidden">
+          <ListRow icon="plus" title="Add a pet" subtitle="or snap a vet paper" trailing="chevron" onClick={addPet} />
+        </Card>
+      </div>
     </div>
   )
 }

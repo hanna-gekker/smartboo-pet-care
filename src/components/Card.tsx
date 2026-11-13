@@ -1,5 +1,5 @@
 // Card — Figma "Card" (Core components).
-// Types: Plain (padding 16), List (no padding, rows go edge to edge), Tappable (Plain + pressed state).
+// Types: Plain (padding 16), List (no padding, no outline, rows go edge to edge), Tappable (Plain + pressed state).
 // A card becomes Tappable when it gets onClick: then it is a real button.
 
 import type { HTMLAttributes, ReactNode } from 'react'
@@ -15,7 +15,7 @@ type CardProps = Omit<HTMLAttributes<HTMLElement>, 'onClick'> & {
 
 const variants: Record<CardVariant, string> = {
   plain: 'p-16',
-  list: 'p-0 ring-1 ring-inset ring-border-control',
+  list: 'p-0',
 }
 
 export function Card({ children, variant = 'plain', onClick, className = '', ...rest }: CardProps) {
