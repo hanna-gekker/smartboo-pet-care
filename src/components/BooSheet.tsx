@@ -9,9 +9,13 @@ import type { Pet, PetRecord, Task, Vaccine } from '../data/types'
 import { readPaper, understand, type BooResult, type ParsedPaper } from '../lib/boo'
 import { addDays, formatDay, today } from '../lib/dates'
 import { BottomSheet } from './BottomSheet'
+import { BooCharacter } from './BooCharacter'
+import { Button } from './Button'
+import { Card } from './Card'
 import { Icon } from './Icon'
-import { BooFace } from './TabBar'
-import { Button, Card, Field, PetAvatar, inputClass } from './ui'
+import { IconButton } from './IconButton'
+import { PetAvatar } from './PetAvatar'
+import { TextField } from './TextField'
 
 type Step =
   | { name: 'menu' }
@@ -97,16 +101,14 @@ function StepView({ step, setStep, text, setText }: { step: Step; setStep: (s: S
       return (
         <div>
           <div className="flex items-center gap-12 pt-4 pb-16">
-            <span className="flex size-control-44 items-center justify-center rounded-full bg-accent-primary text-text-on-accent">
-              <BooFace size={26} />
-            </span>
+            <BooCharacter size={56} />
             <div>
               <p className="font-display text-title font-medium">What happened?</p>
               <p className="text-body-s text-text-secondary">Tell me, or hand me a vet paper.</p>
             </div>
           </div>
           <form
-            className="flex items-center gap-8 rounded-full bg-surface-canvas py-4 pr-4 pl-16 ring-1 ring-surface-subtle"
+            className="flex items-center gap-8 rounded-full bg-surface-canvas py-4 pr-4 pl-16 ring-1 ring-inset ring-border-control focus-within:ring-2 focus-within:ring-text-primary"
             onSubmit={(e) => {
               e.preventDefault()
               send(text)
@@ -119,9 +121,7 @@ function StepView({ step, setStep, text, setText }: { step: Step; setStep: (s: S
               aria-label="Type to Boo"
               className="min-h-control-44 flex-1 bg-transparent text-body outline-none placeholder:text-text-tertiary"
             />
-            <button type="submit" aria-label="Send" disabled={!text.trim()} className="press flex size-control-44 items-center justify-center rounded-full bg-surface-nav text-text-on-dark disabled:opacity-30">
-              <Icon name="send" size={20} />
-            </button>
+            <IconButton type="submit" variant="primary" icon="send" label="Send" disabled={!text.trim()} />
           </form>
           <div className="mt-16 grid grid-cols-3 gap-8">
             <BigAction icon="mic" label="Talk" onClick={() => setStep({ name: 'talk' })} />
@@ -173,9 +173,9 @@ function StepView({ step, setStep, text, setText }: { step: Step; setStep: (s: S
             <FilePick icon="doc" label="Choose from Photos" accept="image/*" onPick={startReading} />
             <FilePick icon="doc" label="PDF from Files" accept="application/pdf" onPick={startReading} />
           </div>
-          <button type="button" onClick={startReading} className="press mt-12 min-h-control-44 w-full text-body font-medium text-accent-primary">
+          <Button full variant="ghost" onClick={startReading} className="mt-12 !text-accent-primary">
             No paper at hand? Try a sample one
-          </button>
+          </Button>
         </div>
       )
 
@@ -186,9 +186,7 @@ function StepView({ step, setStep, text, setText }: { step: Step; setStep: (s: S
     case 'thinking':
       return (
         <div className="flex flex-col items-center py-32 text-center">
-          <span className="animate-pulse-dot flex size-control-64 items-center justify-center rounded-full bg-accent-primary text-text-on-accent">
-            <BooFace />
-          </span>
+          <BooCharacter state="listening" />
           <p className="mt-16 font-display text-title font-medium">{step.name === 'reading' ? 'Reading…' : 'Thinking…'}</p>
           {step.name === 'reading' && <p className="mt-4 text-body-s text-text-secondary">Finding the pet, vaccines and dates</p>}
         </div>
@@ -238,7 +236,7 @@ function StepView({ step, setStep, text, setText }: { step: Step; setStep: (s: S
       return (
         <div className="pt-8">
           <div className="flex justify-center py-8">
-            <PetAvatar pet={pet} size={88} />
+            <PetAvatar pet={pet} size="xl" />
           </div>
           <h2 className="mt-12 text-center font-display text-title font-medium">Add a photo of {step.petName}?</h2>
           <div className="mt-24 flex flex-col gap-8">
@@ -274,7 +272,7 @@ function StepView({ step, setStep, text, setText }: { step: Step; setStep: (s: S
 
 function BigAction({ icon, label, onClick }: { icon: 'mic' | 'camera' | 'keyboard'; label: string; onClick: () => void }) {
   return (
-    <button type="button" onClick={onClick} className="press flex min-h-[88px] flex-col items-center justify-center gap-4 rounded-24 bg-surface-canvas text-body-s font-medium ring-1 ring-surface-subtle">
+    <button type="button" onClick={onClick} className="press flex min-h-control-64 flex-col items-center justify-center gap-4 rounded-24 bg-surface-canvas py-12 text-body-s font-medium active:bg-surface-subtle">
       <span className="flex size-control-40 items-center justify-center rounded-full bg-accent-primary text-text-on-accent">
         <Icon name={icon} size={20} />
       </span>
@@ -342,33 +340,31 @@ function PaperReview({ paper, onConfirm }: { paper: ParsedPaper; onConfirm: (pet
       )}
 
       <div className="mt-12 grid grid-cols-2 gap-8">
-        <Field label="Name">
-          <input className={inputClass} value={name} onChange={(e) => setName(e.target.value)} />
-        </Field>
-        <Field label="Species">
-          <input className={inputClass} value={paper.pet.species} readOnly />
-        </Field>
-        <Field label="Breed">
-          <input className={inputClass} value={breed} onChange={(e) => setBreed(e.target.value)} />
-        </Field>
-        <Field label="Born" unsure={paper.unsure.includes('birthDate')}>
-          <input type="date" className={inputClass} value={birthDate} onChange={(e) => setBirthDate(e.target.value)} />
-        </Field>
+        <TextField label="Name" value={name} onChange={(e) => setName(e.target.value)} />
+        <TextField label="Species" value={paper.pet.species} readOnly />
+        <TextField label="Breed" value={breed} onChange={(e) => setBreed(e.target.value)} />
+        <TextField label="Born" type="date" value={birthDate} onChange={(e) => setBirthDate(e.target.value)} needsCheck={paper.unsure.includes('birthDate')} />
       </div>
 
-      <Card className="mt-12 !p-0">
-        <div className="flex px-16 pt-12 pb-4 text-caption font-medium text-text-secondary">
-          <span className="flex-1">Vaccine</span>
-          <span className="w-[80px] text-right">Given</span>
-          <span className="w-[112px] text-right">Due</span>
-        </div>
-        {paper.vaccines.map((v) => (
-          <div key={v.name} className="flex border-t border-surface-subtle px-16 py-8 text-body-s">
-            <span className="flex-1 font-medium">{v.name}</span>
-            <span className="w-[80px] text-right text-text-secondary">{formatDay(v.given)}</span>
-            <span className="w-[112px] text-right">{formatDay(v.due, { month: 'short', day: 'numeric', year: 'numeric' })}</span>
-          </div>
-        ))}
+      <Card variant="list" className="mt-12 overflow-hidden">
+        <table className="w-full text-body-s">
+          <thead className="text-caption font-medium text-text-secondary">
+            <tr>
+              <th className="px-16 pt-12 pb-4 text-left font-medium">Vaccine</th>
+              <th className="pt-12 pb-4 text-right font-medium">Given</th>
+              <th className="px-16 pt-12 pb-4 text-right font-medium">Due</th>
+            </tr>
+          </thead>
+          <tbody>
+            {paper.vaccines.map((v) => (
+              <tr key={v.name} className="border-t border-surface-subtle">
+                <td className="px-16 py-8 font-medium">{v.name}</td>
+                <td className="py-8 text-right whitespace-nowrap text-text-secondary">{formatDay(v.given)}</td>
+                <td className="px-16 py-8 text-right whitespace-nowrap">{formatDay(v.due, { month: 'short', day: 'numeric', year: 'numeric' })}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </Card>
       <p className="mt-8 text-body-s text-text-secondary">Amount: {paper.amount}</p>
 
@@ -394,8 +390,8 @@ function ResultView({ result, onBack, onPick }: { result: BooResult; onBack: () 
         <p className="mt-4 text-body-s text-text-secondary">“{result.text}”</p>
         <div className="mt-16 flex flex-wrap gap-8">
           {pets.map((p) => (
-            <button key={p.id} type="button" onClick={() => onPick(p.id)} className="press flex min-h-[48px] items-center gap-8 rounded-full bg-surface-canvas py-4 pr-16 pl-4 ring-1 ring-surface-subtle">
-              <PetAvatar pet={p} size={36} />
+            <button key={p.id} type="button" onClick={() => onPick(p.id)} className="press flex min-h-control-44 items-center gap-8 rounded-full bg-surface-card py-4 pr-16 pl-4 ring-1 ring-inset ring-border-control active:bg-surface-subtle">
+              <PetAvatar pet={p} size="sm" />
               <span className="text-body font-medium">{p.name}</span>
             </button>
           ))}
@@ -418,7 +414,7 @@ function ResultView({ result, onBack, onPick }: { result: BooResult; onBack: () 
             className="press mt-12 flex min-h-control-44 items-center gap-4 text-body font-medium text-accent-primary"
           >
             {result.source.label}
-            <Icon name="chevron" size={18} />
+            <Icon name="chevron" size={20} />
           </button>
         )}
         <Button variant="ghost" onClick={onBack} className="mt-16 -ml-16">
@@ -496,7 +492,7 @@ function ReviewShell({ pet, kind, title, children, onConfirm }: { pet: Pet; kind
   return (
     <div className="pt-4">
       <div className="flex items-center gap-12">
-        <PetAvatar pet={pet} size={44} />
+        <PetAvatar pet={pet} size="md" />
         <div>
           <p className="text-body-s font-medium text-accent-primary">{kind}</p>
           <h2 className="font-display text-title font-medium">{title}</h2>
@@ -534,19 +530,16 @@ function Talk({ onDone }: { onDone: (text: string) => void }) {
 
   return (
     <div className="flex flex-col items-center py-24 text-center">
-      <span className={`flex size-[80px] items-center justify-center rounded-full bg-accent-primary text-text-on-accent ${supported ? 'animate-pulse-dot' : ''}`}>
-        <Icon name="mic" size={34} />
-      </span>
+      <BooCharacter state={supported ? 'listening' : 'idle'} animated={supported} />
       {supported ? (
         <>
           <p className="mt-16 font-display text-title font-medium">Listening…</p>
-          <p className="mt-8 min-h-[48px] text-body text-text-secondary">{heard || 'Say something like “Rocky threw up this morning”'}</p>
+          <p className="mt-8 min-h-control-44 text-body text-text-secondary">{heard || 'Say something like “Rocky threw up this morning”'}</p>
           <div className="mt-16 flex gap-8">
             <Button variant="ghost" onClick={() => onDone('')}>
               Cancel
             </Button>
             <Button
-              variant="dark"
               onClick={() => {
                 recRef.current?.stop()
                 onDone(heard)

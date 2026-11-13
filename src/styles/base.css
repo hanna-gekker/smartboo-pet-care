@@ -177,7 +177,8 @@ button {
 
 /* Focus: a visible outline for the keyboard and VoiceOver, never removed for looks.
    [data-state="focus"] shows the same outline on /components and in Storybook. */
-:focus-visible,
+/* Text fields show focus on their own box (TextField), so the outline skips them. */
+:focus-visible:not(input, select, textarea),
 [data-state="focus"]:not(div) {
   outline: 2px solid var(--accent-primary);
   outline-offset: 2px;

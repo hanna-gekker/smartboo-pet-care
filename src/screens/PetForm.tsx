@@ -1,6 +1,9 @@
-import { useRef, useState } from 'react'
+import { useRef, useState, type ChangeEvent } from 'react'
 import { useNavigate, useParams } from 'react-router'
-import { Button, Field, PetAvatar, StackScreen, inputClass } from '../components/ui'
+import { Button } from '../components/Button'
+import { PetAvatar } from '../components/PetAvatar'
+import { TextField } from '../components/TextField'
+import { StackScreen } from '../components/ui'
 import { newId, petById, useApp } from '../data/useApp'
 import type { Pet, Species } from '../data/types'
 
@@ -47,7 +50,7 @@ export function PetForm() {
         className="mt-16 flex flex-col gap-8"
       >
         <button type="button" onClick={() => photoInput.current?.click()} className="press mx-auto mb-8 flex flex-col items-center gap-8">
-          <PetAvatar pet={pet.name ? pet : undefined} size={96} />
+          <PetAvatar pet={pet.name ? pet : undefined} size="hero" />
           <span className="text-body-s font-medium text-accent-primary">{pet.photo ? 'Change photo' : 'Add a photo'}</span>
         </button>
         <input
@@ -62,46 +65,27 @@ export function PetForm() {
           }}
         />
 
-        <Field label="Name">
-          <input required className={inputClass} value={pet.name} onChange={(e) => set({ name: e.target.value })} placeholder="Rocky" autoComplete="off" />
-        </Field>
-        <Field label="Species">
-          <select className={inputClass} value={pet.species} onChange={(e) => set({ species: e.target.value as Species })}>
-            {SPECIES.map((s) => (
-              <option key={s} value={s}>
-                {s[0].toUpperCase() + s.slice(1)}
-              </option>
-            ))}
-          </select>
-        </Field>
-        <Field label="Breed">
-          <input className={inputClass} value={pet.breed ?? ''} onChange={(e) => set({ breed: e.target.value })} placeholder="Labrador Retriever" />
-        </Field>
-        <Field label="Date of birth">
-          <input type="date" className={inputClass} value={pet.birthDate ?? ''} onChange={(e) => set({ birthDate: e.target.value })} />
-        </Field>
+        <TextField label="Name" required value={pet.name} onChange={(e) => set({ name: e.target.value })} placeholder="Rocky" autoComplete="off" />
+        <TextField
+          label="Species"
+          value={pet.species}
+          onChange={(e: ChangeEvent<HTMLSelectElement>) => set({ species: e.target.value as Species })}
+          options={SPECIES.map((s) => ({ value: s, label: s[0].toUpperCase() + s.slice(1) }))}
+        />
+        <TextField label="Breed" value={pet.breed ?? ''} onChange={(e) => set({ breed: e.target.value })} placeholder="Labrador Retriever" />
+        <TextField label="Date of birth" type="date" value={pet.birthDate ?? ''} onChange={(e) => set({ birthDate: e.target.value })} />
         {existing && (
           <>
-            <Field label="Allergies (comma-separated)">
-              <input className={inputClass} value={allergies} onChange={(e) => setAllergies(e.target.value)} />
-            </Field>
-            <Field label="Microchip">
-              <input className={inputClass} value={pet.microchip ?? ''} onChange={(e) => set({ microchip: e.target.value })} />
-            </Field>
-            <Field label="Insurance">
-              <input className={inputClass} value={pet.insurance ?? ''} onChange={(e) => set({ insurance: e.target.value })} />
-            </Field>
-            <Field label="Vet name">
-              <input className={inputClass} value={pet.vet?.name ?? ''} onChange={(e) => set({ vet: { name: e.target.value, phone: pet.vet?.phone ?? '' } })} />
-            </Field>
-            <Field label="Vet phone">
-              <input type="tel" className={inputClass} value={pet.vet?.phone ?? ''} onChange={(e) => set({ vet: { name: pet.vet?.name ?? '', phone: e.target.value } })} />
-            </Field>
+            <TextField label="Allergies (comma-separated)" value={allergies} onChange={(e) => setAllergies(e.target.value)} />
+            <TextField label="Microchip" value={pet.microchip ?? ''} onChange={(e) => set({ microchip: e.target.value })} />
+            <TextField label="Insurance" value={pet.insurance ?? ''} onChange={(e) => set({ insurance: e.target.value })} />
+            <TextField label="Vet name" value={pet.vet?.name ?? ''} onChange={(e) => set({ vet: { name: e.target.value, phone: pet.vet?.phone ?? '' } })} />
+            <TextField label="Vet phone" type="tel" value={pet.vet?.phone ?? ''} onChange={(e) => set({ vet: { name: pet.vet?.name ?? '', phone: e.target.value } })} />
           </>
         )}
 
         <div className="mt-16">
-          <Button type="submit" full disabled={!pet.name.trim()}>
+          <Button type="submit" full size="large" disabled={!pet.name.trim()}>
             {existing ? 'Save' : `Add ${pet.name.trim() || 'pet'}`}
           </Button>
         </div>

@@ -10,6 +10,7 @@ import { Button, type ButtonSize, type ButtonVariant } from '../components/Butto
 import { Card } from '../components/Card'
 import { Checkbox } from '../components/Checkbox'
 import { IconButton, type IconButtonVariant } from '../components/IconButton'
+import { ListRow } from '../components/ListRow'
 import { TabBar, type Tab } from '../components/TabBar'
 import { TaskRow } from '../components/TaskRow'
 import { TextField } from '../components/TextField'
@@ -188,6 +189,16 @@ function Board({ theme }: { theme: 'light' | 'dark' }) {
             <TaskRow title="Ear drops" detail="Otomax · 4 drops" meta="Rocky · 8 AM" state="default" pet={rocky} onToggle={() => {}} flush />
           </Card>
         </Group>
+      </Section>
+
+      <Section title="List row" note="Leading: icon · photo · emoji · none. Trailing: chevron · action · value.">
+        <Card variant="list" className="overflow-hidden">
+          <ListRow icon="heart" title="Title" subtitle="Subtitle" trailing="chevron" onClick={() => {}} />
+          <ListRow pet={rocky} title="Rocky" subtitle="Labrador Retriever · 7 yrs" trailing="chevron" onClick={() => {}} />
+          <ListRow emoji="🩺" title="New vet" subtitle="Everything: history, vaccines, meds, documents" trailing="chevron" onClick={() => {}} />
+          <ListRow icon="phone" label="Vet" title="Bayside Animal Clinic" trailing={{ label: 'Call', icon: 'phone' }} href="#" />
+          <ListRow title="Microchip" value="—" />
+        </Card>
       </Section>
 
       <Section title="Tab bar" note="Active: Today · Schedule · Pets · none (Settings)">

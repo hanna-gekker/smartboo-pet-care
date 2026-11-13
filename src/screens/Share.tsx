@@ -1,7 +1,11 @@
 import { useState } from 'react'
 import { useSearchParams } from 'react-router'
-import { Icon } from '../components/Icon'
-import { Button, Card, PetAvatar, StackScreen } from '../components/ui'
+import { Button } from '../components/Button'
+import { Card } from '../components/Card'
+import { Checkbox } from '../components/Checkbox'
+import { ListRow } from '../components/ListRow'
+import { PetAvatar } from '../components/PetAvatar'
+import { StackScreen } from '../components/ui'
 import { useApp } from '../data/useApp'
 import { useUi } from '../data/useUi'
 import { addDays, age, formatDay, today } from '../lib/dates'
@@ -31,52 +35,43 @@ export function Share() {
       <p className="mt-4 text-body-s font-medium text-text-secondary">Step {step} of 3</p>
 
       {step === 1 && (
-        <div className="mt-16 flex flex-col gap-8">
+        <Card variant="list" className="mt-16 overflow-hidden">
           {SETS.map((s) => (
-            <Card
+            <ListRow
               key={s.key}
+              emoji={s.emoji}
+              title={s.title}
+              subtitle={s.what}
+              trailing="chevron"
               onClick={() => {
                 setSet(s.key)
                 setStep(chosen.length ? 3 : 2)
               }}
-              className="flex items-center gap-12"
-            >
-              <span className="text-display" aria-hidden="true">
-                {s.emoji}
-              </span>
-              <span className="flex-1">
-                <span className="block text-body font-medium">{s.title}</span>
-                <span className="block text-body-s text-text-secondary">{s.what}</span>
-              </span>
-              <Icon name="chevron" size={20} className="text-text-tertiary" />
-            </Card>
+            />
           ))}
-        </div>
+        </Card>
       )}
 
       {step === 2 && (
         <>
-          <div className="mt-16 flex flex-col gap-8">
-            {app.pets.map((p) => {
-              const on = chosen.includes(p.id)
-              return (
-                <button
-                  key={p.id}
-                  type="button"
-                  role="checkbox"
-                  aria-checked={on}
-                  onClick={() => toggle(p.id)}
-                  className={`press flex min-h-control-64 items-center gap-12 rounded-24 bg-surface-card p-12 ring-1 ${on ? 'ring-2 ring-accent-primary' : 'ring-surface-subtle'}`}
-                >
-                  <PetAvatar pet={p} size={44} />
-                  <span className="flex-1 text-left text-body font-medium">{p.name}</span>
-                  <span className={`flex size-[28px] items-center justify-center rounded-full ${on ? 'bg-accent-primary text-text-on-accent' : 'ring-2 ring-surface-subtle'}`}>{on && <Icon name="check" size={16} />}</span>
-                </button>
-              )
-            })}
-          </div>
+          <Card variant="list" className="mt-16 overflow-hidden">
+            {app.pets.map((p) => (
+              <button
+                key={p.id}
+                type="button"
+                role="checkbox"
+                aria-checked={chosen.includes(p.id)}
+                onClick={() => toggle(p.id)}
+                className="press flex w-full items-center gap-16 border-t border-surface-subtle px-24 py-16 text-left first:border-t-0 active:bg-surface-subtle"
+              >
+                <PetAvatar pet={p} size="md" />
+                <span className="flex-1 text-body font-medium">{p.name}</span>
+                <Checkbox checked={chosen.includes(p.id)} />
+              </button>
+            ))}
+          </Card>
           <div className="mt-24">
-            <Button full disabled={!chosen.length} onClick={() => setStep(3)}>
+            <Button full size="large" disabled={!chosen.length} onClick={() => setStep(3)}>
               Preview PDF
             </Button>
           </div>
@@ -86,7 +81,7 @@ export function Share() {
       {step === 3 && (
         <>
           {/* A preview of the PDF. On the phone the PDF is generated with jsPDF and handed to the iOS share sheet. */}
-          <div className="mt-16 rounded-16 bg-surface-card p-16 text-body-s shadow-[0_4px_24px_-8px_var(--surface-scrim)] ring-1 ring-surface-subtle">
+          <Card className="mt-16 text-body-s">
             <p className="text-caption font-medium text-accent-primary uppercase">SmartBoo · {setInfo.title}</p>
             <p className="text-caption text-text-tertiary">Prepared {formatDay(today(), { month: 'long', day: 'numeric', year: 'numeric' })}</p>
             {chosen.map((id) => {
@@ -111,10 +106,11 @@ export function Share() {
                 </div>
               )
             })}
-          </div>
+          </Card>
           <div className="mt-24">
             <Button
               full
+              size="large"
               icon="share"
               onClick={async () => {
                 const text = `${setInfo.title} records for ${chosen.map((id) => app.pets.find((p) => p.id === id)?.name).join(', ')}`

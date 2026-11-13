@@ -1,7 +1,12 @@
 import { useState, type ReactNode } from 'react'
 import { useNavigate, useParams } from 'react-router'
 import { Icon, type IconName } from '../components/Icon'
-import { Button, Card, Chip, PetAvatar, SectionTitle, StackScreen } from '../components/ui'
+import { Button } from '../components/Button'
+import { Card } from '../components/Card'
+import { ListRow } from '../components/ListRow'
+import { PetAvatar } from '../components/PetAvatar'
+import { TextField } from '../components/TextField'
+import { Chip, SectionTitle, StackScreen } from '../components/ui'
 import { petById, useApp } from '../data/useApp'
 import type { PetRecord, RecordType } from '../data/types'
 import { age, formatDay, relative, today } from '../lib/dates'
@@ -59,18 +64,14 @@ export function PetFolder() {
     <StackScreen
       title=""
       right={
-        <Button variant="secondary" icon="share" onClick={() => navigate(`/share?pet=${pet.id}`)} className="!min-h-control-44 !px-16">
+        <Button variant="secondary" icon="share" onClick={() => navigate(`/share?pet=${pet.id}`)}>
           Share
         </Button>
       }
     >
       {/* Header */}
       <div className="mt-8 flex flex-col items-center text-center">
-        <div className="rounded-[42%] bg-accent-primary-subtle p-4">
-          <div className="overflow-hidden rounded-[40%]">
-            <PetAvatar pet={pet} size={112} />
-          </div>
-        </div>
+        <PetAvatar pet={pet} size="hero" />
         <h1 className="mt-12 font-display text-display font-medium">{pet.name}</h1>
         <p className="text-body text-text-secondary">{[pet.species[0].toUpperCase() + pet.species.slice(1), pet.breed, age(pet.birthDate)].filter(Boolean).join(' · ')}</p>
       </div>
@@ -89,16 +90,9 @@ export function PetFolder() {
         )}
         <Tile icon="alert" label="Allergies" value={pet.allergies.length ? pet.allergies.join(', ') : 'None known'} />
         {pet.vet && (
-          <a href={`tel:${pet.vet.phone}`} className="press col-span-2 flex min-h-control-64 items-center gap-12 rounded-24 bg-surface-card p-16 ring-1 ring-surface-subtle">
-            <span className="flex size-control-40 items-center justify-center rounded-full bg-accent-primary text-text-on-accent">
-              <Icon name="phone" size={20} />
-            </span>
-            <span className="flex-1">
-              <span className="block text-caption font-medium text-text-secondary">Vet</span>
-              <span className="block text-body font-medium">{pet.vet.name}</span>
-            </span>
-            <span className="text-body-s font-medium text-accent-primary">Call</span>
-          </a>
+          <Card variant="list" className="col-span-2 overflow-hidden">
+            <ListRow icon="phone" label="Vet" title={pet.vet.name} trailing={{ label: 'Call', icon: 'phone' }} href={`tel:${pet.vet.phone}`} />
+          </Card>
         )}
       </div>
 
@@ -111,10 +105,7 @@ export function PetFolder() {
           </Chip>
         ))}
       </div>
-      <label className="mt-12 flex min-h-control-44 items-center gap-8 rounded-full bg-surface-card px-16 ring-1 ring-surface-subtle">
-        <Icon name="search" size={18} className="text-text-tertiary" />
-        <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search history" className="min-h-control-44 flex-1 bg-transparent text-body outline-none placeholder:text-text-tertiary" />
-      </label>
+      <TextField label="Search history" type="search" value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search history" trailingIcon="search" className="mt-12" />
       <ol className="mt-12">
         {history.map((r) => (
           <HistoryItem key={r.id} record={r} unit={pet.weightUnit} docTitle={documents.find((d) => d.id === r.documentId && r.type !== 'document')?.title} />
@@ -124,7 +115,7 @@ export function PetFolder() {
 
       {/* Profile */}
       <SectionTitle>Profile</SectionTitle>
-      <Card className="!py-4">
+      <Card variant="list" className="overflow-hidden">
         {[
           ['Species', pet.species],
           ['Breed', pet.breed],
@@ -133,10 +124,7 @@ export function PetFolder() {
           ['Insurance', pet.insurance],
           ['Vet', pet.vet?.name],
         ].map(([label, value]) => (
-          <div key={label} className="flex min-h-control-44 items-center justify-between border-b border-surface-subtle py-8 text-body last:border-0">
-            <span className="text-text-secondary">{label}</span>
-            <span className="max-w-[60%] truncate text-right">{value || '—'}</span>
-          </div>
+          <ListRow key={label} title={label} value={value || '—'} />
         ))}
       </Card>
       <Button full variant="ghost" onClick={() => navigate(`/pets/${pet.id}/edit`)} className="mt-8">
@@ -148,7 +136,7 @@ export function PetFolder() {
 
 function Tile({ icon, label, value, warn, children }: { icon: IconName; label: string; value: string; warn?: boolean; children?: ReactNode }) {
   return (
-    <div className="flex min-h-[96px] flex-col rounded-24 bg-surface-card p-12 ring-1 ring-surface-subtle">
+    <div className="flex min-h-avatar-80 flex-col gap-4 rounded-24 bg-surface-card p-12">
       <div className="flex items-center gap-4 text-text-secondary">
         <Icon name={icon} size={16} />
         <span className="text-caption font-medium">{label}</span>
@@ -165,7 +153,7 @@ function Sparkline({ values }: { values: number[] }) {
   const max = Math.max(...values)
   const pts = values.map((v, i) => `${(i / (values.length - 1)) * 100},${max === min ? 10 : 18 - ((v - min) / (max - min)) * 16}`).join(' ')
   return (
-    <svg viewBox="0 0 100 20" preserveAspectRatio="none" className="mt-auto h-[20px] w-full text-accent-primary" aria-hidden="true">
+    <svg viewBox="0 0 100 20" preserveAspectRatio="none" className="mt-auto h-icon-20 w-full shrink-0 pt-4 text-accent-primary" aria-hidden="true">
       <polyline points={pts} fill="none" stroke="currentColor" strokeWidth="2" vectorEffect="non-scaling-stroke" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   )
@@ -174,8 +162,8 @@ function Sparkline({ values }: { values: number[] }) {
 function HistoryItem({ record, unit, docTitle }: { record: PetRecord; unit: string; docTitle?: string }) {
   return (
     <li className="flex gap-12 py-8">
-      <span className="flex size-[36px] shrink-0 items-center justify-center rounded-full bg-accent-primary-subtle text-accent-primary">
-        <Icon name={recordIcon[record.type]} size={18} />
+      <span className="flex size-control-40 shrink-0 items-center justify-center rounded-full bg-accent-primary-subtle text-accent-primary ring-1 ring-inset ring-icon-circle-ring">
+        <Icon name={recordIcon[record.type]} size={20} />
       </span>
       <div className="min-w-0 flex-1 border-b border-surface-subtle pb-8">
         <div className="flex items-baseline justify-between gap-8">

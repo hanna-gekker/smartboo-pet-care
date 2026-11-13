@@ -5,7 +5,7 @@
 import type { Pet } from '../data/types'
 import type { TaskState } from '../lib/tasks'
 import { Checkbox } from './Checkbox'
-import { PetAvatar } from './ui'
+import { PetAvatar } from './PetAvatar'
 
 type TaskRowProps = {
   title: string
@@ -26,7 +26,7 @@ export function TaskRow({ title, detail, meta, state, pet, onToggle, flush }: Ta
   const done = state === 'done'
   return (
     <div className={`flex items-center gap-16 border-t border-surface-subtle py-16 first:border-t-0 ${flush ? 'px-0' : 'px-24'}`}>
-      <PetAvatar pet={pet} size={40} />
+      <PetAvatar pet={pet} size="sm" />
       <div className="min-w-0 flex-1">
         <p className={`truncate text-body font-medium ${done ? 'text-text-tertiary line-through' : 'text-text-primary'}`}>
           {title}
