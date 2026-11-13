@@ -13,8 +13,10 @@ import { Icon, type IconName } from '../components/Icon'
 import { IconButton, type IconButtonVariant } from '../components/IconButton'
 import { ListRow } from '../components/ListRow'
 import { Logo } from '../components/Logo'
+import { MonthCalendar } from '../components/MonthCalendar'
 import { NextUpCard } from '../components/NextUpCard'
 import { PetAvatar } from '../components/PetAvatar'
+import { SegmentedControl } from '../components/SegmentedControl'
 import { StatusPill } from '../components/StatusPill'
 import { AskBooInput } from '../components/AskBooInput'
 import { TabBar, type Tab } from '../components/TabBar'
@@ -254,6 +256,14 @@ function Board({ theme }: { theme: 'light' | 'dark' }) {
         </Card>
       </Section>
 
+      <Section title="Segmented control" note="Week chosen · Month chosen (tap to switch)">
+        <SegmentedDemo />
+      </Section>
+
+      <Section title="Month calendar" note="Selected Nov 4 · today Nov 4 · dots: overdue, due, done · past days grey">
+        <MonthDemo />
+      </Section>
+
       <Section title="Tab bar" note="Active: Today · Schedule · Pets · none (Settings)">
         {(['today', 'schedule', 'pets', undefined] as (Tab | undefined)[]).map((active) => (
           <TabBar key={active ?? 'none'} active={active} onBoo={() => {}} docked={false} />
@@ -285,6 +295,35 @@ function TaskRowDemo() {
       <TaskRow title="Clean litter box" meta="Cleo · 12:00 PM" state="done" pet={cleo} onToggle={() => {}} />
       <TaskRow title="Ear drops" detail="Otomax · 4 drops" meta="Rocky · overdue since Nov 6" state="waiting" pet={rocky} onToggle={() => {}} />
     </>
+  )
+}
+
+function SegmentedDemo() {
+  const [v, setV] = useState<'week' | 'month'>('week')
+  const options = [
+    { value: 'week' as const, label: 'Week' },
+    { value: 'month' as const, label: 'Month' },
+  ]
+  return (
+    <>
+      <SegmentedControl label="View" options={options} value={v} onChange={setV} />
+      <SegmentedControl label="View" options={options} value="month" onChange={() => {}} />
+    </>
+  )
+}
+
+function MonthDemo() {
+  const [selected, setSelected] = useState('2026-11-04')
+  return (
+    <MonthCalendar
+      month="2026-11-04"
+      selected={selected}
+      today="2026-11-04"
+      dots={{ '2026-11-01': 'done', '2026-11-02': 'overdue', '2026-11-03': 'done', '2026-11-04': 'overdue', '2026-11-05': 'due', '2026-11-12': 'due', '2026-11-27': 'due' }}
+      onSelect={setSelected}
+      onPrev={() => {}}
+      onNext={() => {}}
+    />
   )
 }
 
