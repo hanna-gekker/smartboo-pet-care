@@ -9,7 +9,9 @@
     "lint": "oxlint",
     "preview": "vite preview",
     "tokens": "node scripts/figma-to-tokens.mjs && node scripts/build-tokens.mjs",
-    "ios": "npm run build && cap sync ios"
+    "ios": "npm run build && cap sync ios",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
   },
   "dependencies": {
     "@capacitor/core": "^8.6.0",
@@ -22,12 +24,17 @@
   },
   "devDependencies": {
     "@capacitor/cli": "^8.6.0",
+    "@storybook/addon-a11y": "^10.6.7",
+    "@storybook/addon-docs": "^10.6.7",
+    "@storybook/react-vite": "^10.6.7",
     "@tailwindcss/vite": "^4.3.5",
     "@types/node": "^24.19.2",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
     "@vitejs/plugin-react": "^6.1.2",
     "oxlint": "^1.90.0",
+    "storybook": "^10.6.7",
+    "storybook-addon-pseudo-states": "^10.6.7",
     "style-dictionary": "5.7.1",
     "tailwindcss": "^4.3.5",
     "typescript": "~7.0.2",

@@ -248,14 +248,13 @@ body:has(.bg-welcome)::before {
   pointer-events: none;
 }
 
-/* Pressed state instead of hover */
+/* Pressed state instead of hover: a small shrink. No fading, so text keeps its 4.5:1 contrast while pressed. */
 .press {
-  transition: transform 120ms ease, opacity 120ms ease;
+  transition: transform 120ms ease;
 }
 .press:active,
 .press[data-state="pressed"] {
   transform: scale(0.97);
-  opacity: 0.85;
 }
 
 @keyframes sheet-in {
