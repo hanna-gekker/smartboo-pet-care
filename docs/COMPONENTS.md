@@ -154,3 +154,13 @@ Decisions (Nov 13, 2026):
 - **The status on the right of a pet row** comes from `petStatus()` in `src/lib/tasks.ts`: "2 overdue" or the task name when overdue (red), "… today", the next task with its date, or "All good". Daily chores don't count.
 - **Age in the list is short**: "7 y", "5 mo" (`ageShort()`).
 - **A ListRow value takes at most 40% of the row**, so a long status never squeezes the pet's name.
+
+## 11. Schedule as in Figma (Nov 13, 2026)
+
+Schedule follows the Figma screen "5 · Schedule": the Today header (logo, settings) with the month over the title, the week strip in a card, then a card per section ("Today · 2 of 6 done", "Tomorrow · Thu, Nov 5 · 3 tasks", "Later this week · 2 tasks"). No new components.
+
+Decisions (Nov 13, 2026):
+- **Done tasks stay inside their day**, crossed out at the end of the list. There is no separate "Done today" section here.
+- **Week strip dots:** coral when something on that day is overdue, violet when something is planned (`status/waiting-dot`, `status/due-dot`).
+- **Only the current week for now.** The previous/next week arrows are gone (not in Figma). Other weeks come with the Week / Month switch, which waits for a decision.
+- **The empty state** ("Boo hint" in Figma) is not built yet; the old grey line stays until then.
