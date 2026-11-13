@@ -19,6 +19,7 @@ import { TextField } from './TextField'
 
 type Step =
   | { name: 'menu' }
+  | { name: 'type' }
   | { name: 'consent'; then: () => void }
   | { name: 'snap' }
   | { name: 'talk' }
@@ -43,7 +44,7 @@ export function BooSheet() {
 /** One opening of the sheet. A new key on every opening starts it fresh. */
 function BooFlow() {
   const { booStart, booText } = useUi()
-  const [step, setStep] = useState<Step>(booStart === 'snap' ? { name: 'snap' } : booStart === 'talk' ? { name: 'talk' } : { name: 'menu' })
+  const [step, setStep] = useState<Step>({ name: booStart } as Step)
   const [text, setText] = useState(booText)
   return <StepView step={step} setStep={setStep} text={text} setText={setText} />
 }
@@ -99,42 +100,41 @@ function StepView({ step, setStep, text, setText }: { step: Step; setStep: (s: S
   switch (step.name) {
     case 'menu':
       return (
-        <div>
-          <div className="flex items-center gap-12 pt-4 pb-16">
-            <BooCharacter size={56} />
-            <div>
-              <p className="font-display text-title font-medium">What happened?</p>
-              <p className="text-body-s text-text-secondary">Tell me, or hand me a vet paper.</p>
-            </div>
+        <div className="flex flex-col gap-16">
+          <BooHeader />
+          {/* Figma "8 · Boo sheet": three tiles, Talk first and highlighted */}
+          <div className="grid grid-cols-3 gap-12">
+            <BigAction icon="mic" label="Talk" main onClick={() => setStep({ name: 'talk' })} />
+            <BigAction icon="camera" label="Snap" onClick={() => setStep({ name: 'snap' })} />
+            <BigAction icon="keyboard" label="Type" onClick={() => setStep({ name: 'type' })} />
           </div>
+          <p className="text-caption text-text-secondary">Try: “Cleo weighs 950 grams” · “When is Rocky’s rabies due?”</p>
+        </div>
+      )
+
+    case 'type':
+      return (
+        <div className="flex flex-col gap-16">
+          <BooHeader />
+          {/* Figma "8a · Typing": a grey capsule with the send button */}
           <form
-            className="flex items-center gap-8 rounded-full bg-surface-canvas py-4 pr-4 pl-16 ring-1 ring-inset ring-border-control focus-within:ring-2 focus-within:ring-text-primary"
+            className="flex min-h-control-56 items-center gap-8 rounded-full bg-surface-subtle py-8 pr-8 pl-16 focus-within:ring-2 focus-within:ring-text-primary"
             onSubmit={(e) => {
               e.preventDefault()
               send(text)
             }}
           >
             <input
+              autoFocus
               value={text}
               onChange={(e) => setText(e.target.value)}
-              placeholder="“Cleo weighs 3.9 kg”"
+              placeholder="Tell Boo anything…"
               aria-label="Type to Boo"
-              className="min-h-control-44 flex-1 bg-transparent text-body outline-none placeholder:text-text-tertiary"
+              enterKeyHint="send"
+              className="min-w-0 flex-1 bg-transparent text-body outline-none placeholder:text-text-tertiary"
             />
-            <IconButton type="submit" variant="primary" icon="arrow-up" label="Send" disabled={!text.trim()} />
+            <IconButton type="submit" variant="primary" icon="arrow-up" label="Send" disabled={!text.trim()} className="-m-2" />
           </form>
-          <div className="mt-16 grid grid-cols-3 gap-8">
-            <BigAction icon="mic" label="Talk" onClick={() => setStep({ name: 'talk' })} />
-            <BigAction icon="camera" label="Snap a paper" onClick={() => setStep({ name: 'snap' })} />
-            <BigAction icon="keyboard" label="Type" onClick={() => (document.querySelector('[aria-label="Type to Boo"]') as HTMLInputElement | null)?.focus()} />
-          </div>
-          <div className="swipe-row -mx-16 mt-16 flex gap-8 px-16">
-            {['Cleo weighs 3.9 kg', 'Rocky threw up', "When is Rocky's rabies due?", 'Ear drops twice a day for 10 days'].map((s) => (
-              <button key={s} type="button" onClick={() => send(s)} className="press min-h-control-44 shrink-0 rounded-full bg-accent-primary-subtle px-16 text-body-s text-accent-primary">
-                {s}
-              </button>
-            ))}
-          </div>
         </div>
       )
 
@@ -270,11 +270,31 @@ function StepView({ step, setStep, text, setText }: { step: Step; setStep: (s: S
   }
 }
 
-function BigAction({ icon, label, onClick }: { icon: 'mic' | 'camera' | 'keyboard'; label: string; onClick: () => void }) {
+/** Boo and the question on top of the sheet (Figma "Header"). No name: there are no accounts. */
+function BooHeader() {
   return (
-    <button type="button" onClick={onClick} className="press flex min-h-control-64 flex-col items-center justify-center gap-4 rounded-24 bg-surface-canvas py-12 text-body-s font-medium active:bg-surface-subtle">
-      <span className="flex size-control-40 items-center justify-center rounded-full bg-accent-primary text-text-on-accent">
-        <Icon name={icon} size={20} />
+    <div className="flex items-center gap-12">
+      <BooCharacter size={56} />
+      <div className="flex min-w-0 flex-col gap-2">
+        <p className="font-display text-title font-medium">What’s up?</p>
+        <p className="text-body-s text-text-secondary">Talk, snap a paper or type — I’ll file it.</p>
+      </div>
+    </div>
+  )
+}
+
+/** A big tile: an icon in a circle over a label. `main` is the highlighted one (Talk). */
+function BigAction({ icon, label, main, onClick }: { icon: 'mic' | 'camera' | 'keyboard'; label: string; main?: boolean; onClick: () => void }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={`press flex h-[112px] flex-col items-center justify-center gap-12 rounded-24 px-8 py-16 text-body font-medium ${
+        main ? 'bg-accent-primary-subtle text-accent-primary ring-2 ring-accent-primary ring-inset' : 'bg-surface-subtle text-text-primary'
+      }`}
+    >
+      <span className={`flex size-48 items-center justify-center rounded-full ${main ? 'bg-accent-primary text-text-on-accent' : 'bg-surface-card text-text-primary'}`}>
+        <Icon name={icon} size={24} />
       </span>
       {label}
     </button>
