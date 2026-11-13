@@ -56,5 +56,11 @@ export function TabBar({ active, onBoo, docked = true }: TabBarProps) {
   )
 
   if (!docked) return bar
-  return <div className="pointer-events-none fixed inset-x-0 bottom-0 z-30 flex justify-center px-16 pb-safe-16">{bar}</div>
+  return (
+    <div className="pointer-events-none fixed inset-x-0 bottom-0 z-30 flex justify-center px-16 pb-safe-16">
+      {/* Figma "Bottom fade": content scrolling under the bar fades into the page background (120 high, solid from the middle). */}
+      <div aria-hidden="true" className="absolute inset-x-0 bottom-0 h-[120px] bg-linear-to-b from-surface-canvas-clear via-surface-canvas via-50% to-surface-canvas" />
+      <div className="relative flex w-full justify-center">{bar}</div>
+    </div>
+  )
 }
