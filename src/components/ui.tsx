@@ -1,4 +1,6 @@
 // Small building blocks. No data loading inside — only props.
+// Button, IconButton, Card and Field here are the older versions the screens still use.
+// The new ones live in Button.tsx, IconButton.tsx, Card.tsx and TextField.tsx; screens move to them in P10.
 
 import type { ReactNode } from 'react'
 import { useNavigate } from 'react-router'

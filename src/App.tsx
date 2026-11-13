@@ -1,9 +1,10 @@
-import { useEffect } from 'react'
+import { lazy, Suspense, useEffect } from 'react'
 import { createBrowserRouter, Navigate, Outlet, RouterProvider, useLocation } from 'react-router'
 import { BooSheet } from './components/BooSheet'
-import { TabBar } from './components/TabBar'
+import { TabBar, type Tab } from './components/TabBar'
 import { Toast } from './components/Toast'
 import { useApp } from './data/useApp'
+import { useUi } from './data/useUi'
 import { PetFolder } from './screens/PetFolder'
 import { PetForm } from './screens/PetForm'
 import { PetList } from './screens/PetList'
@@ -16,9 +17,20 @@ import { Welcome } from './screens/Welcome'
 /** Screens without the tab bar: first launch and focused flows. */
 const NO_TAB_BAR = ['/welcome', '/pets/new', '/share']
 
+/** The tab that is open for a path, if any (Settings has none). */
+function tabFor(pathname: string): Tab | undefined {
+  if (pathname === '/') return 'today'
+  if (pathname.startsWith('/schedule')) return 'schedule'
+  if (pathname.startsWith('/pets')) return 'pets'
+}
+
+// The component check page exists only while developing (npm run dev). It is left out of the finished app.
+const ComponentsPage = import.meta.env.DEV ? lazy(() => import('./dev/ComponentsPage')) : null
+
 function Shell() {
   const { pathname } = useLocation()
   const hasPets = useApp((s) => s.pets.length > 0)
+  const openBoo = useUi((s) => s.openBoo)
 
   useEffect(() => {
     window.scrollTo(0, 0)
@@ -34,7 +46,7 @@ function Shell() {
   return (
     <div className="mx-auto max-w-[560px]">
       {redirect ? <Navigate to={redirect} replace /> : <Outlet />}
-      {!redirect && !hideTabBar && <TabBar />}
+      {!redirect && !hideTabBar && <TabBar active={tabFor(pathname)} onBoo={() => openBoo()} />}
       <BooSheet />
       <Toast />
     </div>
@@ -42,6 +54,18 @@ function Shell() {
 }
 
 const router = createBrowserRouter([
+  ...(ComponentsPage
+    ? [
+        {
+          path: '/components',
+          element: (
+            <Suspense>
+              <ComponentsPage />
+            </Suspense>
+          ),
+        },
+      ]
+    : []),
   {
     element: <Shell />,
     children: [
