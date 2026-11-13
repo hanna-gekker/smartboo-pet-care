@@ -179,3 +179,14 @@ Decisions (approved Nov 13, 2026):
 - **One dot per day**, the most urgent wins: overdue (coral) → due (violet) → done (green, `status/done-dot`, when everything on that day is done).
 - **Past days** have grey numbers, as in Figma.
 - **Tapping a day** in Month shows that day's card below, like in Week. ‹ › move by a month.
+
+## 13. Boo sheet as in Figma (Nov 13, 2026)
+
+The Boo sheet menu follows Figma "8 · Boo sheet", and typing follows "8a · Typing". No new components: the tiles and the header are parts of `BooSheet.tsx`.
+
+Decisions (Nov 13, 2026):
+- **"What's up?" without a name.** There are no accounts (same as the Today greeting).
+- **Three tiles: Talk, Snap, Type.** Talk is highlighted. Type opens a step with the text field and Send; the field is gone from the menu.
+- **No suggestion chips.** A grey "Try: …" line shows two examples instead.
+- **All sheets have 24px side padding and a 5px handle in `border/control`**, as in Figma.
+- The other Boo steps (consent, snap, reading, review, remind, photo, answers) keep their current look for now; they have their own Figma frames (6a–6g, 8b–8d, 9, 10).

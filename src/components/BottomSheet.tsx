@@ -26,11 +26,11 @@ export function BottomSheet({ open, onClose, children, label }: { open: boolean;
     <div className="fixed inset-0 z-40" role="dialog" aria-modal="true" aria-label={label}>
       <div className="animate-fade-in absolute inset-0 bg-surface-scrim" onClick={onClose} />
       <div
-        className="animate-sheet-in pb-safe absolute inset-x-0 bottom-0 mx-auto max-h-[88dvh] max-w-560 overflow-y-auto rounded-t-24 bg-surface-card px-16"
+        className="animate-sheet-in pb-safe absolute inset-x-0 bottom-0 mx-auto max-h-[88dvh] max-w-560 overflow-y-auto rounded-t-24 bg-surface-card px-24"
         style={{ transform: `translateY(${dragY}px)`, transition: dragging ? 'none' : 'transform 200ms ease' }}
       >
         <div
-          className="sticky top-0 z-10 -mx-16 flex h-control-32 touch-none items-center justify-center bg-surface-card"
+          className="sticky top-0 z-10 -mx-24 flex h-control-32 touch-none items-center justify-center bg-surface-card"
           onTouchStart={(e) => onStart(e.touches[0].clientY)}
           onTouchMove={(e) => onMove(e.touches[0].clientY)}
           onTouchEnd={onEnd}
@@ -38,7 +38,7 @@ export function BottomSheet({ open, onClose, children, label }: { open: boolean;
           onPointerMove={(e) => e.pointerType === 'mouse' && e.buttons && onMove(e.clientY)}
           onPointerUp={(e) => e.pointerType === 'mouse' && onEnd()}
         >
-          <span className="h-[6px] w-control-40 rounded-full bg-surface-subtle" />
+          <span className="h-[5px] w-control-40 rounded-full bg-border-control" />
         </div>
         {children}
       </div>
