@@ -10,3 +10,6 @@ boo-tests/
 dist/
 *.local
 *.log
+
+*storybook.log
+storybook-static

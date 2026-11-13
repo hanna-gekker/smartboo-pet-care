@@ -36,6 +36,10 @@ Run them in the project folder. The first time, run `npm install`.
 - `npm run preview` — opens the finished app from `dist/` to check the build before shipping.
 - `npm run lint` — looks for common mistakes in the code (oxlint).
 - `npm run ios` — builds the app and copies it into the iOS project (`ios/`, Capacitor). Then open it in the iPhone simulator from Xcode or the Claude simulator panel.
+- `npm run storybook` — opens Storybook at http://localhost:6006: every component on its own, in every state, with a Light/Dark switch and phone sizes. In the Claude app it starts from the Browser panel ("storybook" in `.claude/launch.json`).
+- `npm run build-storybook` — makes the finished Storybook in `storybook-static/`, for publishing.
+
+When I write «відкрий Storybook» / «открой Storybook» / «open Storybook»: start it ("storybook" in `.claude/launch.json`) and open it for me in the Browser panel.
 
 When I write «онови iOS» / «update iOS»: run `npm run ios`, build the Xcode project `ios/App/App.xcodeproj` (scheme App) and launch it in the iPhone 17 Pro simulator, then show me a screenshot.
 
