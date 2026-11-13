@@ -1,5 +1,6 @@
 // Icons from the Figma "Design system" page (Icon / …), 24 × 24, a 1.5px line in the current text color.
-// Exported from Figma; names are the Figma names. The line stays 1.5px at any size, like in Figma.
+// Exported from Figma; names are the Figma names. The line scales with the size, like in Figma:
+// 24 → 1.5, 20 → 1.25, 16 → 1.
 // sparkle-ai is filled with the AI gradient (ai/* tokens) instead of a line.
 // search and more aren't in Figma yet — they are drawn in the same style until they are.
 
@@ -78,7 +79,7 @@ export function Icon({ name, size = 24, className = '' }: { name: IconName; size
       aria-hidden="true"
     >
       {paths.map((d) => (
-        <path key={d} d={d} vectorEffect="non-scaling-stroke" />
+        <path key={d} d={d} />
       ))}
     </svg>
   )
