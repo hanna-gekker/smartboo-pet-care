@@ -2,7 +2,7 @@
 // Kept out of TaskRow, so the component only draws what it is given.
 
 import type { Task } from '../data/types'
-import { formatDay, formatTime, today } from './dates'
+import { daysBetween, formatDay, formatTime, relative, today } from './dates'
 
 export type TaskState = 'default' | 'done' | 'waiting'
 
@@ -24,4 +24,25 @@ export function taskMeta(task: Task, petName: string | undefined, { showDate = f
     when = task.date === today() ? `waiting since ${formatTime(task.time)}` : `overdue since ${formatDay(task.date)}`
   }
   return [petName, when].filter(Boolean).join(' · ')
+}
+
+/** The pill on Next up: "Overdue · 3 days", "Waiting · 8 AM", "12:00 PM", "Tomorrow", "Nov 20". */
+export function taskPill(task: Task, now = new Date()): { kind: 'waiting' | 'upcoming' | 'done'; label: string } {
+  if (task.doneAt) return { kind: 'done', label: 'Done' }
+  const t = today()
+  if (taskState(task, now) === 'waiting') {
+    if (task.date === t) return { kind: 'waiting', label: `Waiting · ${formatTime(task.time)}` }
+    const days = daysBetween(task.date, t)
+    return { kind: 'waiting', label: `Overdue · ${days} day${days === 1 ? '' : 's'}` }
+  }
+  if (task.date === t) return { kind: 'upcoming', label: task.time ? formatTime(task.time) : 'Today' }
+  const rel = relative(task.date)
+  return { kind: 'upcoming', label: rel[0].toUpperCase() + rel.slice(1) }
+}
+
+/** The grey line on Next up: "Rocky · was due Nov 1 · Dr. Lee". */
+export function nextUpMeta(task: Task, petName?: string, vetName?: string, now = new Date()): string {
+  const late = taskState(task, now) === 'waiting' && task.date < today()
+  const when = late ? `was due ${formatDay(task.date)}` : task.date === today() ? '' : formatDay(task.date)
+  return [petName, task.detail, when, vetName].filter(Boolean).join(' · ')
 }

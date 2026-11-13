@@ -9,8 +9,14 @@ import { BooCharacter } from '../components/BooCharacter'
 import { Button, type ButtonSize, type ButtonVariant } from '../components/Button'
 import { Card } from '../components/Card'
 import { Checkbox } from '../components/Checkbox'
+import { Icon, type IconName } from '../components/Icon'
 import { IconButton, type IconButtonVariant } from '../components/IconButton'
 import { ListRow } from '../components/ListRow'
+import { Logo } from '../components/Logo'
+import { NextUpCard } from '../components/NextUpCard'
+import { PetAvatar } from '../components/PetAvatar'
+import { StatusPill } from '../components/StatusPill'
+import { AskBooInput } from '../components/AskBooInput'
 import { TabBar, type Tab } from '../components/TabBar'
 import { TaskRow } from '../components/TaskRow'
 import { TextField } from '../components/TextField'
@@ -111,7 +117,7 @@ function Board({ theme }: { theme: 'light' | 'dark' }) {
       </Section>
 
       <Section title="Icon button" note="Primary · Secondary · Soft × 40 · 56. Tap area is 44 even for 40.">
-        {(['primary', 'secondary', 'soft'] as IconButtonVariant[]).map((variant) => (
+        {(['primary', 'secondary', 'soft', 'plain'] as IconButtonVariant[]).map((variant) => (
           <Row key={variant} label={variant}>
             <IconButton variant={variant} icon="mic" label="Talk to Boo" />
             <IconButton variant={variant} icon="mic" label="Talk to Boo" size={56} />
@@ -191,9 +197,56 @@ function Board({ theme }: { theme: 'light' | 'dark' }) {
         </Group>
       </Section>
 
+      <Section title="Icons" note="From Figma, 1.5px line. search and more are not in Figma yet.">
+        <div className="grid grid-cols-6 gap-8">
+          {(['mic', 'check', 'plus', 'chevron-right', 'x', 'sun', 'paw', 'calendar', 'home', 'thermometer', 'bag', 'heart-pulse', 'route', 'bell', 'keyboard', 'sparkle-ai', 'settings', 'camera', 'chevron-left', 'share', 'phone', 'syringe', 'pill', 'weight', 'shield-alert', 'stethoscope', 'file-text', 'image', 'arrow-up', 'user', 'alert-circle', 'search', 'more'] as IconName[]).map((n) => (
+            <div key={n} className="flex flex-col items-center gap-4 rounded-16 bg-surface-card p-8 text-text-primary">
+              <Icon name={n} />
+              <span className="w-full truncate text-center text-caption text-text-secondary">{n}</span>
+            </div>
+          ))}
+        </div>
+      </Section>
+
+      <Section title="Logo" note="Figma Logo · Horizontal">
+        <Logo />
+      </Section>
+
+      <Section title="Status pill" note="Waiting · Upcoming · Done">
+        <Row label="">
+          <StatusPill status="waiting" label="Overdue · 3 days" />
+          <StatusPill status="upcoming" label="12:00 PM" />
+          <StatusPill status="done" label="Done" />
+        </Row>
+      </Section>
+
+      <Section title="Next up card" note="Waiting tint · Upcoming on white · without a vet">
+        <NextUpCard pet={rocky} title="Rabies & DHPP" meta="Rocky · was due Nov 1 · Dr. Lee" status={{ kind: 'waiting', label: 'Overdue · 3 days' }} onDone={() => {}} onBookVet={() => {}} />
+        <NextUpCard pet={cleo} title="Ear drops" meta="Cleo · Otomax · 4 drops" status={{ kind: 'upcoming', label: '8 PM' }} onDone={() => {}} />
+      </Section>
+
+      <Section title="Ask Boo input" note="Placeholder opens typing · camera · mic">
+        <div className="rounded-24 bg-ai-card p-16">
+          <AskBooInput placeholder="Tell Boo anything…" onType={() => {}} onSnap={() => {}} onTalk={() => {}} />
+        </div>
+      </Section>
+
+      <Section title="Pet avatar" note="Round 40 · 48 · 72 outlined · petals 80 in each pet color, with the due dot">
+        <Row label="">
+          <PetAvatar pet={rocky} size="sm" />
+          <PetAvatar pet={rocky} size="md" />
+          <PetAvatar pet={rocky} size="lg" outlined />
+        </Row>
+        <Row label="">
+          {(['ocean', 'lavender', 'butter', 'mint', 'pink', 'slate'] as const).map((c, i) => (
+            <PetAvatar key={c} pet={i % 2 ? cleo : rocky} petals={c} dueSoon={i === 1} />
+          ))}
+        </Row>
+      </Section>
+
       <Section title="List row" note="Leading: icon · photo · emoji · none. Trailing: chevron · action · value.">
         <Card variant="list" className="overflow-hidden">
-          <ListRow icon="heart" title="Title" subtitle="Subtitle" trailing="chevron" onClick={() => {}} />
+          <ListRow icon="heart-pulse" title="Title" subtitle="Subtitle" trailing="chevron" onClick={() => {}} />
           <ListRow pet={rocky} title="Rocky" subtitle="Labrador Retriever · 7 yrs" trailing="chevron" onClick={() => {}} />
           <ListRow emoji="🩺" title="New vet" subtitle="Everything: history, vaccines, meds, documents" trailing="chevron" onClick={() => {}} />
           <ListRow icon="phone" label="Vet" title="Bayside Animal Clinic" trailing={{ label: 'Call', icon: 'phone' }} href="#" />

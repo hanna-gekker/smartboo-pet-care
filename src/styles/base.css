@@ -196,6 +196,11 @@ body::before {
   pointer-events: none;
 }
 
+/* Figma "Assistant card": the Boo card's soft gradient (ai/card-*), top left to bottom right. */
+.bg-ai-card {
+  background: linear-gradient(135deg, var(--ai-card-mint) 0%, var(--ai-card-blue) 45%, var(--ai-card-lilac) 80%, var(--ai-card-pink) 100%);
+}
+
 /* Pressed state instead of hover */
 .press {
   transition: transform 120ms ease, opacity 120ms ease;

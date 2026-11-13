@@ -21,12 +21,12 @@ const filters: { key: 'all' | RecordType; label: string }[] = [
 ]
 
 const recordIcon: Record<RecordType, IconName> = {
-  health: 'heart',
+  health: 'heart-pulse',
   meds: 'pill',
   vaccine: 'syringe',
-  weight: 'scale',
-  document: 'doc',
-  note: 'sparkle',
+  weight: 'weight',
+  document: 'file-text',
+  note: 'sparkle-ai',
 }
 
 const NO_VACCINES = ['fish', 'reptile', 'bird']
@@ -84,11 +84,11 @@ export function PetFolder() {
         )}
         <Tile icon="pill" label="Meds now" value={medsNow.length ? medsNow.map((m) => m.name).join(', ') : 'None'} />
         {lastWeight && (
-          <Tile icon="scale" label="Weight" value={`${lastWeight.value} ${pet.weightUnit}`}>
+          <Tile icon="weight" label="Weight" value={`${lastWeight.value} ${pet.weightUnit}`}>
             <Sparkline values={weights.map((w) => w.value!)} />
           </Tile>
         )}
-        <Tile icon="alert" label="Allergies" value={pet.allergies.length ? pet.allergies.join(', ') : 'None known'} />
+        <Tile icon="shield-alert" label="Allergies" value={pet.allergies.length ? pet.allergies.join(', ') : 'None known'} />
         {pet.vet && (
           <Card variant="list" className="col-span-2 overflow-hidden">
             <ListRow icon="phone" label="Vet" title={pet.vet.name} trailing={{ label: 'Call', icon: 'phone' }} href={`tel:${pet.vet.phone}`} />
@@ -173,7 +173,7 @@ function HistoryItem({ record, unit, docTitle }: { record: PetRecord; unit: stri
         {record.detail && <p className="text-body-s text-text-secondary">{record.detail}</p>}
         {docTitle && (
           <p className="mt-2 flex items-center gap-4 text-body-s text-accent-primary">
-            <Icon name="doc" size={14} />
+            <Icon name="file-text" size={14} />
             From: {docTitle}
           </p>
         )}

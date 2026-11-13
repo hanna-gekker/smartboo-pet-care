@@ -30,7 +30,7 @@ export function StackScreen({ title, children, right, withTabBar = true }: { tit
   return (
     <div className={`pt-safe min-h-dvh px-16 ${withTabBar ? 'pb-[144px]' : 'pb-safe'}`}>
       <header className="-mx-2 flex min-h-control-56 items-center gap-4">
-        <IconButton icon="back" label="Back" onClick={() => navigate(-1)} />
+        <IconButton icon="chevron-left" label="Back" onClick={() => navigate(-1)} />
         {title ? <h1 className="flex-1 truncate font-display text-body-l font-medium">{title}</h1> : <span className="flex-1" />}
         {right}
       </header>

@@ -53,8 +53,8 @@ export function Schedule() {
       <div className="mt-12 flex items-center justify-between">
         <p className="text-body font-medium">{fromDay(week[0]).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</p>
         <div className="-mr-2 flex">
-          <IconButton icon="back" label="Previous week" onClick={() => setSelected(addDays(selected, -7))} />
-          <IconButton icon="chevron" label="Next week" onClick={() => setSelected(addDays(selected, 7))} />
+          <IconButton icon="chevron-left" label="Previous week" onClick={() => setSelected(addDays(selected, -7))} />
+          <IconButton icon="chevron-right" label="Next week" onClick={() => setSelected(addDays(selected, 7))} />
         </div>
       </div>
       <div role="tablist" aria-label="Days" className="mt-4 grid grid-cols-7">
@@ -86,7 +86,7 @@ export function Schedule() {
 
       {onDay.length === 0 && tomorrow.length === 0 && later.length === 0 && (
         <div className="mt-48 flex flex-col items-center text-center text-text-secondary">
-          <Icon name="schedule" size={24} />
+          <Icon name="calendar" size={24} />
           <p className="mt-8 text-body">{isPast ? 'Nothing was logged that day.' : 'Nothing planned for this day.'}</p>
         </div>
       )}

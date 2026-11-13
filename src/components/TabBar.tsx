@@ -9,9 +9,9 @@ import { Icon, type IconName } from './Icon'
 export type Tab = 'today' | 'schedule' | 'pets'
 
 const tabs: { key: Tab; to: string; label: string; icon: IconName }[] = [
-  { key: 'today', to: '/', label: 'Today', icon: 'today' },
-  { key: 'schedule', to: '/schedule', label: 'Schedule', icon: 'schedule' },
-  { key: 'pets', to: '/pets', label: 'Pets', icon: 'pets' },
+  { key: 'today', to: '/', label: 'Today', icon: 'sun' },
+  { key: 'schedule', to: '/schedule', label: 'Schedule', icon: 'calendar' },
+  { key: 'pets', to: '/pets', label: 'Pets', icon: 'paw' },
 ]
 
 type TabBarProps = {
