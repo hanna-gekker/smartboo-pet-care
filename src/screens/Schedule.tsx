@@ -1,11 +1,13 @@
 import { useState } from 'react'
+import { Button } from '../components/Button'
+import { Card } from '../components/Card'
 import { Icon } from '../components/Icon'
+import { IconButton } from '../components/IconButton'
 import { TaskRow } from '../components/TaskRow'
-import { taskMeta, taskState } from '../lib/tasks'
-import { Card, IconButton } from '../components/ui'
 import { petById, useApp } from '../data/useApp'
 import type { Task } from '../data/types'
 import { addDays, formatDay, fromDay, today, weekOf } from '../lib/dates'
+import { taskMeta, taskState } from '../lib/tasks'
 
 const byTime = (a: Task, b: Task) => (a.date + (a.time ?? '99')).localeCompare(b.date + (b.time ?? '99'))
 
@@ -28,7 +30,7 @@ export function Schedule() {
     list.length > 0 && (
       <section className="mt-24">
         <h2 className="mb-8 text-body-s font-medium text-text-secondary uppercase">{title}</h2>
-        <Card className="!p-0">
+        <Card variant="list">
           {list.map((x) => (
             <TaskRow key={x.id} title={x.title} detail={x.detail} meta={taskMeta(x, petById(pets, x.petId)?.name, { showDate })} state={taskState(x)} pet={petById(pets, x.petId)} onToggle={() => toggleTask(x.id)} />
           ))}
@@ -38,19 +40,19 @@ export function Schedule() {
 
   return (
     <div className="pt-safe min-h-dvh px-16 pb-[144px]">
-      <header className="flex min-h-[48px] items-center justify-between">
+      <header className="flex min-h-control-56 items-center justify-between">
         <h1 className="font-display text-display font-medium">Schedule</h1>
         {!isToday && (
-          <button type="button" onClick={() => setSelected(t)} className="press min-h-control-44 rounded-full px-12 text-body font-medium text-accent-primary">
+          <Button variant="ghost" onClick={() => setSelected(t)} className="-mr-16 !text-accent-primary">
             Today
-          </button>
+          </Button>
         )}
       </header>
 
       {/* Week strip */}
       <div className="mt-12 flex items-center justify-between">
         <p className="text-body font-medium">{fromDay(week[0]).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</p>
-        <div className="-mr-8 flex">
+        <div className="-mr-2 flex">
           <IconButton icon="back" label="Previous week" onClick={() => setSelected(addDays(selected, -7))} />
           <IconButton icon="chevron" label="Next week" onClick={() => setSelected(addDays(selected, 7))} />
         </div>
@@ -69,7 +71,7 @@ export function Schedule() {
             >
               <span className={`text-caption font-medium ${active ? '' : 'text-text-secondary'}`}>{formatDay(day, { weekday: 'narrow' })}</span>
               <span className="font-display text-body-l font-medium">{fromDay(day).getDate()}</span>
-              <span className={`size-[6px] rounded-full ${hasTasks(day) ? (active ? 'bg-text-on-dark' : 'bg-status-waiting-dot') : 'bg-transparent'}`} />
+              <span className={`size-8 rounded-full ${hasTasks(day) ? (active ? 'bg-text-on-dark' : 'bg-status-waiting-dot') : 'bg-transparent'}`} />
             </button>
           )
         })}
@@ -84,7 +86,7 @@ export function Schedule() {
 
       {onDay.length === 0 && tomorrow.length === 0 && later.length === 0 && (
         <div className="mt-48 flex flex-col items-center text-center text-text-secondary">
-          <Icon name="schedule" size={32} />
+          <Icon name="schedule" size={24} />
           <p className="mt-8 text-body">{isPast ? 'Nothing was logged that day.' : 'Nothing planned for this day.'}</p>
         </div>
       )}

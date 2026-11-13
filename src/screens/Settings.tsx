@@ -1,5 +1,10 @@
+import type { ChangeEvent } from 'react'
 import { useNavigate } from 'react-router'
-import { Card, SectionTitle, StackScreen } from '../components/ui'
+import { Button } from '../components/Button'
+import { Card } from '../components/Card'
+import { ListRow } from '../components/ListRow'
+import { TextField } from '../components/TextField'
+import { SectionTitle, StackScreen } from '../components/ui'
 import { useApp } from '../data/useApp'
 import { RED_FLAG_NOTE } from '../lib/boo'
 
@@ -11,32 +16,21 @@ export function Settings() {
   return (
     <StackScreen title="Settings">
       <SectionTitle>Vets</SectionTitle>
-      <Card className="!py-4">
-        {vets.length === 0 && <p className="py-12 text-body text-text-secondary">Add a vet in a pet’s profile.</p>}
+      <Card variant="list" className="overflow-hidden">
+        {vets.length === 0 && <p className="px-24 py-16 text-body text-text-secondary">Add a vet in a pet’s profile.</p>}
         {vets.map((v) => (
-          <a key={v.name} href={`tel:${v.phone}`} className="press flex min-h-[48px] items-center justify-between border-b border-surface-subtle py-8 last:border-0">
-            <span className="text-body">{v.name}</span>
-            <span className="text-body-s font-medium text-accent-primary">Call</span>
-          </a>
+          <ListRow key={v.name} icon="phone" title={v.name} trailing={{ label: 'Call', icon: 'phone' }} href={`tel:${v.phone}`} />
         ))}
       </Card>
 
       <SectionTitle>Reminders</SectionTitle>
       <Card>
-        <label className="flex min-h-control-44 items-center justify-between gap-12 text-body">
-          Remind me before vaccines
-          <select
-            value={settings.remindDaysBefore}
-            onChange={(e) => updateSettings({ remindDaysBefore: Number(e.target.value) })}
-            className="min-h-control-44 rounded-16 bg-surface-canvas px-8 text-body ring-1 ring-surface-subtle"
-          >
-            {[3, 7, 14, 30].map((d) => (
-              <option key={d} value={d}>
-                {d === 7 ? '1 week' : d === 14 ? '2 weeks' : d === 30 ? '1 month' : `${d} days`}
-              </option>
-            ))}
-          </select>
-        </label>
+        <TextField
+          label="Remind me before vaccines"
+          value={String(settings.remindDaysBefore)}
+          onChange={(e: ChangeEvent<HTMLSelectElement>) => updateSettings({ remindDaysBefore: Number(e.target.value) })}
+          options={[3, 7, 14, 30].map((d) => ({ value: String(d), label: d === 7 ? '1 week' : d === 14 ? '2 weeks' : d === 30 ? '1 month' : `${d} days` }))}
+        />
       </Card>
 
       <SectionTitle>Boo and privacy</SectionTitle>
@@ -51,7 +45,7 @@ export function Settings() {
             role="switch"
             checked={settings.booConsent}
             onChange={(e) => updateSettings({ booConsent: e.target.checked })}
-            className="size-icon-24 shrink-0 accent-[var(--accent-primary)]"
+            className="size-icon-24 shrink-0 accent-accent-primary"
           />
         </label>
         <p className="mt-12 border-t border-surface-subtle pt-12 text-body-s text-text-secondary">Privacy policy — coming with the web version.</p>
@@ -66,19 +60,20 @@ export function Settings() {
 
       <SectionTitle>For testing</SectionTitle>
       <div className="flex flex-col gap-8">
-        <button type="button" onClick={loadSample} className="press min-h-[48px] rounded-full bg-surface-card text-body font-medium ring-1 ring-surface-subtle">
+        <Button full variant="secondary" onClick={loadSample}>
           Load sample pets
-        </button>
-        <button
-          type="button"
+        </Button>
+        <Button
+          full
+          variant="secondary"
           onClick={async () => {
             await startFresh()
             navigate('/welcome', { replace: true })
           }}
-          className="press min-h-[48px] rounded-full bg-surface-card text-body font-medium text-status-waiting-text ring-1 ring-surface-subtle"
+          className="!text-status-waiting-text"
         >
           Start fresh (show Welcome)
-        </button>
+        </Button>
       </div>
     </StackScreen>
   )

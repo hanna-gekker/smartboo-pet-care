@@ -58,14 +58,3 @@ export function TabBar({ active, onBoo, docked = true }: TabBarProps) {
   if (!docked) return bar
   return <div className="pointer-events-none fixed inset-x-0 bottom-0 z-30 flex justify-center px-16 pb-safe-16">{bar}</div>
 }
-
-/** Boo's old ghost face. Screens still use it; P10 moves them to BooCharacter. */
-export function BooFace({ size = 30 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 32 32" aria-hidden="true">
-      <path d="M16 4c-5.5 0-9.5 4.2-9.5 9.6V26l3.2-2.2 3.1 2.2L16 23.8l3.2 2.2 3.1-2.2 3.2 2.2V13.6C25.5 8.2 21.5 4 16 4z" fill="currentColor" />
-      <circle cx="12.6" cy="14" r="1.7" fill="var(--accent-primary)" />
-      <circle cx="19.4" cy="14" r="1.7" fill="var(--accent-primary)" />
-    </svg>
-  )
-}

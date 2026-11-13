@@ -88,6 +88,18 @@ SmartBoo's own components, also on `/components`.
 - What the line says and whether a task is overdue is worked out in `src/lib/tasks.ts` (`taskState`, `taskMeta`), not inside the row.
 - The tab bar's Boo button now shows the mini Boo from Figma. Other screens still show the old ghost (`BooFace`) until P10.
 
+## 7. Screens on components (session 3, P10)
+
+Every screen is built from `src/components/`; the old Button, IconButton, Card, Field and the ghost `BooFace` are gone.
+
+| Component | File | Props |
+|---|---|---|
+| List row (Figma List row + Summary row) | `ListRow.tsx` | `title` · `subtitle` · `label` (small text above, like Summary row) · `value` · leading `icon` / `pet` / `emoji` · `trailing` (chevron or an action pill like "Call") · `href` or `onClick` (the whole row is the tap target) |
+| Pet avatar | `PetAvatar.tsx` | `pet` · `size` (sm 40, md 48, lg 72, xl 80, hero 128 — the size/avatar-* tokens) · `dueSoon` |
+
+Still hand-built, for later: Key fact tile and Timeline item (Pet folder), Filter chip (`Chip` in `ui.tsx`), Ask Boo input (Today, Boo sheet), Status pill, Pet avatar petals, Nav bar and Screen title, the Boo sheet's big actions.
+Values without a token left in classes: `pb-[144px]` (room for the tab bar), `max-w-[320px]`, `max-w-[420px]`, `max-w-[560px]`, `max-h-[88dvh]`, `h-[6px]` (sheet handle).
+
 Forced looks for the board and Storybook: `data-state="pressed"` or `data-state="focus"`.
 
 The screens still use the older versions in `ui.tsx` (Button, IconButton, Card, Field). They move to these components in P10, and the old ones are deleted then.
