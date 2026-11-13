@@ -1,13 +1,17 @@
 // What every story shares: the app's styles, the theme switch and the phone sizes.
 
 import type { Decorator, Preview } from '@storybook/react-vite'
+import { MemoryRouter } from 'react-router'
 import { ThemeFrame } from './ThemeFrame'
 import '../src/styles/base.css'
 
+// Links (Tab bar) need a router; Storybook gets one that stays in memory.
 const withTheme: Decorator = (Story, context) => (
-  <ThemeFrame theme={context.globals.theme as 'light' | 'dark'}>
-    <Story />
-  </ThemeFrame>
+  <MemoryRouter>
+    <ThemeFrame theme={context.globals.theme as 'light' | 'dark'}>
+      <Story />
+    </ThemeFrame>
+  </MemoryRouter>
 )
 
 const preview: Preview = {

@@ -8,6 +8,8 @@ const config: StorybookConfig = {
   stories: ['../src/**/*.mdx', '../src/**/*.stories.@(ts|tsx)'],
   addons: ['@storybook/addon-docs', '@storybook/addon-a11y', 'storybook-addon-pseudo-states'],
   framework: '@storybook/react-vite',
+  // Pet photos and other files from public/, like in the app (/pets/rocky.jpg)
+  staticDirs: ['../public'],
   // Capacitor plugins only work inside the iPhone app: Storybook gets a stand-in that keeps data in memory.
   viteFinal: (config) => ({
     ...config,
