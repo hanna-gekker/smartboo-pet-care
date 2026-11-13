@@ -144,3 +144,13 @@ Decisions (Nov 12, 2026):
 - **The Reminder card is an example**, always Rocky from the sample photos, not a real task.
 - **Icon lines scale with the size** (Figma rule since Nov 12): 24 → 1.5, 20 → 1.25, 16 → 1. This replaces "the line stays 1.5px" in section 8.
 - **Room for the tab bar** is now the Figma token `size/tab-bar-room` (128), and the max widths are `size/max-width-*`.
+
+## 10. Pets as in Figma (Nov 13, 2026)
+
+Pets follows the Figma screen "11 · Pets": "Your pack" with a caption and a + button, the pet list, then an "Add a pet" row. No new components.
+
+Decisions (Nov 13, 2026):
+- **List cards have no outline**, as in Figma: a white card, rows split by a 1px `surface/subtle` line.
+- **The status on the right of a pet row** comes from `petStatus()` in `src/lib/tasks.ts`: "2 overdue" or the task name when overdue (red), "… today", the next task with its date, or "All good". Daily chores don't count.
+- **Age in the list is short**: "7 y", "5 mo" (`ageShort()`).
+- **A ListRow value takes at most 40% of the row**, so a long status never squeezes the pet's name.

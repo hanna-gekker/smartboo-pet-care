@@ -46,3 +46,22 @@ export function nextUpMeta(task: Task, petName?: string, vetName?: string, now =
   const when = late ? `was due ${formatDay(task.date)}` : task.date === today() ? '' : formatDay(task.date)
   return [petName, task.detail, when, vetName].filter(Boolean).join(' · ')
 }
+
+/**
+ * The status on the right of a pet row (Figma "11 · Pets"):
+ * "2 overdue" or "Flea drops" (overdue, red), "Ear drops today", "Rabies Dec 3", "All good".
+ * Daily chores (feeding) don't count. `due` is true when something is overdue or due today.
+ */
+export function petStatus(tasks: Task[], petId: string, horizonDays = 60): { label: string; overdue: boolean; due: boolean } {
+  const t = today()
+  const open = tasks
+    .filter((x) => x.petId === petId && !x.doneAt && x.kind !== 'chore')
+    .sort((a, b) => (a.date + (a.time ?? '99')).localeCompare(b.date + (b.time ?? '99')))
+  const late = open.filter((x) => x.date < t)
+  if (late.length > 1) return { label: `${late.length} overdue`, overdue: true, due: true }
+  if (late.length === 1) return { label: late[0].title, overdue: true, due: true }
+  const next = open.find((x) => daysBetween(t, x.date) <= horizonDays)
+  if (!next) return { label: 'All good', overdue: false, due: false }
+  if (next.date === t) return { label: `${next.title} today`, overdue: false, due: true }
+  return { label: `${next.title} ${formatDay(next.date)}`, overdue: false, due: false }
+}

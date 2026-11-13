@@ -71,6 +71,13 @@ export function age(birthDate?: string): string {
   return `${years} yr${years > 1 ? 's' : ''}`
 }
 
+/** Short age, as in the Pets list: "7 y", "5 mo". */
+export function ageShort(birthDate?: string): string {
+  if (!birthDate) return ''
+  const months = Math.floor(daysBetween(birthDate, today()) / 30.44)
+  return months < 12 ? `${months} mo` : `${Math.floor(months / 12)} y`
+}
+
 export function greeting(): string {
   const h = new Date().getHours()
   if (h < 12) return 'Good morning'

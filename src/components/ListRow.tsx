@@ -47,7 +47,7 @@ export function ListRow({ title, subtitle, label, value, icon, pet, emoji, trail
         <span className="truncate text-body font-medium text-text-primary">{title}</span>
         {subtitle && <span className="text-body-s text-text-secondary">{subtitle}</span>}
       </span>
-      {value !== undefined && <span className="min-w-0 truncate text-right text-body-s text-text-secondary">{value}</span>}
+      {value !== undefined && <span className="min-w-0 max-w-2/5 truncate text-right text-body-s text-text-secondary">{value}</span>}
       {trailing === 'chevron' && <Icon name="chevron-right" size={20} className="shrink-0 text-text-secondary" />}
       {trailing && trailing !== 'chevron' && (
         <span className="flex h-control-32 shrink-0 items-center gap-4 rounded-full bg-accent-primary-subtle px-12 text-body-s font-medium text-accent-primary">
