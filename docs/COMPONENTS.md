@@ -54,10 +54,26 @@ These are in Figma but not used on any screen or in code: Progress ring, Stat ti
 6. **Large screen titles.** Today, Schedule and Pets each repeat the same `h1` classes. This becomes Screen title.
 7. **Pill-shaped choices.** `Chip` (Pet folder), Boo suggestions, "Which pet?" and the answer chips in the Boo sheet. These become Filter chip and Chip.
 
-## 4. Open questions for the designer
+## 4. Decisions (Nov 12, 2026)
 
-1. **Button "dark".** The code uses it for "Done" in Next up, but Figma has only Primary, Secondary and Ghost. Keep it as a 4th variant or use Primary?
-2. **Error state for Form field.** Figma has Default, Focused and Needs check. The course asks for an error state with a message under the field. Add "Error" in Figma?
-3. **Card.** There is no base Card in Figma. Make one (Plain and Tappable), or keep cards only inside the patterns?
-4. **Toast.** Not in Figma. Draw it, or keep the code version?
-5. **Sizes without a token.** The 48 px button height, the 28 px checkbox, avatar sizes and the room for the tab bar. Add `size/*` tokens in Figma, or allow them as exact values?
+1. **Button "dark".** Dropped. Next up uses Primary ("Done") and Secondary ("Book vet"), as in Figma.
+2. **Error state for Form field.** Added in Figma: a `status/error-border` outline plus an icon and a message in `status/error-text` under the field.
+3. **Card.** Added in Figma: Plain (padding 16), List (no padding, `border/control` outline), Tappable (pressed: `surface/subtle`). No shadow.
+4. **Toast.** Added in Figma: a `surface/nav` capsule, 56 high, with a check, the text and a Ghost "Undo" button.
+5. **Sizes.** Button Medium is 44 (`size/control-44`) and Large is 56. Checkbox is 32 (`size/control-32`). Pet avatars use the new `size/avatar-40/48/72/80/128`. The room under the tab bar has no token yet.
+
+## 5. Built (session 3, P8)
+
+Base components in `src/components/`, each state set by props. They are shown on the dev-only page `/components` in light and dark.
+
+| Component | File | Props |
+|---|---|---|
+| Button | `Button.tsx` | `variant` (primary, secondary, ghost) · `size` (medium, large) · `icon` · `full` · `disabled` · `loading` · `onClick` (if it returns a promise, the button loads by itself and ignores more taps) |
+| Icon button | `IconButton.tsx` | `icon` · `label` (for VoiceOver, required) · `variant` (primary, secondary, soft) · `size` (40, 56; 40 sits in a 44 tap area) · `disabled` |
+| Card | `Card.tsx` | `variant` (plain, list) · `onClick` (makes it Tappable) |
+| Form field | `TextField.tsx` | `label` · `hint` · `error` · `needsCheck` · `trailingIcon` · `options` (turns it into a choice list) · plus the usual input props |
+| Tab bar | `TabBar.tsx` | `active` (today, schedule, pets or none) · `onBoo` · `docked` |
+
+Forced looks for the board and Storybook: `data-state="pressed"` or `data-state="focus"`.
+
+The screens still use the older versions in `ui.tsx` (Button, IconButton, Card, Field). They move to these components in P10, and the old ones are deleted then.

@@ -55,6 +55,16 @@ Testing data: the first launch loads sample pets (Rocky, Milo, Cleo, Tank). Sett
 - `design/` holds early HTML sketches — don't touch them. The one exception: `design/figma-variables.json`, the raw Variables export from Figma, is replaced with each new export.
 - Mobile UI rules: works from 360px wide, checked at 390px; safe areas via `viewport-fit=cover` and `env(safe-area-inset-*)`; touch targets at least 44px; no hover-only states; no text selection or tap highlight on buttons; the page never scrolls sideways (swipeable rows like chips and Your Pack are fine); light and dark themes follow the phone.
 
+## Components
+
+- Screens are built only from `src/components/`. Inventory and decisions: `docs/COMPONENTS.md`.
+- A new component goes into `docs/COMPONENTS.md` first, and I approve it before it is built.
+- Variants and states come from Figma and are set by props (`variant`, `size`, `disabled`, `loading`, `error`…). Texts and data come in through props too: a component never knows which screen it is on.
+- Every state a phone has: pressed (no hover), visible focus, disabled, loading (a second tap does nothing), field error (outline and a message under the field, not only color).
+- Touch targets at least 44×44, even when the shape is smaller. A real `button` for anything tappable, a label for every field, `aria-label` on icon-only buttons.
+- In classes only tokens: no hex and no values in square brackets for colors, spacing, radii or fonts.
+- Check page: `/components` (only in `npm run dev`) shows every component in every state, light and dark side by side.
+
 ## Working with me
 
 - I'm a designer and this is my first app. Explain in plain words, one step at a time.

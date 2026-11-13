@@ -98,6 +98,11 @@
   --size-control-44: 44px; /* Default button height (iOS min tap target) */
   --size-control-56: 56px; /* Large button, input bar, tab item */
   --size-control-64: 64px; /* Tab bar, Boo button */
+  --size-avatar-40: 40px; /* Pet photo in Task row and Boo cards */
+  --size-avatar-48: 48px; /* Pet photo in Pets list */
+  --size-avatar-72: 72px; /* Pet photo in Next up */
+  --size-avatar-80: 80px; /* Your pack avatar with petals */
+  --size-avatar-128: 128px; /* Pet hero in Pet folder */
   --font-family-display: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", system-ui, sans-serif;
   --font-family-text: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", system-ui, sans-serif;
   --font-size-12: 12px;
@@ -141,6 +146,8 @@
   --status-check-bg: var(--yellow-50); /* Boo is not sure — tap to check */
   --status-check-text: var(--yellow-800); /* Boo is not sure — tap to check */
   --status-check-border: var(--yellow-600); /* Boo is not sure — tap to check */
+  --status-error-border: var(--coral-700); /* Form field error outline */
+  --status-error-text: var(--coral-700); /* Error message under a field */
   --avatar-yellow: var(--yellow-300); /* Household member A */
   --ai-card-mint: var(--green-50); /* Assistant card gradient 1 */
   --ai-card-blue: var(--blue-50); /* Assistant card gradient 2 */
@@ -197,6 +204,8 @@
     --status-check-bg: var(--yellow-950); /* Boo is not sure — tap to check */
     --status-check-text: var(--yellow-300); /* Boo is not sure — tap to check */
     --status-check-border: var(--yellow-500); /* Boo is not sure — tap to check */
+    --status-error-border: var(--coral-400); /* Form field error outline */
+    --status-error-text: var(--coral-300); /* Error message under a field */
     --avatar-yellow: var(--yellow-300); /* Household member A */
     --ai-card-mint: var(--green-950); /* Assistant card gradient 1 */
     --ai-card-blue: var(--blue-950); /* Assistant card gradient 2 */
@@ -253,6 +262,8 @@
   --status-check-bg: var(--yellow-950); /* Boo is not sure — tap to check */
   --status-check-text: var(--yellow-300); /* Boo is not sure — tap to check */
   --status-check-border: var(--yellow-500); /* Boo is not sure — tap to check */
+  --status-error-border: var(--coral-400); /* Form field error outline */
+  --status-error-text: var(--coral-300); /* Error message under a field */
   --avatar-yellow: var(--yellow-300); /* Household member A */
   --ai-card-mint: var(--green-950); /* Assistant card gradient 1 */
   --ai-card-blue: var(--blue-950); /* Assistant card gradient 2 */

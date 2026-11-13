@@ -5,7 +5,7 @@
  * Tailwind takes every value from the Figma tokens in tokens.css. Its own palette, spacing scale,
  * radii and font sizes are switched off, so only these utilities exist. Names are the Figma names:
  *   colors   bg-surface-card, text-text-primary, ring-border-control, bg-status-waiting-bg…
- *   spacing  p-16, gap-8, mt-24 (space/*); sizes size-control-44, size-icon-24 (size/*)
+ *   spacing  p-16, gap-8, mt-24 (space/*); sizes size-control-44, size-icon-24, size-avatar-48 (size/*)
  *   radii    rounded-8, rounded-16, rounded-24, rounded-full (radius/*)
  *   type     text-caption … text-display (Figma text styles), font-regular / font-medium
  */
@@ -33,6 +33,8 @@
   --color-status-check-bg: var(--status-check-bg);
   --color-status-check-text: var(--status-check-text);
   --color-status-check-border: var(--status-check-border);
+  --color-status-error-border: var(--status-error-border);
+  --color-status-error-text: var(--status-error-text);
   --color-status-due-dot: var(--status-due-dot);
   --color-status-done-dot: var(--status-done-dot);
   --color-nav-active-label: var(--nav-active-label);
@@ -65,6 +67,11 @@
   --spacing-control-44: var(--size-control-44);
   --spacing-control-56: var(--size-control-56);
   --spacing-control-64: var(--size-control-64);
+  --spacing-avatar-40: var(--size-avatar-40);
+  --spacing-avatar-48: var(--size-avatar-48);
+  --spacing-avatar-72: var(--size-avatar-72);
+  --spacing-avatar-80: var(--size-avatar-80);
+  --spacing-avatar-128: var(--size-avatar-128);
 
   --radius-*: initial;
   --radius-8: var(--radius-8);
@@ -164,6 +171,17 @@ button {
 .pb-safe {
   padding-bottom: max(env(safe-area-inset-bottom), var(--space-12));
 }
+.pb-safe-16 {
+  padding-bottom: max(env(safe-area-inset-bottom), var(--space-16));
+}
+
+/* Focus: a visible outline for the keyboard and VoiceOver, never removed for looks.
+   [data-state="focus"] shows the same outline on /components and in Storybook. */
+:focus-visible,
+[data-state="focus"]:not(div) {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 2px;
+}
 
 /* Status bar backdrop: scrolled content slides under it, not under the clock.
    Below the tab bar (z-30) and bottom sheets (z-40), so a sheet's scrim dims it too. */
@@ -181,7 +199,8 @@ body::before {
 .press {
   transition: transform 120ms ease, opacity 120ms ease;
 }
-.press:active {
+.press:active,
+.press[data-state="pressed"] {
   transform: scale(0.97);
   opacity: 0.85;
 }
@@ -205,7 +224,8 @@ body::before {
 @media (prefers-reduced-motion: reduce) {
   .animate-sheet-in,
   .animate-fade-in,
-  .animate-pulse-dot {
+  .animate-pulse-dot,
+  .animate-spin {
     animation: none;
   }
 }

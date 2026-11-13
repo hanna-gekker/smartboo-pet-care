@@ -1,45 +1,61 @@
-import { NavLink } from 'react-router'
-import { useUi } from '../data/useUi'
+// Tab bar — Figma "Tab bar" + "Tab item" (Patterns).
+// A dark capsule with Today · Schedule · Pets, and the round Boo button to its right.
+// The active tab is a light pill (nav/active-*), marked for VoiceOver with aria-current="page".
+
+import { Link } from 'react-router'
 import { Icon, type IconName } from './Icon'
 
-const tabs: { to: string; label: string; icon: IconName }[] = [
-  { to: '/', label: 'Today', icon: 'today' },
-  { to: '/schedule', label: 'Schedule', icon: 'schedule' },
-  { to: '/pets', label: 'Pets', icon: 'pets' },
+export type Tab = 'today' | 'schedule' | 'pets'
+
+const tabs: { key: Tab; to: string; label: string; icon: IconName }[] = [
+  { key: 'today', to: '/', label: 'Today', icon: 'today' },
+  { key: 'schedule', to: '/schedule', label: 'Schedule', icon: 'schedule' },
+  { key: 'pets', to: '/pets', label: 'Pets', icon: 'pets' },
 ]
 
-/** Floating black capsule with Today · Schedule · Pets, plus the round Boo button to the right. */
-export function TabBar() {
-  const openBoo = useUi((s) => s.openBoo)
-  return (
-    <div className="pointer-events-none fixed inset-x-0 bottom-0 z-30 flex justify-center px-16 pb-[max(env(safe-area-inset-bottom),var(--space-16))]">
-      <div className="pointer-events-auto flex w-full max-w-[420px] items-center gap-12">
-        <nav aria-label="Main" className="flex h-control-64 flex-1 items-center justify-around rounded-full bg-surface-nav px-8 text-text-on-dark shadow-[0_12px_30px_-10px_var(--surface-scrim)]">
-          {tabs.map((t) => (
-            <NavLink
-              key={t.to}
+type TabBarProps = {
+  /** Which tab is open. None on screens like Settings. */
+  active?: Tab
+  /** What the Boo button does. */
+  onBoo: () => void
+  /** Pinned to the bottom of the screen (the app). Off on /components, where it sits in the page. */
+  docked?: boolean
+}
+
+export function TabBar({ active, onBoo, docked = true }: TabBarProps) {
+  const bar = (
+    <div className="pointer-events-auto flex w-full max-w-[420px] items-center gap-12">
+      <nav aria-label="Main" className="flex h-control-64 flex-1 items-center rounded-full bg-surface-nav p-4">
+        {tabs.map((t) => {
+          const on = t.key === active
+          return (
+            <Link
+              key={t.key}
               to={t.to}
-              end={t.to === '/'}
-              className={({ isActive }) =>
-                `press flex min-h-[48px] min-w-control-64 flex-col items-center justify-center gap-2 rounded-full text-caption font-medium ${isActive ? 'opacity-100' : 'opacity-55'}`
-              }
+              aria-current={on ? 'page' : undefined}
+              className={`press flex h-control-56 flex-1 flex-col items-center justify-center gap-2 rounded-full text-caption ${
+                on ? 'bg-surface-card font-medium text-nav-active-label ring-1 ring-inset ring-nav-active-ring' : 'text-text-on-dark-muted'
+              }`}
             >
-              <Icon name={t.icon} size={22} />
+              <Icon name={t.icon} size={24} />
               {t.label}
-            </NavLink>
-          ))}
-        </nav>
-        <button
-          type="button"
-          aria-label="Open Boo"
-          onClick={() => openBoo()}
-          className="press flex size-control-64 shrink-0 items-center justify-center rounded-full bg-accent-primary text-text-on-accent shadow-[0_12px_30px_-10px_var(--accent-primary)]"
-        >
-          <BooFace />
-        </button>
-      </div>
+            </Link>
+          )
+        })}
+      </nav>
+      <button
+        type="button"
+        aria-label="Open Boo"
+        onClick={onBoo}
+        className="press flex size-control-64 shrink-0 items-center justify-center rounded-full bg-accent-primary text-text-on-accent"
+      >
+        <BooFace />
+      </button>
     </div>
   )
+
+  if (!docked) return bar
+  return <div className="pointer-events-none fixed inset-x-0 bottom-0 z-30 flex justify-center px-16 pb-safe-16">{bar}</div>
 }
 
 /** Boo's little ghost face */
