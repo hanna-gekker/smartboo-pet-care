@@ -26,7 +26,7 @@ export function BottomSheet({ open, onClose, children, label }: { open: boolean;
     <div className="fixed inset-0 z-40" role="dialog" aria-modal="true" aria-label={label}>
       <div className="animate-fade-in absolute inset-0 bg-surface-scrim" onClick={onClose} />
       <div
-        className="animate-sheet-in pb-safe absolute inset-x-0 bottom-0 mx-auto max-h-[88dvh] max-w-[560px] overflow-y-auto rounded-t-24 bg-surface-card px-16"
+        className="animate-sheet-in pb-safe absolute inset-x-0 bottom-0 mx-auto max-h-[88dvh] max-w-560 overflow-y-auto rounded-t-24 bg-surface-card px-16"
         style={{ transform: `translateY(${dragY}px)`, transition: dragging ? 'none' : 'transform 200ms ease' }}
       >
         <div

@@ -126,3 +126,21 @@ Decisions (Nov 12, 2026):
 Forced looks for the board and Storybook: `data-state="pressed"` or `data-state="focus"`.
 
 The screens still use the older versions in `ui.tsx` (Button, IconButton, Card, Field). They move to these components in P10, and the old ones are deleted then.
+
+## 9. Welcome as in Figma (Nov 12, 2026)
+
+Welcome follows the Figma screen "Welcome" (and "Welcome · Dark"): Boo on top with "Tap Boo to talk", a glass Reminder card as an example, the title in the middle, two buttons and two notes at the bottom.
+
+| Component | File | Props |
+|---|---|---|
+| Glass card (Figma "Glass card") | `GlassCard.tsx` | `pet` (photo, 40) · `title` · `caption`. Frosted glass: a see-through fill, blur behind it and an `ai/*` gradient edge. Only on Welcome for now |
+| Tap hint (Figma "Tap hint") | `TapHint.tsx` | `label` · `onClick`. A small mic and a caption that opens Boo for voice |
+| Note (Figma "Note") | `Note.tsx` | `icon` · `children`. A 16 icon and a grey caption, centred |
+
+Decisions (Nov 12, 2026):
+- **Welcome background** is the `.bg-welcome` class in `base.css`: the `ai/backdrop-*` gradient with an `ai/sheen` wash, plus soft `ai/aura-*` glows (dark only) and `ai/boo-backdrop` behind Boo (light only).
+- **"No papers right now" is gone.** Tapping Boo or "Tap Boo to talk" opens Boo, as in the Figma prototype.
+- **"Explore with sample pets" is gone for now.** It isn't in Figma. Sample pets stay in Settings → "Load sample pets" (reachable once there is a pet).
+- **The Reminder card is an example**, always Rocky from the sample photos, not a real task.
+- **Icon lines scale with the size** (Figma rule since Nov 12): 24 → 1.5, 20 → 1.25, 16 → 1. This replaces "the line stays 1.5px" in section 8.
+- **Room for the tab bar** is now the Figma token `size/tab-bar-room` (128), and the max widths are `size/max-width-*`.

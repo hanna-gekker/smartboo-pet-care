@@ -44,7 +44,7 @@ function Shell() {
   const hideTabBar = NO_TAB_BAR.includes(pathname) || pathname.endsWith('/edit')
   // Boo's sheet and the toast stay mounted across screens, so a flow in the sheet survives navigation.
   return (
-    <div className="mx-auto max-w-[560px]">
+    <div className="mx-auto max-w-560">
       {redirect ? <Navigate to={redirect} replace /> : <Outlet />}
       {!redirect && !hideTabBar && <TabBar active={tabFor(pathname)} onBoo={() => openBoo()} />}
       <BooSheet />

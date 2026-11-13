@@ -39,7 +39,7 @@ export function Schedule() {
     )
 
   return (
-    <div className="pt-safe min-h-dvh px-16 pb-[144px]">
+    <div className="pt-safe min-h-dvh px-16 pb-tab-bar-room">
       <header className="flex min-h-control-56 items-center justify-between">
         <h1 className="font-display text-display font-medium">Schedule</h1>
         {!isToday && (

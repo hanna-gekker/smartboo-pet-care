@@ -47,6 +47,9 @@
   --color-pet-butter: var(--pet-butter);
   --color-pet-ocean: var(--pet-ocean);
   --color-pet-slate: var(--pet-slate);
+  --color-ai-aura-1: var(--ai-aura-1);
+  --color-ai-aura-2: var(--ai-aura-2);
+  --color-ai-boo-backdrop: var(--ai-boo-backdrop);
 
   --spacing-*: initial;
   --spacing: initial;
@@ -72,6 +75,13 @@
   --spacing-avatar-72: var(--size-avatar-72);
   --spacing-avatar-80: var(--size-avatar-80);
   --spacing-avatar-128: var(--size-avatar-128);
+  --spacing-tab-bar-room: var(--size-tab-bar-room);
+
+  /* max-w-320 / 420 / 560 (size/max-width-*) */
+  --container-*: initial;
+  --container-320: var(--size-max-width-320);
+  --container-420: var(--size-max-width-420);
+  --container-560: var(--size-max-width-560);
 
   --radius-*: initial;
   --radius-8: var(--radius-8);
@@ -195,10 +205,47 @@ body::before {
   z-index: 20;
   pointer-events: none;
 }
+/* Welcome's gradient runs under the clock, as in Figma. */
+body:has(.bg-welcome)::before {
+  display: none;
+}
 
 /* Figma "Assistant card": the Boo card's soft gradient (ai/card-*), top left to bottom right. */
 .bg-ai-card {
   background: linear-gradient(135deg, var(--ai-card-mint) 0%, var(--ai-card-blue) 45%, var(--ai-card-lilac) 80%, var(--ai-card-pink) 100%);
+}
+
+/* Figma "Welcome" background: the ai/backdrop-* gradient (pastel in light, plain canvas in dark)
+   under a 45% ai/sheen wash (white in light, nothing in dark). */
+.bg-welcome {
+  background:
+    linear-gradient(color-mix(in srgb, var(--ai-sheen) 45%, transparent), color-mix(in srgb, var(--ai-sheen) 45%, transparent)),
+    linear-gradient(135deg, var(--ai-backdrop-1) 0%, var(--ai-backdrop-2) 45%, var(--ai-backdrop-3) 80%, var(--ai-backdrop-4) 100%);
+}
+
+/* Figma "Glass card": a see-through fill with a highlight at the top, blur behind it,
+   an ai/* gradient edge and a soft indigo shadow. */
+.glass {
+  position: relative;
+  background:
+    linear-gradient(color-mix(in srgb, var(--ai-sheen) 35%, transparent), color-mix(in srgb, var(--ai-sheen) 35%, transparent)),
+    linear-gradient(180deg, color-mix(in srgb, var(--ai-highlight) 40%, transparent) 0%, color-mix(in srgb, var(--surface-card) 40%, transparent) 55%);
+  -webkit-backdrop-filter: blur(18px);
+  backdrop-filter: blur(18px);
+  box-shadow: 0 14px 36px -6px color-mix(in srgb, var(--accent-primary) 14%, transparent);
+}
+.glass::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1.2px;
+  background: linear-gradient(135deg, var(--ai-highlight) 0%, var(--ai-glow) 45%, var(--ai-spark-pink) 100%);
+  opacity: 0.9;
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+  pointer-events: none;
 }
 
 /* Pressed state instead of hover */
