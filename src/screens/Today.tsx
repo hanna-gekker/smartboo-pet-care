@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router'
 import { Icon } from '../components/Icon'
 import { BooFace } from '../components/TabBar'
 import { TaskRow } from '../components/TaskRow'
+import { taskMeta, taskState } from '../lib/tasks'
 import { Button, Card, IconButton, PetAvatar, SectionTitle, TextLink } from '../components/ui'
 import { petById, useApp } from '../data/useApp'
 import { useUi } from '../data/useUi'
@@ -66,7 +67,7 @@ export function Today() {
         <>
           <SectionTitle>Next up</SectionTitle>
           <Card>
-            <TaskRow task={nextUp} pet={petById(pets, nextUp.petId)} onToggle={() => toggleTask(nextUp.id)} showDate={nextUp.date !== t} />
+            <TaskRow title={nextUp.title} detail={nextUp.detail} meta={taskMeta(nextUp, petById(pets, nextUp.petId)?.name, { showDate: nextUp.date !== t })} state={taskState(nextUp)} pet={petById(pets, nextUp.petId)} onToggle={() => toggleTask(nextUp.id)} flush />
             <div className="mt-8 flex gap-8">
               <Button variant="dark" icon="check" onClick={() => toggleTask(nextUp.id)} className="flex-1">
                 Done
@@ -107,9 +108,9 @@ export function Today() {
       {comingUp.length > 0 && (
         <>
           <SectionTitle action={<TextLink onClick={() => navigate('/schedule')}>See schedule</TextLink>}>Coming up</SectionTitle>
-          <Card className="!py-4">
+          <Card className="!p-0">
             {comingUp.map((x) => (
-              <TaskRow key={x.id} task={x} pet={petById(pets, x.petId)} onToggle={() => toggleTask(x.id)} showDate={x.date !== t} />
+              <TaskRow key={x.id} title={x.title} detail={x.detail} meta={taskMeta(x, petById(pets, x.petId)?.name, { showDate: x.date !== t })} state={taskState(x)} pet={petById(pets, x.petId)} onToggle={() => toggleTask(x.id)} />
             ))}
           </Card>
         </>
@@ -137,9 +138,9 @@ export function Today() {
             Done today · {doneToday.length}
             <Icon name="chevron" size={18} />
           </summary>
-          <Card className="!py-4">
+          <Card className="!p-0">
             {doneToday.map((x) => (
-              <TaskRow key={x.id} task={x} pet={petById(pets, x.petId)} onToggle={() => toggleTask(x.id)} />
+              <TaskRow key={x.id} title={x.title} detail={x.detail} meta={taskMeta(x, petById(pets, x.petId)?.name)} state={taskState(x)} pet={petById(pets, x.petId)} onToggle={() => toggleTask(x.id)} />
             ))}
           </Card>
         </details>

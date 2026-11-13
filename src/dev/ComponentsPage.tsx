@@ -1,15 +1,22 @@
-// /components — a check page for the base components, like a component board in Figma.
+// /components — a check page for the components, like a component board in Figma.
 // Only in development (npm run dev); the finished app doesn't include it.
 //
 // /components                → light and dark side by side, each an iPhone-wide frame (390)
 // /components?theme=light|dark → the board itself in one theme
 
 import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from 'react'
+import { BooCharacter } from '../components/BooCharacter'
 import { Button, type ButtonSize, type ButtonVariant } from '../components/Button'
 import { Card } from '../components/Card'
+import { Checkbox } from '../components/Checkbox'
 import { IconButton, type IconButtonVariant } from '../components/IconButton'
 import { TabBar, type Tab } from '../components/TabBar'
+import { TaskRow } from '../components/TaskRow'
 import { TextField } from '../components/TextField'
+import type { Pet } from '../data/types'
+
+const rocky: Pet = { id: 'rocky', name: 'Rocky', species: 'dog', weightUnit: 'kg', allergies: [] }
+const cleo: Pet = { id: 'cleo', name: 'Cleo', species: 'cat', weightUnit: 'kg', allergies: [] }
 
 export default function ComponentsPage() {
   const theme = new URLSearchParams(window.location.search).get('theme')
@@ -156,12 +163,64 @@ function Board({ theme }: { theme: 'light' | 'dark' }) {
         />
       </Section>
 
+      <Section title="Boo" note="Idle (breathing) · Listening (pulse) · Mini (tab bar)">
+        <Row label="idle · listening">
+          <BooCharacter state="idle" size={150} />
+          <BooCharacter state="listening" size={150} />
+        </Row>
+        <Row label="mini · still (Idle 1)">
+          <BooCharacter look="mini" />
+          <BooCharacter look="mini" state="listening" />
+          <BooCharacter look="full" animated={false} size={100} />
+        </Row>
+      </Section>
+
+      <Section title="Checkbox" note="Unchecked · Checked · Waiting · Pressed · Focus · Disabled. Tap area 44.">
+        <CheckboxRow />
+      </Section>
+
+      <Section title="Task row" note="Default · Done · Waiting (overdue). Tap the circle.">
+        <Card variant="list">
+          <TaskRowDemo />
+        </Card>
+        <Group label="flush (inside Next up)">
+          <Card>
+            <TaskRow title="Ear drops" detail="Otomax · 4 drops" meta="Rocky · 8 AM" state="default" pet={rocky} onToggle={() => {}} flush />
+          </Card>
+        </Group>
+      </Section>
+
       <Section title="Tab bar" note="Active: Today · Schedule · Pets · none (Settings)">
         {(['today', 'schedule', 'pets', undefined] as (Tab | undefined)[]).map((active) => (
           <TabBar key={active ?? 'none'} active={active} onBoo={() => {}} docked={false} />
         ))}
       </Section>
     </div>
+  )
+}
+
+function CheckboxRow() {
+  const [on, setOn] = useState(false)
+  return (
+    <Row label="">
+      <Checkbox checked={on} label="Clean litter box" onChange={setOn} />
+      <Checkbox checked label="Clean litter box" onChange={() => {}} />
+      <Checkbox checked={false} tone="waiting" label="Clean litter box" onChange={() => {}} />
+      <Checkbox checked={false} label="Clean litter box" onChange={() => {}} data-state="pressed" />
+      <Checkbox checked={false} label="Clean litter box" onChange={() => {}} data-state="focus" />
+      <Checkbox checked label="Clean litter box" onChange={() => {}} disabled />
+    </Row>
+  )
+}
+
+function TaskRowDemo() {
+  const [done, setDone] = useState(false)
+  return (
+    <>
+      <TaskRow title="Clean litter box" meta="Cleo · 12:00 PM" state={done ? 'done' : 'default'} pet={cleo} onToggle={() => setDone((d) => !d)} />
+      <TaskRow title="Clean litter box" meta="Cleo · 12:00 PM" state="done" pet={cleo} onToggle={() => {}} />
+      <TaskRow title="Ear drops" detail="Otomax · 4 drops" meta="Rocky · overdue since Nov 6" state="waiting" pet={rocky} onToggle={() => {}} />
+    </>
   )
 }
 

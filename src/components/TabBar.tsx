@@ -3,6 +3,7 @@
 // The active tab is a light pill (nav/active-*), marked for VoiceOver with aria-current="page".
 
 import { Link } from 'react-router'
+import { BooCharacter } from './BooCharacter'
 import { Icon, type IconName } from './Icon'
 
 export type Tab = 'today' | 'schedule' | 'pets'
@@ -47,9 +48,9 @@ export function TabBar({ active, onBoo, docked = true }: TabBarProps) {
         type="button"
         aria-label="Open Boo"
         onClick={onBoo}
-        className="press flex size-control-64 shrink-0 items-center justify-center rounded-full bg-accent-primary text-text-on-accent"
+        className="press flex size-control-64 shrink-0 items-center justify-center rounded-full"
       >
-        <BooFace />
+        <BooCharacter look="mini" animated={false} />
       </button>
     </div>
   )
@@ -58,7 +59,7 @@ export function TabBar({ active, onBoo, docked = true }: TabBarProps) {
   return <div className="pointer-events-none fixed inset-x-0 bottom-0 z-30 flex justify-center px-16 pb-safe-16">{bar}</div>
 }
 
-/** Boo's little ghost face */
+/** Boo's old ghost face. Screens still use it; P10 moves them to BooCharacter. */
 export function BooFace({ size = 30 }: { size?: number }) {
   return (
     <svg width={size} height={size} viewBox="0 0 32 32" aria-hidden="true">

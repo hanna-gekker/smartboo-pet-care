@@ -74,6 +74,20 @@ Base components in `src/components/`, each state set by props. They are shown on
 | Form field | `TextField.tsx` | `label` · `hint` · `error` · `needsCheck` · `trailingIcon` · `options` (turns it into a choice list) · plus the usual input props |
 | Tab bar | `TabBar.tsx` | `active` (today, schedule, pets or none) · `onBoo` · `docked` |
 
+## 6. Built (session 3, P9)
+
+SmartBoo's own components, also on `/components`.
+
+| Component | File | Props |
+|---|---|---|
+| Boo (Figma Boo / Character) | `BooCharacter.tsx` | `state` (idle: slow breathing; listening: faster pulse) · `look` (full: with glow, halo and shadow; mini: the flower alone, as in the tab bar) · `size` · `animated`. Colors are `ai/*` tokens; motion stops when the phone asks for less |
+| Checkbox | `Checkbox.tsx` | `checked` · `label` (read by VoiceOver) · `onChange` · `tone` (default, waiting) · 32 circle in a 44 tap area |
+| Task row | `TaskRow.tsx` | `title` · `detail` · `meta` (the grey line) · `state` (default, done, waiting) · `pet` · `onToggle` · `flush` (no side padding, inside Next up) |
+
+- **Task row "waiting"** (decided Nov 12, 2026): a third state not drawn in Figma yet. An overdue task's line and circle take `status/waiting-text`, so it stands out in Coming up.
+- What the line says and whether a task is overdue is worked out in `src/lib/tasks.ts` (`taskState`, `taskMeta`), not inside the row.
+- The tab bar's Boo button now shows the mini Boo from Figma. Other screens still show the old ghost (`BooFace`) until P10.
+
 Forced looks for the board and Storybook: `data-state="pressed"` or `data-state="focus"`.
 
 The screens still use the older versions in `ui.tsx` (Button, IconButton, Card, Field). They move to these components in P10, and the old ones are deleted then.
