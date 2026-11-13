@@ -1,0 +1,63 @@
+# SmartBoo · Components
+
+Inventory of what repeats across the screens, as of Nov 12, 2026. It compares the Figma page "Design system" (sections Core components and Patterns) with the code in `src/components/` and `src/screens/`. Names follow Figma.
+
+States used below:
+- **pressed**: the look under the finger. Phones have no hover.
+- **focus**: a visible outline for the keyboard and VoiceOver.
+- **disabled**: can't be tapped, and the text stays readable.
+- **loading**: a spinner, and a second tap does nothing.
+- **error**: an outline plus a message under the field, not only a color.
+
+Touch targets are at least 44×44 pt, even when the shape is smaller.
+
+## 1. Base components (session 3, P8)
+
+| Component (Figma) | Screens | Variants | States | Props in plain words | In code now |
+|---|---|---|---|---|---|
+| **Button** | Welcome, Today, Boo sheet, Pet folder, Add your pet, Edit profile, Share | Primary, Secondary, Ghost · size Medium, Large | pressed, focus, disabled, loading | label; variant; size; icon (optional); full width; disabled; loading; what happens on tap | `Button` in `ui.tsx` has four variants: primary, secondary, ghost and **dark**. Dark isn't in Figma. It has one size, 48 px. There is no loading state and no pressed look from Figma, only a generic shrink. |
+| **Icon button** | Today, Schedule, Boo sheet, Pets, Pet folder, Share, Add your pet, Settings | Primary, Secondary, Soft · size 40, 56 | pressed, focus, disabled | icon; label for VoiceOver; style; size | `IconButton` in `ui.tsx` comes in one style only. The mic and camera on Today, Send in the Boo sheet and the vet's phone circle are drawn by hand. |
+| **Card** | Today, Schedule, Pets, Pet folder, Settings, Share, Boo sheet | Plain, Tappable | pressed (when tappable), focus | content; padding (normal or none, for lists); what happens on tap | `Card` in `ui.tsx`. Figma has no standalone Card component: cards exist only inside Next up card, Attention card and Key fact tile. |
+| **Form field** (TextField) | Add your pet, Edit profile, Boo review card, Your profile | Text, Date, Choice (select) | focus, disabled, **needs check** (Figma), **error** | label; value; type; placeholder; hint under the field; error message; needs check; trailing icon | `Field` and `inputClass` in `ui.tsx`. It has a "needs check" state but no error state, and no `aria-invalid` or `aria-describedby`. The search field in Pet folder is drawn by hand. |
+| **Tab bar** + **Tab item** | Today, Schedule, Pets, Pet folder, Settings, Boo sheet | Active tab: Today, Schedule or Pets | pressed, focus, active (`aria-current`) | active tab (read from the address); what the Boo button does | `TabBar.tsx`. The active tab is shown only by brighter text (55% opacity on the others). It doesn't use the `nav-active-*` tokens yet. |
+
+## 2. SmartBoo's own components (session 3, P9 candidates)
+
+| Component (Figma) | Screens | Variants | States | Props in plain words | In code now |
+|---|---|---|---|---|---|
+| **Task row** (with **Checkbox** and **Status pill**) | Today, Schedule, Boo sheet, Share · Pick pets | Default, Done, Waiting (overdue) | pressed (checkbox), focus | title; detail (dose); pet; time or date line; state; what happens on tick | `TaskRow.tsx`. It works out "overdue" and builds the time text itself; that logic should come in as props. Status pill doesn't exist in code yet. |
+| **Pet avatar** | Today (Your pack), Pets, Pet folder, Boo sheet, Share | Color: lavender, mint, pink, butter, ocean, slate or none · Status: Normal, Waiting · size S, M, L | — (decoration) | pet (photo or first letter); color; size; due-soon dot; name under it | `PetAvatar` in `ui.tsx`. It always uses the accent color (no pet colors) and takes any size in px (28–112). |
+| **List row** / **Summary row** | Pets, Pet folder, Settings, Share · Pick a set, Boo answer, Vaccines | Leading: icon, photo or none · Trailing: chevron or action ("Call") | pressed, focus | title; subtitle; value; leading icon or photo; trailing chevron or action | No component yet. It's drawn by hand five times, each differently: the pet card on Pets, the Profile rows and the vet card in Pet folder, the vet rows in Settings, and the set cards in Share. |
+| **Section header** | Today, Schedule, Pet folder, Settings, Boo sheet | With or without an action link | pressed, focus (link) | title; action text and what it does | `SectionTitle` and `TextLink` in `ui.tsx`. Schedule draws its own uppercase heading. |
+| **Ask Boo input** | Today, Boo sheet | Idle, Typing | pressed, focus, disabled (Send) | placeholder; text; what happens on send, mic and camera | No component yet. The Boo card on Today and the text field in the Boo sheet are drawn separately. |
+| **Next up card** | Today | With or without a second action (Book vet) | pressed (buttons) | task; pet; main action; second action | No component yet. It's put together by hand on Today: a Card, a Task row and two buttons. "Book vet" is a link styled like a button by hand. |
+| **Key fact tile** / **Attention card** | Pet folder, Today (gap hint) | Tone: Default, Attention | — (pressed, if tappable) | icon; label; value; extra line | `Tile` lives inside `PetFolder.tsx`. The gap hint on Today ("I don't know … shots yet") is drawn by hand. |
+| **Filter chip** | Pet folder (History) | Selected, Default | pressed, focus, selected | label; selected; what happens on tap | `Chip` in `ui.tsx`. The suggestion chips in the Boo sheet and the "Which pet?" chips are drawn by hand. |
+| **Timeline item** | Pet folder | By record type (icon) | — | icon; title; date; detail; source document | `HistoryItem` lives inside `PetFolder.tsx`. |
+| **Nav bar** / **Screen title** | Nav bar: every inner screen · Screen title: Pets, Today, Schedule | Nav bar with or without a right action | pressed, focus (back, action) | title; right action | `StackScreen` in `ui.tsx` covers the nav bar. Large titles on Today, Schedule and Pets are drawn by hand three times. |
+| **Boo / Character** | Welcome, Today, Boo sheet, tab bar | Idle, Listening | — (animation) | state; size | `BooFace` in `TabBar.tsx` is one static drawing. |
+| **Bottom sheet** (Figma: **Sheet header**) | Boo sheet | — | open, being dragged | title; content; what happens on close | `BottomSheet.tsx`. |
+| **Segmented control** | Schedule (Week / Month) | Week, Month | pressed, focus, selected | options; selected | Not in code. Schedule has a week view only. |
+| **Pet hero** | Pet folder, Edit profile | Pet colors | — | pet; color | Drawn by hand in `PetFolder.tsx`. |
+| **Colour swatch** | Edit profile | Colour, None · Default, Selected | pressed, focus, selected | color; selected | Not in code. The pet color can't be picked yet. |
+| **Toast** ("Saved · Undo") | Every screen, after Boo saves something | With or without Undo | pressed (Undo) | text; Undo action | `Toast.tsx`. **Not in Figma.** |
+
+These are in Figma but not used on any screen or in code: Progress ring, Stat tile, Timeline step, and Chip (Core components; it differs from Filter chip).
+
+## 3. Built by hand in several places, each differently (first to fix)
+
+1. **Rows with a leading icon or photo and a trailing chevron or action.** Pets list, Pet folder (vet card, Profile), Settings (vets), Share (sets, Pick pets). These become List row / Summary row.
+2. **Round icon buttons.** They come in three sizes (44, 48, 40 px) drawn by hand: Today (mic, camera), Boo sheet (Send), Pet folder (vet phone). These become Icon button.
+3. **Checkbox circle.** It's drawn twice, differently: in Task row (28 px circle, `border-control` ring) and in Share · Pick pets (`surface-subtle` ring). These become Checkbox.
+4. **Buttons made from links or plain `button`s.** "Book vet" on Today, the two test buttons in Settings, "Snap it / Not now" on Today, "Explore with sample pets" on Welcome. These become Button (and a Ghost size).
+5. **Text fields.** `Field` (forms), the search in Pet folder, the Boo text field, the Ask Boo pill on Today. These become Form field and Ask Boo input.
+6. **Large screen titles.** Today, Schedule and Pets each repeat the same `h1` classes. This becomes Screen title.
+7. **Pill-shaped choices.** `Chip` (Pet folder), Boo suggestions, "Which pet?" and the answer chips in the Boo sheet. These become Filter chip and Chip.
+
+## 4. Open questions for the designer
+
+1. **Button "dark".** The code uses it for "Done" in Next up, but Figma has only Primary, Secondary and Ghost. Keep it as a 4th variant or use Primary?
+2. **Error state for Form field.** Figma has Default, Focused and Needs check. The course asks for an error state with a message under the field. Add "Error" in Figma?
+3. **Card.** There is no base Card in Figma. Make one (Plain and Tappable), or keep cards only inside the patterns?
+4. **Toast.** Not in Figma. Draw it, or keep the code version?
+5. **Sizes without a token.** The 48 px button height, the 28 px checkbox, avatar sizes and the room for the tab bar. Add `size/*` tokens in Figma, or allow them as exact values?
