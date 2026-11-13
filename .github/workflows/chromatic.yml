@@ -1,0 +1,29 @@
+# Publishes Storybook to Chromatic on every push to main, so the Storybook link always shows main.
+# The project token lives only as the GitHub secret CHROMATIC_PROJECT_TOKEN (Settings → Secrets and variables → Actions).
+
+name: Storybook (Chromatic)
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  chromatic:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Chromatic compares with earlier builds, it needs the git history
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - uses: chromaui/action@latest
+        with:
+          projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
+          buildScriptName: build-storybook
+          # What lands on main is already reviewed: take it as the new baseline, keep the run green
+          autoAcceptChanges: main
+          exitZeroOnChanges: true
