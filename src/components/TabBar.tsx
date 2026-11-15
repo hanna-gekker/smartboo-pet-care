@@ -2,7 +2,8 @@
 // A frosted glass capsule with Today · Schedule · Pets, and Boo to its right.
 // Capsule 62 high with 4 inside, tabs 54 high; the bar is 348 wide on a 390 phone (21 on each side).
 // The selected tab is a pill (nav/active-*) with the filled icon, marked for VoiceOver with aria-current="page".
-// A coral dot on Schedule when something is overdue. Content scrolls under the glass (no fade).
+// A coral dot on Schedule when something is overdue. Content scrolls under the glass and melts into the
+// screen background behind it (scroll edge effect, .edge-bottom).
 
 import { Link } from 'react-router'
 import { BooCharacter } from './BooCharacter'
@@ -65,5 +66,10 @@ export function TabBar({ active, overdue = false, onBoo, docked = true }: TabBar
   )
 
   if (!docked) return bar
-  return <div className="pointer-events-none fixed inset-x-0 bottom-0 z-30 flex justify-center px-[21px] pb-safe-16">{bar}</div>
+  return (
+    <div className="pointer-events-none fixed inset-x-0 bottom-0 z-30 flex justify-center px-[21px] pb-safe-16">
+      <div aria-hidden="true" className="edge-bottom" />
+      <div className="relative flex w-full justify-center">{bar}</div>
+    </div>
+  )
 }
