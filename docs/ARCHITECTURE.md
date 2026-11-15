@@ -4,7 +4,7 @@ How the first version is put together: screens and navigation, folders, data, na
 
 ## 1. Screen map and navigation
 
-A floating **tab bar**: a black capsule with three tabs — **Today · Schedule · Pets** — plus the **Boo button** to the right of it. Today and Pets have a **stack** inside (screens open "deeper" with a back arrow at the top left). **Boo is not a screen**: it is a bottom sheet that opens over whatever screen you are on and closes with a swipe down.
+A floating **tab bar**: a frosted glass capsule with three tabs — **Today · Schedule · Pets** — plus the **Boo button** to the right of it. Today and Pets have a **stack** inside (screens open "deeper" with a back arrow at the top left). **Boo is not a screen**: it is a bottom sheet that opens over whatever screen you are on and closes with a swipe down.
 
 **Schedule** is the plan view: a week strip at the top, then *Due today*, *Done today*, *Tomorrow* and *Later this week*. Tapping a task's circle crosses it out and moves it to Done (tap again to undo).
 

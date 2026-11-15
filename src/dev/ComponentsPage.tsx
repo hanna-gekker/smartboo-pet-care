@@ -201,7 +201,7 @@ function Board({ theme }: { theme: 'light' | 'dark' }) {
 
       <Section title="Icons" note="From Figma, 1.5px line. search and more are not in Figma yet.">
         <div className="grid grid-cols-6 gap-8">
-          {(['mic', 'check', 'plus', 'chevron-right', 'x', 'sun', 'paw', 'calendar', 'home', 'thermometer', 'bag', 'heart-pulse', 'route', 'bell', 'keyboard', 'sparkle-ai', 'settings', 'camera', 'chevron-left', 'share', 'phone', 'syringe', 'pill', 'weight', 'shield-alert', 'stethoscope', 'file-text', 'image', 'arrow-up', 'user', 'alert-circle', 'search', 'more'] as IconName[]).map((n) => (
+          {(['mic', 'check', 'plus', 'chevron-right', 'x', 'sun', 'sun-fill', 'paw', 'paw-fill', 'calendar', 'calendar-fill', 'home', 'thermometer', 'bag', 'heart-pulse', 'route', 'bell', 'keyboard', 'sparkle-ai', 'settings', 'camera', 'chevron-left', 'share', 'phone', 'syringe', 'pill', 'weight', 'shield-alert', 'stethoscope', 'file-text', 'image', 'arrow-up', 'user', 'alert-circle', 'search', 'more'] as IconName[]).map((n) => (
             <div key={n} className="flex flex-col items-center gap-4 rounded-16 bg-surface-card p-8 text-text-primary">
               <Icon name={n} />
               <span className="w-full truncate text-center text-caption text-text-secondary">{n}</span>
@@ -264,10 +264,12 @@ function Board({ theme }: { theme: 'light' | 'dark' }) {
         <MonthDemo />
       </Section>
 
-      <Section title="Tab bar" note="Active: Today · Schedule · Pets · none (Settings)">
+      <Section title="Tab bar" note="Active: Today · Schedule · Pets · none (Settings) · overdue dot on Schedule (Today active, Schedule active)">
         {(['today', 'schedule', 'pets', undefined] as (Tab | undefined)[]).map((active) => (
           <TabBar key={active ?? 'none'} active={active} onBoo={() => {}} docked={false} />
         ))}
+        <TabBar active="today" overdue onBoo={() => {}} docked={false} />
+        <TabBar active="schedule" overdue onBoo={() => {}} docked={false} />
       </Section>
     </div>
   )

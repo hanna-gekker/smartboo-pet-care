@@ -24,9 +24,9 @@ export function Logo({ className = '' }: { className?: string }) {
       </g>
       <defs>
       <linearGradient id={`${id}-paint0_linear_170_29341`} x1="5.51202" y1="2.47748" x2="20.3455" y2="22.4034" gradientUnits="userSpaceOnUse">
-      <stop style={{ stopColor: 'var(--ai-petal-light)' }} />
-      <stop offset="0.5" style={{ stopColor: 'var(--ai-petal)' }} />
-      <stop offset="1" style={{ stopColor: 'var(--ai-petal-tint)' }} />
+      <stop style={{ stopColor: 'var(--brand-logo-petal-light)' }} />
+      <stop offset="0.5" style={{ stopColor: 'var(--brand-logo-petal)' }} />
+      <stop offset="1" style={{ stopColor: 'var(--brand-logo-petal-tint)' }} />
       </linearGradient>
       </defs>
     </svg>

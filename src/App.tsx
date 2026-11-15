@@ -5,6 +5,7 @@ import { TabBar, type Tab } from './components/TabBar'
 import { Toast } from './components/Toast'
 import { useApp } from './data/useApp'
 import { useUi } from './data/useUi'
+import { taskState } from './lib/tasks'
 import { PetFolder } from './screens/PetFolder'
 import { PetForm } from './screens/PetForm'
 import { PetList } from './screens/PetList'
@@ -31,6 +32,8 @@ function Shell() {
   const { pathname } = useLocation()
   const hasPets = useApp((s) => s.pets.length > 0)
   const openBoo = useUi((s) => s.openBoo)
+  // A dot on Schedule while anything is overdue
+  const overdue = useApp((s) => s.tasks.some((x) => taskState(x) === 'waiting'))
 
   useEffect(() => {
     window.scrollTo(0, 0)
@@ -46,7 +49,7 @@ function Shell() {
   return (
     <div className="mx-auto max-w-560">
       {redirect ? <Navigate to={redirect} replace /> : <Outlet />}
-      {!redirect && !hideTabBar && <TabBar active={tabFor(pathname)} onBoo={() => openBoo()} />}
+      {!redirect && !hideTabBar && <TabBar active={tabFor(pathname)} overdue={overdue} onBoo={() => openBoo()} />}
       <BooSheet />
       <Toast />
     </div>

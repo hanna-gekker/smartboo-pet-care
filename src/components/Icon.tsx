@@ -2,6 +2,8 @@
 // Exported from Figma; names are the Figma names. The line scales with the size, like in Figma:
 // 24 → 1.5, 20 → 1.25, 16 → 1.
 // sparkle-ai is filled with the AI gradient (ai/* tokens) instead of a line.
+// sun-fill, calendar-fill and paw-fill are the filled versions for the selected tab (Figma Icon / …-fill):
+// the same line, with some shapes filled in the current color.
 // search and more aren't in Figma yet — they are drawn in the same style until they are.
 
 import { useId } from 'react'
@@ -44,9 +46,28 @@ const extra = {
   more: ['M5.5 12h.01M12 12h.01M18.5 12h.01'],
 } as const
 
+// Filled icons: [path, filled?] — filled shapes also keep the line, as in Figma.
+const filled = {
+  'sun-fill': [
+    ['M12 16C14.2091 16 16 14.2091 16 12C16 9.79086 14.2091 8 12 8C9.79086 8 8 9.79086 8 12C8 14.2091 9.79086 16 12 16Z', true],
+    ['M12 2V4'], ['M12 20V22'], ['M4.93005 4.93L6.34005 6.34'], ['M17.66 17.66L19.07 19.07'], ['M2 12H4'], ['M20 12H22'], ['M6.34005 17.66L4.93005 19.07'], ['M19.07 4.93L17.66 6.34'],
+  ],
+  'calendar-fill': [
+    ['M5 4H19C20.1046 4 21 4.89543 21 6V20C21 21.1046 20.1046 22 19 22H5C3.89543 22 3 21.1046 3 20V6C3 4.89543 3.89543 4 5 4Z'],
+    ['M5 4H19C20.1046 4 21 4.8954 21 6V10H3V6C3 4.8954 3.8954 4 5 4Z', true],
+    ['M16 2V6'], ['M8 2V6'], ['M3 10H21'],
+  ],
+  'paw-fill': [
+    ['M11 6C12.1046 6 13 5.10457 13 4C13 2.89543 12.1046 2 11 2C9.89543 2 9 2.89543 9 4C9 5.10457 9.89543 6 11 6Z', true],
+    ['M18 10C19.1046 10 20 9.10457 20 8C20 6.89543 19.1046 6 18 6C16.8954 6 16 6.89543 16 8C16 9.10457 16.8954 10 18 10Z', true],
+    ['M20 18C21.1046 18 22 17.1046 22 16C22 14.8954 21.1046 14 20 14C18.8954 14 18 14.8954 18 16C18 17.1046 18.8954 18 20 18Z', true],
+    ['M8.99999 10C9.6566 10 10.3068 10.1293 10.9134 10.3806C11.52 10.6319 12.0712 11.0002 12.5355 11.4645C12.9998 11.9288 13.3681 12.48 13.6194 13.0866C13.8707 13.6932 14 14.3434 14 15V18.5C13.9997 19.3365 13.6999 20.1452 13.1548 20.7796C12.6097 21.4141 11.8554 21.8324 11.0286 21.9587C10.2017 22.085 9.35695 21.9111 8.64729 21.4683C7.93763 21.0255 7.41001 20.3432 7.15999 19.545C6.73333 18.1683 5.83333 17.2667 4.45999 16.84C3.66218 16.5901 2.98016 16.0629 2.53735 15.3538C2.09455 14.6446 1.92021 13.8004 2.04588 12.9739C2.17155 12.1473 2.58893 11.3931 3.2225 10.8476C3.85607 10.3021 4.66396 10.0015 5.49999 10H8.99999Z', true],
+  ],
+} as const satisfies Record<string, readonly (readonly [string, true?])[]>
+
 const SPARKLE = 'M12 1.5C13.26 7.24 16.76 10.74 22.5 12C16.76 13.26 13.26 16.76 12 22.5C10.74 16.76 7.24 13.26 1.5 12C7.24 10.74 10.74 7.24 12 1.5Z'
 
-export type IconName = keyof typeof figma | keyof typeof extra | 'sparkle-ai'
+export type IconName = keyof typeof figma | keyof typeof filled | keyof typeof extra | 'sparkle-ai'
 
 export function Icon({ name, size = 24, className = '' }: { name: IconName; size?: number; className?: string }) {
   const id = useId().replace(/:/g, '')
@@ -61,6 +82,15 @@ export function Icon({ name, size = 24, className = '' }: { name: IconName; size
           </linearGradient>
         </defs>
         <path d={SPARKLE} fill={`url(#${id}-ai)`} />
+      </svg>
+    )
+  }
+  if (name in filled) {
+    return (
+      <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden="true">
+        {filled[name as keyof typeof filled].map(([d, fill]) => (
+          <path key={d} d={d} fill={fill ? 'currentColor' : undefined} />
+        ))}
       </svg>
     )
   }

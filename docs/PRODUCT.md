@@ -71,7 +71,7 @@ Boo takes three kinds of input:
 
 ## Screens in the first version
 
-Tab bar: a floating black capsule with **Today · Schedule · Pets**, and the round **Boo button** to the right of it. Settings: icon in the top-right corner of Today.
+Tab bar: a floating frosted glass capsule with **Today · Schedule · Pets**, and **Boo** to the right of it. Settings: icon in the top-right corner of Today.
 
 1. **Welcome** — two ways in: Snap a vet paper / Add your pet (+ No papers right now).
 2. **Today** — what's due soon:
