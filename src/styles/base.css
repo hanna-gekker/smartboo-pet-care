@@ -37,8 +37,14 @@
   --color-status-error-text: var(--status-error-text);
   --color-status-due-dot: var(--status-due-dot);
   --color-status-done-dot: var(--status-done-dot);
-  --color-nav-active-label: var(--nav-active-label);
-  --color-nav-active-ring: var(--nav-active-ring);
+  --color-surface-panel: var(--surface-panel);
+  --color-surface-glass: var(--surface-glass);
+  --color-border-card: var(--border-card);
+  --color-nav-active-fill: var(--nav-active-fill);
+  --color-nav-active-icon: var(--nav-active-icon);
+  --color-nav-active-content: var(--nav-active-content);
+  --color-nav-dot-ring: var(--nav-dot-ring);
+  --color-nav-dot-ring-active: var(--nav-dot-ring-active);
   --color-icon-circle-ring: var(--icon-circle-ring);
   --color-avatar-yellow: var(--avatar-yellow);
   --color-pet-lavender: var(--pet-lavender);
@@ -98,6 +104,7 @@
   --font-weight-medium: var(--font-weight-medium);
 
   --leading-*: initial;
+  --leading-14: var(--font-line-height-14);
   --leading-16: var(--font-line-height-16);
   --leading-18: var(--font-line-height-18);
   --leading-20: var(--font-line-height-20);
@@ -107,6 +114,9 @@
 
   /* Figma text styles (SB/*). Letter spacing is not a Figma Variable yet, so it comes from the styles. */
   --text-*: initial;
+  --text-tab-label: var(--font-size-11);
+  --text-tab-label--line-height: var(--font-line-height-14);
+  --text-tab-label--letter-spacing: 0px;
   --text-caption: var(--font-size-13);
   --text-caption--line-height: var(--font-line-height-18);
   --text-caption--letter-spacing: 0px;
@@ -246,6 +256,34 @@ body:has(.bg-welcome)::before {
   -webkit-mask-composite: xor;
   mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
   pointer-events: none;
+}
+
+/* Figma "Tab bar" capsule: surface/glass at 85% with a soft top sheen (ai/highlight → surface/card, 17.5%),
+   a 24 background blur and a 1px rim inside (border/glass-rim-* gradient). No shadow. */
+.glass-bar {
+  position: relative;
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--ai-highlight) 17.5%, transparent) 0%, color-mix(in srgb, var(--surface-card) 17.5%, transparent) 50%, color-mix(in srgb, var(--surface-card) 17.5%, transparent) 100%),
+    color-mix(in srgb, var(--surface-glass) 85%, transparent);
+  -webkit-backdrop-filter: blur(24px);
+  backdrop-filter: blur(24px);
+}
+.glass-bar::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg, var(--border-glass-rim-start) 0%, var(--border-glass-rim-mid) 50%, var(--border-glass-rim-end) 100%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+  pointer-events: none;
+}
+
+/* The selected tab pill's soft shadow (Figma 0 1 6, nav/active-shadow: ink 8% in light, none in dark). */
+.tab-pill {
+  box-shadow: 0 1px 6px var(--nav-active-shadow);
 }
 
 /* Pressed state instead of hover: a small shrink. No fading, so text keeps its 4.5:1 contrast while pressed. */

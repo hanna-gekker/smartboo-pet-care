@@ -136,7 +136,7 @@ export function PetFolder() {
 
 function Tile({ icon, label, value, warn, children }: { icon: IconName; label: string; value: string; warn?: boolean; children?: ReactNode }) {
   return (
-    <div className="flex min-h-avatar-80 flex-col gap-4 rounded-24 bg-surface-card p-12">
+    <div className="flex min-h-avatar-80 flex-col gap-4 rounded-24 bg-surface-panel ring-1 ring-inset ring-border-card p-12">
       <div className="flex items-center gap-4 text-text-secondary">
         <Icon name={icon} size={16} />
         <span className="text-caption font-medium">{label}</span>

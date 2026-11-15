@@ -19,7 +19,7 @@ Touch targets are at least 44×44 pt, even when the shape is smaller.
 | **Icon button** | Today, Schedule, Boo sheet, Pets, Pet folder, Share, Add your pet, Settings | Primary, Secondary, Soft · size 40, 56 | pressed, focus, disabled | icon; label for VoiceOver; style; size | `IconButton` in `ui.tsx` comes in one style only. The mic and camera on Today, Send in the Boo sheet and the vet's phone circle are drawn by hand. |
 | **Card** | Today, Schedule, Pets, Pet folder, Settings, Share, Boo sheet | Plain, Tappable | pressed (when tappable), focus | content; padding (normal or none, for lists); what happens on tap | `Card` in `ui.tsx`. Figma has no standalone Card component: cards exist only inside Next up card, Attention card and Key fact tile. |
 | **Form field** (TextField) | Add your pet, Edit profile, Boo review card, Your profile | Text, Date, Choice (select) | focus, disabled, **needs check** (Figma), **error** | label; value; type; placeholder; hint under the field; error message; needs check; trailing icon | `Field` and `inputClass` in `ui.tsx`. It has a "needs check" state but no error state, and no `aria-invalid` or `aria-describedby`. The search field in Pet folder is drawn by hand. |
-| **Tab bar** + **Tab item** | Today, Schedule, Pets, Pet folder, Settings, Boo sheet | Active tab: Today, Schedule or Pets | pressed, focus, active (`aria-current`) | active tab (read from the address); what the Boo button does | `TabBar.tsx`. The active tab is shown only by brighter text (55% opacity on the others). It doesn't use the `nav-active-*` tokens yet. |
+| **Tab bar** + **Tab item** | Today, Schedule, Pets, Pet folder, Settings, Boo sheet | Active tab: Today, Schedule or Pets | pressed, focus, active (`aria-current`) | active tab (read from the address); what the Boo button does | `TabBar.tsx`. Frosted glass capsule; the active tab is a pill in the `nav/active-*` tokens with the filled icon (see section 14). |
 
 ## 2. SmartBoo's own components (session 3, P9 candidates)
 
@@ -72,7 +72,7 @@ Base components in `src/components/`, each state set by props. They are shown on
 | Icon button | `IconButton.tsx` | `icon` · `label` (for VoiceOver, required) · `variant` (primary, secondary, soft) · `size` (40, 56; 40 sits in a 44 tap area) · `disabled` |
 | Card | `Card.tsx` | `variant` (plain, list) · `onClick` (makes it Tappable) |
 | Form field | `TextField.tsx` | `label` · `hint` · `error` · `needsCheck` · `trailingIcon` · `options` (turns it into a choice list) · plus the usual input props |
-| Tab bar | `TabBar.tsx` | `active` (today, schedule, pets or none) · `onBoo` · `docked` |
+| Tab bar | `TabBar.tsx` | `active` (today, schedule, pets or none) · `overdue` (dot on Schedule) · `onBoo` · `docked` |
 
 ## 6. Built (session 3, P9)
 
@@ -133,7 +133,7 @@ Welcome follows the Figma screen "Welcome" (and "Welcome · Dark"): Boo on top w
 
 | Component | File | Props |
 |---|---|---|
-| Glass card (Figma "Glass card") | `GlassCard.tsx` | `pet` (photo, 40) · `title` · `caption`. Frosted glass: a see-through fill, blur behind it and an `ai/*` gradient edge. Only on Welcome for now |
+| Glass card (Figma "Glass card") | `GlassCard.tsx` | `pet` (photo, 40) · `title` · `caption`. Frosted glass: a see-through fill, blur behind it and an `ai/*` gradient edge. Glass is used here (the Reminder card) and on the tab bar |
 | Tap hint (Figma "Tap hint") | `TapHint.tsx` | `label` · `onClick`. A small mic and a caption that opens Boo for voice |
 | Note (Figma "Note") | `Note.tsx` | `icon` · `children`. A 16 icon and a grey caption, centred |
 
@@ -190,3 +190,23 @@ Decisions (Nov 13, 2026):
 - **No suggestion chips.** A grey "Try: …" line shows two examples instead.
 - **All sheets have 24px side padding and a 5px handle in `border/control`**, as in Figma.
 - The other Boo steps (consent, snap, reading, review, remind, photo, answers) keep their current look for now; they have their own Figma frames (6a–6g, 8b–8d, 9, 10).
+
+## 14. Glass tab bar and surfaces (Nov 14, 2026)
+
+The tab bar and the card surfaces follow the new Figma "Tab bar" + "Tab item" (Patterns). Tokens came in with a full Variables export.
+
+| Component | File | What changed |
+|---|---|---|
+| Tab bar | `TabBar.tsx` | Frosted glass capsule (`surface/glass` at 85%, a soft top sheen, 24 background blur, 1px `border/glass-rim-*` rim inside), no shadow. 62 high with 4 inside, tabs 54 high, 21 from the screen edges (348 wide on a 390 phone). Selected tab: a `nav/active-fill` pill with a soft `nav/active-shadow`, the filled icon in `nav/active-icon`, the label in `nav/active-content`. Other tabs: outline icon and label in `text/secondary`. Icons 20, labels SB/Tab label (11/14 Medium, `text-tab-label`). Boo is the mini flower at 62, breathing, with no circle. No fade under the bar: content scrolls under the glass |
+| Due dot | `TabBar.tsx` | `overdue`: an 8px `status/waiting-dot` on Schedule's icon (tab centre + 3, 8 from the top) with a 2px ring outside: `nav/dot-ring`, or `nav/dot-ring-active` on the selected tab. VoiceOver reads "Schedule, overdue" |
+| Icon | `Icon.tsx` | `sun-fill`, `calendar-fill`, `paw-fill` (Figma Icon / …-fill) for the selected tab |
+| Card, screen cards | `Card.tsx`, Today, Schedule, Month, Pet folder | On `surface/panel` with a 1px `border/card` hairline inside (a ring, so it takes no room). Next up and the Boo card keep their tint and get the hairline too. Rows inside cards have no hairline |
+| Logo | `Logo.tsx` | Petals use `brand/logo-petal-*` (one step deeper in light); Boo keeps `ai/petal-*` |
+
+Surfaces, back to front:
+- `surface/canvas` — the screen (light: iOS grey #F2F2F7).
+- `surface/panel` — cards and sections (white in light, `gray/900` in dark), with the `border/card` hairline.
+- `surface/card` — controls and sheets: buttons, fields, checkboxes, the segmented thumb, bottom sheets.
+- `surface/glass` — the tab bar.
+
+Also from the export: overdue and form errors are rose (`status/waiting-*`, `status/error-*`).

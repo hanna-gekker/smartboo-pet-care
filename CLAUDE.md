@@ -6,7 +6,7 @@ Read this file and `docs/PRODUCT.md` before every task. If a task conflicts with
 
 SmartBoo is an iOS app for US pet owners: everything about your pets in one place. The assistant **Boo** takes vet papers (photo, PDF), events and questions by voice or text, files everything into each pet's folder, sets reminders, and makes records quick to share (PDF via the iOS share sheet).
 
-- Tab bar: a floating black capsule **Today · Schedule · Pets** + the round **Boo button** to its right. Boo opens as a bottom sheet, not a chat.
+- Tab bar: a floating frosted glass capsule **Today · Schedule · Pets** + **Boo** to its right. Boo opens as a bottom sheet, not a chat.
 - First-version screens: Welcome, Today, Schedule, Boo (bottom sheet), Pet folder (+ pet list), Share.
 - Main screen: **Today** (first tab, Figma "Today · V17"): Boo card, Next up, Coming up, Your pack, Done today.
 - Main flow: a paper → Boo creates the pet and its vaccines → review card "Looks right" → reminder.
@@ -52,6 +52,7 @@ Testing data: the first launch loads sample pets (Rocky, Milo, Cleo, Tank). Sett
 - How tokens get into code: Figma → `design/figma-variables.json` (raw export, as is) → `npm run tokens` → `tokens.json` (W3C DTCG) → `src/styles/tokens.css` (Style Dictionary). CSS names are the Figma names: `accent/primary` → `--accent-primary`.
 - To update tokens: change them in Figma, re-run the export, replace `design/figma-variables.json`, run `npm run tokens`. Never edit `tokens.json` or `tokens.css` by hand, and never rename tokens that come from Figma.
 - Components use the semantic tokens (`--surface-*`, `--text-*`, `--accent-*`…), not primitives like `--blue-700`. Text and icons on an `accent/primary` fill use `text/on-accent`.
+- Surfaces, back to front: `surface/canvas` (the screen) → `surface/panel` (cards and sections, with a 1px `border/card` hairline inside) → `surface/card` (controls and sheets: buttons, fields, checkboxes, the segmented thumb, bottom sheets) → `surface/glass` (the tab bar). Glass (blur behind) is used on the Reminder card and the tab bar only.
 - Tailwind utilities carry the Figma names (mapped in `src/styles/base.css`): `bg-surface-card`, `text-text-primary`, `p-16`, `size-control-44`, `rounded-24`, `text-caption` … `text-display` (the SB/* text styles), `font-regular` / `font-medium`. Tailwind's own palette and scales are switched off. A value Figma has no token for (a size, the room for the tab bar) is written as an exact arbitrary value, e.g. `size-[48px]`.
 - Colors, spacing, radii and fonts only through CSS variables. No hex values in components.
 - Text contrast at least 4.5:1 (3:1 for large text and icons), in both themes.

@@ -18,4 +18,8 @@ export const Schedule: Story = { args: { active: 'schedule' } }
 export const Pets: Story = { args: { active: 'pets' } }
 /** Screens like Settings: no tab is open. */
 export const NoneActive: Story = { args: { active: undefined } }
+/** Something is overdue: a coral dot on Schedule, ringed in the glass color. */
+export const OverdueDot: Story = { args: { overdue: true } }
+/** The dot on the selected Schedule tab, ringed in the pill color. */
+export const OverdueDotOnSelected: Story = { args: { active: 'schedule', overdue: true } }
 export const Pressed: Story = { parameters: { pseudo: { active: true } } }

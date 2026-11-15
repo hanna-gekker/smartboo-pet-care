@@ -77,6 +77,21 @@
   --alpha-violet-400-18: #A88AF22E;
   --alpha-white-85: #FFFFFFD9;
   --alpha-indigo-400-50: #8F98F580;
+  --alpha-gray-900-55: #1B1E248C;
+  --alpha-white-30: #FFFFFF4D;
+  --alpha-gray-500-45: #6E6E7573;
+  --alpha-blue-300-30: #9FBDF24D;
+  --alpha-violet-300-30: #B9A2D44D;
+  --alpha-white-10: #FFFFFF1A;
+  --alpha-neutral-100-85: #F2F2F7D9;
+  --alpha-ink-8: #1A1F4014;
+  --neutral-100: #F2F2F7;
+  --rose-50: #FFEEF1;
+  --rose-300: #FF9CB0;
+  --rose-400: #FF6B85;
+  --rose-500: #EF4F6C;
+  --rose-700: #C42648;
+  --rose-950: #3A1B24;
 
   /* Layout */
   --space-0: 0px; /* Spacing 0px — padding & gaps (8pt grid, 4/12 as half-steps, 2 for hairline groups) */
@@ -111,6 +126,7 @@
   --size-max-width-560: 560px; /* Max width of the app column and bottom sheets on wide screens */
   --font-family-display: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", system-ui, sans-serif;
   --font-family-text: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", system-ui, sans-serif;
+  --font-size-11: 11px;
   --font-size-12: 12px;
   --font-size-13: 13px;
   --font-size-14: 14px;
@@ -120,6 +136,7 @@
   --font-size-36: 36px;
   --font-weight-regular: 400;
   --font-weight-medium: 500;
+  --font-line-height-14: 14px;
   --font-line-height-16: 16px;
   --font-line-height-18: 18px;
   --font-line-height-20: 20px;
@@ -128,12 +145,14 @@
   --font-line-height-40: 40px;
 
   /* Colors — light */
-  --surface-canvas: var(--gray-50); /* Page background */
+  --surface-canvas: var(--neutral-100); /* Screen background. Light: neutral/100 #F2F2F7 (iOS grouped background); Dark: gray/950. */
   --surface-card: var(--base-white); /* Cards, input bar, chips */
   --surface-subtle: var(--gray-100); /* Dividers, list rows, ring track */
   --surface-nav: var(--gray-950); /* Floating menu capsule */
   --surface-scrim: var(--alpha-ink-40); /* Dim behind bottom sheets and modals */
   --surface-canvas-clear: var(--alpha-gray-50-0); /* Canvas at 0% — top stop of the bottom fade behind the tab bar. */
+  --surface-glass: var(--alpha-neutral-100-85); /* Tint of the frosted tab bar (with background blur). Light: #F2F2F7 at 85% (grey glass that separates from white cards without a shadow); Dark: gray/900 55%. */
+  --surface-panel: var(--base-white); /* Content cards and sections. Light: white on the #F2F2F7 canvas (iOS grouped pattern); Dark: gray/900. */
   --text-primary: var(--gray-950); /* Main text and icons (also done checks, home indicator) */
   --text-secondary: var(--gray-600); /* Supporting text (AA on white) */
   --text-on-dark: var(--base-white); /* Text/icons on dark or accent */
@@ -141,19 +160,23 @@
   --text-tertiary: var(--gray-500); /* Completed / disabled text (crossed-out tasks). Not for essential info. */
   --text-on-accent: var(--base-white); /* Text and icons on accent/primary fills (buttons, badges). White in light, near-black in dark. */
   --border-control: var(--gray-400); /* Unchecked check circle */
+  --border-glass-rim-start: var(--base-white); /* Rim of the glass tab bar (paint at 100%). Light: solid white hairline; Dark: Boo-coloured gradient at ~30%. */
+  --border-glass-rim-mid: var(--base-white); /* Rim of the glass tab bar (paint at 100%). Light: solid white hairline; Dark: Boo-coloured gradient at ~30%. */
+  --border-glass-rim-end: var(--base-white); /* Rim of the glass tab bar (paint at 100%). Light: solid white hairline; Dark: Boo-coloured gradient at ~30%. */
+  --border-card: var(--base-white); /* 1px inside hairline on cards. Light: white; Dark: white 10%. */
   --accent-primary: var(--indigo-600); /* Buttons, active states, progress, mic */
   --accent-primary-soft: var(--indigo-200); /* Soft accent fills (avatars) */
   --accent-primary-subtle: var(--indigo-50); /* Very light accent tint — backgrounds of icons in circles, soft buttons, selected rows */
-  --status-waiting-bg: var(--coral-50); /* Coral — background of things that need attention (overdue, needs check) */
-  --status-waiting-dot: var(--coral-500); /* Status dot */
-  --status-waiting-text: var(--coral-700); /* Coral text on white or waiting-bg (≈6:1) */
+  --status-waiting-bg: var(--rose-50); /* Coral — background of things that need attention (overdue, needs check) */
+  --status-waiting-dot: var(--rose-500); /* Status dot */
+  --status-waiting-text: var(--rose-700); /* Coral text on white or waiting-bg (≈6:1) */
   --status-due-dot: var(--violet-600); /* Scheduled / due — calendar dots */
   --status-done-dot: var(--green-600); /* Completed — calendar dots */
   --status-check-bg: var(--yellow-50); /* Boo is not sure — tap to check */
   --status-check-text: var(--yellow-800); /* Boo is not sure — tap to check */
   --status-check-border: var(--yellow-600); /* Boo is not sure — tap to check */
-  --status-error-border: var(--coral-700); /* Form field error outline */
-  --status-error-text: var(--coral-700); /* Error message under a field */
+  --status-error-border: var(--rose-700); /* Form field error outline */
+  --status-error-text: var(--rose-700); /* Error message under a field */
   --avatar-yellow: var(--yellow-300); /* Household member A */
   --ai-card-mint: var(--green-50); /* Assistant card gradient 1 */
   --ai-card-blue: var(--blue-50); /* Assistant card gradient 2 */
@@ -187,20 +210,32 @@
   --overlay-photo-clear: var(--alpha-ink-0); /* Top of the photo gradient */
   --overlay-photo-dark: var(--alpha-ink-55); /* Bottom of the photo gradient — keeps white text readable on photos */
   --brand-logo-core: var(--blue-700); /* Core of the SmartBoo logo mark */
+  --brand-logo-petal-light: var(--blue-200); /* Logo petals gradient (separate from Boo’s ai/petal-*). Light: one step deeper so the mark holds on the grey canvas; Dark: same as Boo. */
+  --brand-logo-petal: var(--blue-300); /* Logo petals gradient (separate from Boo’s ai/petal-*). Light: one step deeper so the mark holds on the grey canvas; Dark: same as Boo. */
+  --brand-logo-petal-tint: var(--violet-200); /* Logo petals gradient (separate from Boo’s ai/petal-*). Light: one step deeper so the mark holds on the grey canvas; Dark: same as Boo. */
   --nav-active-label: var(--indigo-600); /* Icon and label of the active tab (indigo in light, light grey in dark) */
   --nav-active-ring: var(--base-white); /* Ring of the active tab pill (invisible in light, soft grey in dark) */
+  --nav-active-fill: var(--base-white); /* Selected tab pill. Light: white (like the iOS segmented control); Dark: grey 500 at 45%. */
+  --nav-active-content: var(--gray-950); /* Label of the selected tab. Light: white on blue; Dark: white. */
+  --nav-active-border: var(--alpha-ink-0); /* Outline of the selected tab. Light: same as the fill (invisible); Dark: none. */
+  --nav-active-shadow: var(--alpha-ink-8); /* Soft shadow under the selected tab pill (0 1 6). Light: ink 8%; Dark: none. */
+  --nav-active-icon: var(--indigo-600); /* Filled icon of the selected tab. Light: white on the blue pill; Dark: indigo/400 on the translucent grey pill. */
+  --nav-dot-ring-active: var(--base-white); /* Ring around the due dot on the selected tab (cut-out). Light: indigo/600 = pill; Dark: gray/700 ≈ the translucent pill. */
+  --nav-dot-ring: var(--base-white); /* Ring around the due dot on an unselected tab (cut-out). Light: white; Dark: gray/800 ≈ the glass. */
   --icon-circle-ring: var(--indigo-50); /* Ring around soft icon circles (invisible in light, soft indigo in dark) */
 }
 
 /* Colors — dark, following the phone */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --surface-canvas: var(--gray-950); /* Page background */
+    --surface-canvas: var(--gray-950); /* Screen background. Light: neutral/100 #F2F2F7 (iOS grouped background); Dark: gray/950. */
     --surface-card: var(--gray-900); /* Cards, input bar, chips */
     --surface-subtle: var(--gray-800); /* Dividers, list rows, ring track */
     --surface-nav: var(--gray-700); /* Floating menu capsule */
     --surface-scrim: var(--alpha-black-60); /* Dim behind bottom sheets and modals */
     --surface-canvas-clear: var(--alpha-gray-950-0); /* Canvas at 0% — top stop of the bottom fade behind the tab bar. */
+    --surface-glass: var(--alpha-gray-900-55); /* Tint of the frosted tab bar (with background blur). Light: #F2F2F7 at 85% (grey glass that separates from white cards without a shadow); Dark: gray/900 55%. */
+    --surface-panel: var(--gray-900); /* Content cards and sections. Light: white on the #F2F2F7 canvas (iOS grouped pattern); Dark: gray/900. */
     --text-primary: var(--gray-100); /* Main text and icons (also done checks, home indicator) */
     --text-secondary: var(--gray-300); /* Supporting text (AA on white) */
     --text-on-dark: var(--base-white); /* Text/icons on dark or accent */
@@ -208,19 +243,23 @@
     --text-tertiary: var(--gray-400); /* Completed / disabled text (crossed-out tasks). Not for essential info. */
     --text-on-accent: var(--gray-950); /* Text and icons on accent/primary fills (buttons, badges). White in light, near-black in dark. */
     --border-control: var(--gray-500); /* Unchecked check circle */
+    --border-glass-rim-start: var(--alpha-white-30); /* Rim of the glass tab bar (paint at 100%). Light: solid white hairline; Dark: Boo-coloured gradient at ~30%. */
+    --border-glass-rim-mid: var(--alpha-blue-300-30); /* Rim of the glass tab bar (paint at 100%). Light: solid white hairline; Dark: Boo-coloured gradient at ~30%. */
+    --border-glass-rim-end: var(--alpha-violet-300-30); /* Rim of the glass tab bar (paint at 100%). Light: solid white hairline; Dark: Boo-coloured gradient at ~30%. */
+    --border-card: var(--alpha-white-10); /* 1px inside hairline on cards. Light: white; Dark: white 10%. */
     --accent-primary: var(--indigo-400); /* Buttons, active states, progress, mic */
     --accent-primary-soft: var(--indigo-800); /* Soft accent fills (avatars) */
     --accent-primary-subtle: var(--indigo-900); /* Very light accent tint — backgrounds of icons in circles, soft buttons, selected rows */
-    --status-waiting-bg: var(--coral-950); /* Coral — background of things that need attention (overdue, needs check) */
-    --status-waiting-dot: var(--coral-400); /* Status dot */
-    --status-waiting-text: var(--coral-300); /* Coral text on white or waiting-bg (≈6:1) */
+    --status-waiting-bg: var(--rose-950); /* Coral — background of things that need attention (overdue, needs check) */
+    --status-waiting-dot: var(--rose-400); /* Status dot */
+    --status-waiting-text: var(--rose-300); /* Coral text on white or waiting-bg (≈6:1) */
     --status-due-dot: var(--violet-400); /* Scheduled / due — calendar dots */
     --status-done-dot: var(--green-400); /* Completed — calendar dots */
     --status-check-bg: var(--yellow-950); /* Boo is not sure — tap to check */
     --status-check-text: var(--yellow-300); /* Boo is not sure — tap to check */
     --status-check-border: var(--yellow-500); /* Boo is not sure — tap to check */
-    --status-error-border: var(--coral-400); /* Form field error outline */
-    --status-error-text: var(--coral-300); /* Error message under a field */
+    --status-error-border: var(--rose-400); /* Form field error outline */
+    --status-error-text: var(--rose-300); /* Error message under a field */
     --avatar-yellow: var(--yellow-300); /* Household member A */
     --ai-card-mint: var(--green-950); /* Assistant card gradient 1 */
     --ai-card-blue: var(--blue-950); /* Assistant card gradient 2 */
@@ -254,20 +293,32 @@
     --overlay-photo-clear: var(--alpha-ink-0); /* Top of the photo gradient */
     --overlay-photo-dark: var(--alpha-ink-55); /* Bottom of the photo gradient — keeps white text readable on photos */
     --brand-logo-core: var(--blue-700); /* Core of the SmartBoo logo mark */
+    --brand-logo-petal-light: var(--blue-300); /* Logo petals gradient (separate from Boo’s ai/petal-*). Light: one step deeper so the mark holds on the grey canvas; Dark: same as Boo. */
+    --brand-logo-petal: var(--blue-400); /* Logo petals gradient (separate from Boo’s ai/petal-*). Light: one step deeper so the mark holds on the grey canvas; Dark: same as Boo. */
+    --brand-logo-petal-tint: var(--violet-300); /* Logo petals gradient (separate from Boo’s ai/petal-*). Light: one step deeper so the mark holds on the grey canvas; Dark: same as Boo. */
     --nav-active-label: var(--gray-100); /* Icon and label of the active tab (indigo in light, light grey in dark) */
     --nav-active-ring: var(--gray-500); /* Ring of the active tab pill (invisible in light, soft grey in dark) */
+    --nav-active-fill: var(--alpha-gray-500-45); /* Selected tab pill. Light: white (like the iOS segmented control); Dark: grey 500 at 45%. */
+    --nav-active-content: var(--base-white); /* Label of the selected tab. Light: white on blue; Dark: white. */
+    --nav-active-border: var(--alpha-ink-0); /* Outline of the selected tab. Light: same as the fill (invisible); Dark: none. */
+    --nav-active-shadow: var(--alpha-ink-0); /* Soft shadow under the selected tab pill (0 1 6). Light: ink 8%; Dark: none. */
+    --nav-active-icon: var(--indigo-400); /* Filled icon of the selected tab. Light: white on the blue pill; Dark: indigo/400 on the translucent grey pill. */
+    --nav-dot-ring-active: var(--gray-700); /* Ring around the due dot on the selected tab (cut-out). Light: indigo/600 = pill; Dark: gray/700 ≈ the translucent pill. */
+    --nav-dot-ring: var(--gray-800); /* Ring around the due dot on an unselected tab (cut-out). Light: white; Dark: gray/800 ≈ the glass. */
     --icon-circle-ring: var(--indigo-800); /* Ring around soft icon circles (invisible in light, soft indigo in dark) */
   }
 }
 
 /* Colors — dark, chosen in the app */
 [data-theme="dark"] {
-  --surface-canvas: var(--gray-950); /* Page background */
+  --surface-canvas: var(--gray-950); /* Screen background. Light: neutral/100 #F2F2F7 (iOS grouped background); Dark: gray/950. */
   --surface-card: var(--gray-900); /* Cards, input bar, chips */
   --surface-subtle: var(--gray-800); /* Dividers, list rows, ring track */
   --surface-nav: var(--gray-700); /* Floating menu capsule */
   --surface-scrim: var(--alpha-black-60); /* Dim behind bottom sheets and modals */
   --surface-canvas-clear: var(--alpha-gray-950-0); /* Canvas at 0% — top stop of the bottom fade behind the tab bar. */
+  --surface-glass: var(--alpha-gray-900-55); /* Tint of the frosted tab bar (with background blur). Light: #F2F2F7 at 85% (grey glass that separates from white cards without a shadow); Dark: gray/900 55%. */
+  --surface-panel: var(--gray-900); /* Content cards and sections. Light: white on the #F2F2F7 canvas (iOS grouped pattern); Dark: gray/900. */
   --text-primary: var(--gray-100); /* Main text and icons (also done checks, home indicator) */
   --text-secondary: var(--gray-300); /* Supporting text (AA on white) */
   --text-on-dark: var(--base-white); /* Text/icons on dark or accent */
@@ -275,19 +326,23 @@
   --text-tertiary: var(--gray-400); /* Completed / disabled text (crossed-out tasks). Not for essential info. */
   --text-on-accent: var(--gray-950); /* Text and icons on accent/primary fills (buttons, badges). White in light, near-black in dark. */
   --border-control: var(--gray-500); /* Unchecked check circle */
+  --border-glass-rim-start: var(--alpha-white-30); /* Rim of the glass tab bar (paint at 100%). Light: solid white hairline; Dark: Boo-coloured gradient at ~30%. */
+  --border-glass-rim-mid: var(--alpha-blue-300-30); /* Rim of the glass tab bar (paint at 100%). Light: solid white hairline; Dark: Boo-coloured gradient at ~30%. */
+  --border-glass-rim-end: var(--alpha-violet-300-30); /* Rim of the glass tab bar (paint at 100%). Light: solid white hairline; Dark: Boo-coloured gradient at ~30%. */
+  --border-card: var(--alpha-white-10); /* 1px inside hairline on cards. Light: white; Dark: white 10%. */
   --accent-primary: var(--indigo-400); /* Buttons, active states, progress, mic */
   --accent-primary-soft: var(--indigo-800); /* Soft accent fills (avatars) */
   --accent-primary-subtle: var(--indigo-900); /* Very light accent tint — backgrounds of icons in circles, soft buttons, selected rows */
-  --status-waiting-bg: var(--coral-950); /* Coral — background of things that need attention (overdue, needs check) */
-  --status-waiting-dot: var(--coral-400); /* Status dot */
-  --status-waiting-text: var(--coral-300); /* Coral text on white or waiting-bg (≈6:1) */
+  --status-waiting-bg: var(--rose-950); /* Coral — background of things that need attention (overdue, needs check) */
+  --status-waiting-dot: var(--rose-400); /* Status dot */
+  --status-waiting-text: var(--rose-300); /* Coral text on white or waiting-bg (≈6:1) */
   --status-due-dot: var(--violet-400); /* Scheduled / due — calendar dots */
   --status-done-dot: var(--green-400); /* Completed — calendar dots */
   --status-check-bg: var(--yellow-950); /* Boo is not sure — tap to check */
   --status-check-text: var(--yellow-300); /* Boo is not sure — tap to check */
   --status-check-border: var(--yellow-500); /* Boo is not sure — tap to check */
-  --status-error-border: var(--coral-400); /* Form field error outline */
-  --status-error-text: var(--coral-300); /* Error message under a field */
+  --status-error-border: var(--rose-400); /* Form field error outline */
+  --status-error-text: var(--rose-300); /* Error message under a field */
   --avatar-yellow: var(--yellow-300); /* Household member A */
   --ai-card-mint: var(--green-950); /* Assistant card gradient 1 */
   --ai-card-blue: var(--blue-950); /* Assistant card gradient 2 */
@@ -321,7 +376,17 @@
   --overlay-photo-clear: var(--alpha-ink-0); /* Top of the photo gradient */
   --overlay-photo-dark: var(--alpha-ink-55); /* Bottom of the photo gradient — keeps white text readable on photos */
   --brand-logo-core: var(--blue-700); /* Core of the SmartBoo logo mark */
+  --brand-logo-petal-light: var(--blue-300); /* Logo petals gradient (separate from Boo’s ai/petal-*). Light: one step deeper so the mark holds on the grey canvas; Dark: same as Boo. */
+  --brand-logo-petal: var(--blue-400); /* Logo petals gradient (separate from Boo’s ai/petal-*). Light: one step deeper so the mark holds on the grey canvas; Dark: same as Boo. */
+  --brand-logo-petal-tint: var(--violet-300); /* Logo petals gradient (separate from Boo’s ai/petal-*). Light: one step deeper so the mark holds on the grey canvas; Dark: same as Boo. */
   --nav-active-label: var(--gray-100); /* Icon and label of the active tab (indigo in light, light grey in dark) */
   --nav-active-ring: var(--gray-500); /* Ring of the active tab pill (invisible in light, soft grey in dark) */
+  --nav-active-fill: var(--alpha-gray-500-45); /* Selected tab pill. Light: white (like the iOS segmented control); Dark: grey 500 at 45%. */
+  --nav-active-content: var(--base-white); /* Label of the selected tab. Light: white on blue; Dark: white. */
+  --nav-active-border: var(--alpha-ink-0); /* Outline of the selected tab. Light: same as the fill (invisible); Dark: none. */
+  --nav-active-shadow: var(--alpha-ink-0); /* Soft shadow under the selected tab pill (0 1 6). Light: ink 8%; Dark: none. */
+  --nav-active-icon: var(--indigo-400); /* Filled icon of the selected tab. Light: white on the blue pill; Dark: indigo/400 on the translucent grey pill. */
+  --nav-dot-ring-active: var(--gray-700); /* Ring around the due dot on the selected tab (cut-out). Light: indigo/600 = pill; Dark: gray/700 ≈ the translucent pill. */
+  --nav-dot-ring: var(--gray-800); /* Ring around the due dot on an unselected tab (cut-out). Light: white; Dark: gray/800 ≈ the glass. */
   --icon-circle-ring: var(--indigo-800); /* Ring around soft icon circles (invisible in light, soft indigo in dark) */
 }

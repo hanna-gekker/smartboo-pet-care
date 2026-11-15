@@ -78,7 +78,7 @@ export function Today() {
         )}
 
         {/* Boo card */}
-        <section aria-label="Boo" className="flex flex-col gap-16 rounded-24 bg-ai-card p-24">
+        <section aria-label="Boo" className="flex flex-col gap-16 rounded-24 bg-ai-card p-24 ring-1 ring-inset ring-border-card">
           <div className="flex items-center gap-16">
             <button type="button" aria-label="Talk to Boo" onClick={() => openBoo('talk')} className="press shrink-0 rounded-full">
               <BooCharacter size={72} />
@@ -95,7 +95,7 @@ export function Today() {
         </section>
 
         {comingUp.length > 0 && (
-          <section aria-label="Coming up" className="overflow-hidden rounded-24 bg-surface-card">
+          <section aria-label="Coming up" className="overflow-hidden rounded-24 bg-surface-panel ring-1 ring-inset ring-border-card">
             <div className="flex items-center justify-between gap-16 px-24 pt-24 pb-16">
               <h2 className="font-display text-title font-medium">Coming up</h2>
               <button type="button" onClick={() => navigate('/schedule')} className="press -my-12 -mr-8 min-h-control-44 px-8 text-caption text-accent-primary">
@@ -106,7 +106,7 @@ export function Today() {
           </section>
         )}
 
-        <section aria-label="Your pack" className="flex flex-col gap-16 rounded-24 bg-surface-card py-24">
+        <section aria-label="Your pack" className="flex flex-col gap-16 rounded-24 bg-surface-panel ring-1 ring-inset ring-border-card py-24">
           <div className="flex items-center justify-between gap-16 px-24">
             <h2 className="font-display text-title font-medium">Your pack</h2>
             {dueSoon.size > 0 && (
@@ -127,14 +127,14 @@ export function Today() {
 
         {doneToday.length > 0 && (
           <details className="group">
-            <summary className="press flex min-h-control-56 cursor-pointer list-none items-center gap-12 rounded-24 bg-surface-card px-24 py-16">
+            <summary className="press flex min-h-control-56 cursor-pointer list-none items-center gap-12 rounded-24 bg-surface-panel ring-1 ring-inset ring-border-card px-24 py-16">
               <span className="flex size-icon-24 shrink-0 items-center justify-center rounded-full bg-accent-primary text-text-on-accent">
                 <Icon name="check" size={16} />
               </span>
               <span className="flex-1 text-body font-medium">Done today · {doneToday.length}</span>
               <Icon name="chevron-right" size={20} className="shrink-0 text-text-secondary transition-transform group-open:rotate-90" />
             </summary>
-            <div className="mt-8 overflow-hidden rounded-24 bg-surface-card">{doneToday.map((x) => row(x, false))}</div>
+            <div className="mt-8 overflow-hidden rounded-24 bg-surface-panel ring-1 ring-inset ring-border-card">{doneToday.map((x) => row(x, false))}</div>
           </details>
         )}
       </div>

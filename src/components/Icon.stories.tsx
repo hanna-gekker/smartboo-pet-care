@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite'
 import { Icon, type IconName } from './Icon'
 
 const names: IconName[] = [
-  'sun', 'calendar', 'paw', 'settings', 'home', 'camera', 'mic', 'keyboard', 'plus', 'check', 'x', 'chevron-left', 'chevron-right',
+  'sun', 'sun-fill', 'calendar', 'calendar-fill', 'paw', 'paw-fill', 'settings', 'home', 'camera', 'mic', 'keyboard', 'plus', 'check', 'x', 'chevron-left', 'chevron-right',
   'arrow-up', 'share', 'phone', 'bell', 'search', 'more', 'user', 'thermometer', 'bag', 'heart-pulse', 'route', 'syringe', 'pill',
   'weight', 'shield-alert', 'alert-circle', 'stethoscope', 'file-text', 'image', 'sparkle-ai',
 ]

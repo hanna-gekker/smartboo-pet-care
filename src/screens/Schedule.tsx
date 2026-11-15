@@ -46,7 +46,7 @@ export function Schedule() {
 
   const section = (title: string, trailing: string, list: Task[], showDate = false) =>
     list.length > 0 && (
-      <section aria-label={title} className="overflow-hidden rounded-24 bg-surface-card">
+      <section aria-label={title} className="overflow-hidden rounded-24 bg-surface-panel ring-1 ring-inset ring-border-card">
         {/* Figma "Section header": title and a grey count on one baseline */}
         <div className="flex items-baseline justify-between gap-16 px-24 pt-24 pb-16">
           <h2 className="min-w-0 font-display text-title font-medium">{title}</h2>
@@ -100,7 +100,7 @@ export function Schedule() {
         {view === 'month' ? (
           <MonthCalendar month={month} selected={selected} today={t} dots={dots} onSelect={setSelected} onPrev={() => shiftMonth(-1)} onNext={() => shiftMonth(1)} />
         ) : (
-          <div role="tablist" aria-label="Days" className="grid grid-cols-7 rounded-24 bg-surface-card p-12">
+          <div role="tablist" aria-label="Days" className="grid grid-cols-7 rounded-24 bg-surface-panel ring-1 ring-inset ring-border-card p-12">
             {week.map((day) => {
               const active = day === selected
               const left = open(day)

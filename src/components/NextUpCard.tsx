@@ -19,9 +19,9 @@ type NextUpCardProps = {
 }
 
 export function NextUpCard({ pet, title, meta, status, onDone, onBookVet }: NextUpCardProps) {
-  const tint = status.kind === 'waiting' ? 'bg-status-waiting-bg' : 'bg-surface-card'
+  const tint = status.kind === 'waiting' ? 'bg-status-waiting-bg' : 'bg-surface-panel'
   return (
-    <section aria-label="Next up" className={`flex flex-col gap-16 rounded-24 p-24 ${tint}`}>
+    <section aria-label="Next up" className={`flex flex-col gap-16 rounded-24 p-24 ring-1 ring-inset ring-border-card ${tint}`}>
       <div className="flex items-center gap-16">
         <PetAvatar pet={pet} size="lg" outlined />
         <div className="flex min-w-0 flex-1 flex-col gap-8">
