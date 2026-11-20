@@ -1,10 +1,11 @@
 import { lazy, Suspense, useEffect } from 'react'
-import { createBrowserRouter, Navigate, Outlet, RouterProvider, useLocation } from 'react-router'
+import { createBrowserRouter, Navigate, Outlet, RouterProvider, useLocation, useNavigate } from 'react-router'
 import { BooSheet } from './components/BooSheet'
 import { TabBar, type Tab } from './components/TabBar'
 import { Toast } from './components/Toast'
 import { useApp } from './data/useApp'
 import { useUi } from './data/useUi'
+import { onReminderTap } from './lib/reminders'
 import { taskState } from './lib/tasks'
 import { PetFolder } from './screens/PetFolder'
 import { AddPet } from './screens/AddPet'
@@ -39,6 +40,10 @@ function Shell() {
   useEffect(() => {
     window.scrollTo(0, 0)
   }, [pathname])
+
+  // A tapped reminder opens Schedule on its task's day
+  const navigate = useNavigate()
+  useEffect(() => onReminderTap((day) => navigate(`/schedule?day=${day}`)), [navigate])
 
   // Welcome shows only until the first pet exists.
   let redirect: string | undefined

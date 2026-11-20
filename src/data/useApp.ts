@@ -3,6 +3,7 @@
 import { create } from 'zustand'
 import { today } from '../lib/dates'
 import { pickPetColor } from '../lib/petColors'
+import { syncReminders } from '../lib/reminders'
 import { emptyData, sampleData } from './sample'
 import { clearData, loadData, saveData } from './store'
 import type { AppData, Med, Pet, PetDocument, PetRecord, Settings, Task, Vaccine } from './types'
@@ -107,6 +108,18 @@ export const useApp = create<AppState>((set, get) => ({
 // Save after every change (once the data has been loaded).
 useApp.subscribe((s) => {
   if (s.loaded) void saveData(dataOf(s))
+})
+
+// Keep iOS reminders in step with the tasks: rebuilt a moment after tasks, pets or the "remind me before" setting
+// change (and once after loading). Only when notifications are allowed; it never asks.
+let reminderTimer: ReturnType<typeof setTimeout> | undefined
+const resync = (s: AppState) => {
+  clearTimeout(reminderTimer)
+  reminderTimer = setTimeout(() => void syncReminders(s.tasks, s.pets, s.settings.remindDaysBefore).catch(() => {}), 400)
+}
+useApp.subscribe((s, prev) => {
+  if (!s.loaded) return
+  if (!prev.loaded || s.tasks !== prev.tasks || s.pets !== prev.pets || s.settings.remindDaysBefore !== prev.settings.remindDaysBefore) resync(s)
 })
 
 export const petById = (pets: Pet[], id: string) => pets.find((p) => p.id === id)

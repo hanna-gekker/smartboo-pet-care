@@ -6,6 +6,10 @@ const config: CapacitorConfig = {
   appId: 'com.hannagekker.smartboo',
   appName: 'SmartBoo',
   webDir: 'dist',
+  plugins: {
+    // A reminder that comes while SmartBoo is open still shows as a banner (iOS hides them by default)
+    LocalNotifications: { presentationOptions: ['banner', 'list', 'sound'] },
+  },
 }
 
 export default config
