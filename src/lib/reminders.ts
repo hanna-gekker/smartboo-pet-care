@@ -119,3 +119,8 @@ export async function pendingCount(): Promise<number> {
   if (!isNative()) return 0
   return (await LocalNotifications.getPending()).notifications.length
 }
+
+/** Opens SmartBoo's own page in the iPhone Settings app (where notifications can be turned back on). */
+export function openAppSettings() {
+  if (isNative()) window.location.href = 'app-settings:'
+}

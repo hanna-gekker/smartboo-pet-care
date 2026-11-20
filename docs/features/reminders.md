@@ -36,7 +36,7 @@ Notification copy:
 |---|---|
 | First launch | Nothing is asked. Permission comes only after "Remind you…? → Yes" (never on app start). |
 | Permission given | Reminders are scheduled; toast "3 reminders set". Settings → Reminders: "Notifications · On". |
-| Permission denied | The tasks are still saved in Schedule. The sheet says: "Notifications are off, so I can't remind you. You can turn them on in Settings." [Open Settings] [Not now]. Settings → Reminders: "Notifications · Off" with [Open Settings]. |
+| Permission denied | The tasks are still saved in Schedule. The sheet says "Notifications are off" / "So I can't remind you. You can turn them on in Settings — your reminders are still in Schedule." [Open Settings] [Not now]. Settings → Reminders: "Notifications · Off" with [Open Settings]. |
 | Error (scheduling fails) | Toast "Couldn't set reminders. They're still in your Schedule." Nothing else breaks. |
 | Empty | Nothing to remind about (no open tasks): no notifications, Settings shows "Notifications · On" and "No reminders yet". |
 | Web / Storybook | No notifications in the browser: the same flow, the toast says how many reminders would be set, nothing crashes. |
