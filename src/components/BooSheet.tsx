@@ -290,10 +290,10 @@ function BigAction({ icon, label, main, onClick }: { icon: 'mic' | 'camera' | 'k
       type="button"
       onClick={onClick}
       className={`press flex h-[112px] flex-col items-center justify-center gap-12 rounded-24 px-8 py-16 text-body font-medium ${
-        main ? 'bg-accent-primary-subtle text-accent-primary ring-2 ring-accent-primary ring-inset' : 'bg-surface-subtle text-text-primary'
+        main ? 'bg-accent-primary-subtle text-accent-primary ring-2 ring-accent-primary ring-inset' : 'shadow-card bg-surface-card text-text-primary ring-1 ring-border-card ring-inset'
       }`}
     >
-      <span className={`flex size-48 items-center justify-center rounded-full ${main ? 'bg-accent-primary text-text-on-accent' : 'bg-surface-card text-text-primary'}`}>
+      <span className={`flex size-48 items-center justify-center rounded-full ${main ? 'bg-accent-primary text-text-on-accent' : 'bg-accent-primary-subtle text-accent-primary'}`}>
         <Icon name={icon} size={24} />
       </span>
       {label}

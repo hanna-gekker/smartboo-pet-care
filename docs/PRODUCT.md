@@ -27,17 +27,17 @@ Sources: product interviews, an ongoing survey of US pet owners, and an analysis
 
 ## Main flow — the first minute
 
-The first screen offers two equal ways in:
+The first screen puts talking to Boo first. Most owners don't have a vet paper at hand, and talking or typing is the easiest start.
 
-- **Snap a vet paper** (for people in a hurry):
+- **Tell me about your pet** — one field on Welcome. Type straight into it, or tap the mic to talk. Boo creates the pet from what it hears.
+- **Snap a vet paper** — the camera button in the same field:
   1. Camera, photo library, or a PDF from Files.
   2. Boo reads it for 3–8 seconds ("Reading…").
   3. Review card: the pet (name, species, breed, date of birth — Boo creates the pet from the paper), document type, clinic, date, vaccines found with "given" and "due" dates, amount. Uncertain fields are highlighted and editable with a tap. Button: **Looks right**.
   4. "Remind you 2 weeks before each one?" → **Yes** → only now does iOS ask for notification permission.
   5. "Add a photo of Rocky?" [Take photo] [Later].
   6. Done: the pet's folder holds the paper and the vaccines; Today shows "Next: Bordetella in 5 months".
-- **Add your pet** (for organized people): name, species, breed, date of birth, photo. Papers can come later.
-- **No papers right now** → "Tell me about your pet" by voice or text.
+- **Add your pet** — a secondary button: name, species, breed, date of birth, photo. Papers can come later.
 
 If a pet with the same name already exists, the paper goes into that pet's folder; when unsure, Boo asks "Is this the same Rocky?". If a paper covers several pets, Boo finds or creates each of them.
 
@@ -71,21 +71,20 @@ Boo takes three kinds of input:
 
 ## Screens in the first version
 
-Tab bar: a floating frosted glass capsule with **Today · Schedule · Pets**, and **Boo** to the right of it. Settings: icon in the top-right corner of Today.
+Tab bar: a floating capsule with **Today · Schedule · Pets**, and **Boo** to the right of it. Settings: icon in the top-right corner of Today.
 
-1. **Welcome** — two ways in: Snap a vet paper / Add your pet (+ No papers right now).
+1. **Welcome** — Boo on a calm glow; a white card "Everything about your pets, in one place." / "Just hand it to Boo."; one field "Tell me about your pet…" with camera and mic inside; a secondary "Add your pet"; at the bottom "Boo keeps your pet's records. It isn't a vet."
 2. **Today** — what's due soon:
    - Boo card with a text field, mic and camera;
    - **Next up** — the single most urgent item with actions [Done] / [Book vet];
-   - **Coming up** — the next few items (vaccines, med courses, lab rechecks, insurance deadlines), overdue on top, with "See schedule"; daily chores only if the owner set them up;
+   - **Coming up** — the next few items (vaccines, med courses, lab rechecks, insurance deadlines), overdue on top, with "See schedule"; daily chores only if the owner set them up. Works like a checklist: a task done today stays in place, checked and crossed out;
    - **Your pack** — avatars with a dot when a pet has something due soon;
-   - **Done today** — small, collapsed;
    - empty day: "All good. Next: Rocky's rabies in 3 weeks." + one Boo hint about a gap ("I don't know Milo's shots yet. Snap his last vet paper?"); "Not now" hides it for a week.
 3. **Schedule** — the plan by day:
    - a week strip at the top (dots under days that have something due); swipe for other weeks;
-   - for the selected day: *Due today*, *Done today*, *Tomorrow*, *Later this week*;
+   - for the selected day: *Due today*, *Tomorrow*, *Later this week*;
    - each task: pet avatar, what (with dose), pet name and time; overdue shows "waiting since 8 AM";
-   - tapping a task's circle crosses it out and moves it to Done (tap again to undo);
+   - tapping a task's circle checks it and crosses it out in place (tap again to undo);
    - past days show what was done — the answer to "did anyone give the pill yesterday?".
 4. **Boo (bottom sheet)** — Talk / Snap / Type → toast, review card, or answer.
 5. **Pet folder**:

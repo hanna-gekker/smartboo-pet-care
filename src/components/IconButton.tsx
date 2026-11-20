@@ -1,6 +1,8 @@
 // Icon button — Figma "Icon button" (Core components).
 // Styles: Primary, Secondary, Soft. Sizes: 40 and 56.
-// Plain: the icon alone, no circle (Figma: Settings on Today, with the fill and stroke turned off).
+// Secondary is glass (header back, settings): surface/panel, a border/card hairline, a 30 blur and a soft shadow.
+// Soft is a quiet accent chip (the camera in the Ask Boo input): accent/primary-subtle with an accent icon.
+// Plain: the icon alone, no circle.
 // The 40 circle sits inside a 44×44 tap area, so it is easy to hit with a finger.
 
 import type { ButtonHTMLAttributes } from 'react'
@@ -18,8 +20,8 @@ type IconButtonProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'children' 
 
 const variants: Record<IconButtonVariant, string> = {
   primary: 'bg-accent-primary text-text-on-accent',
-  secondary: 'bg-surface-card text-text-primary ring-1 ring-inset ring-border-control group-active:bg-surface-subtle group-data-[state=pressed]:bg-surface-subtle',
-  soft: 'bg-accent-primary-subtle text-accent-primary ring-1 ring-inset ring-icon-circle-ring',
+  secondary: 'glass-button bg-surface-panel text-text-primary ring-1 ring-inset ring-border-card group-active:bg-surface-subtle group-data-[state=pressed]:bg-surface-subtle',
+  soft: 'bg-accent-primary-subtle text-accent-primary',
   plain: 'text-text-primary group-active:bg-surface-subtle group-data-[state=pressed]:bg-surface-subtle',
 }
 

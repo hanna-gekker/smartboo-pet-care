@@ -10,6 +10,7 @@
   --base-ink: #0A0D1A;
   --gray-50: #F8FAFD;
   --gray-100: #F2F3F5;
+  --gray-150: #E8EAEF;
   --gray-200: #C3CCDB;
   --gray-300: #A6A9B1;
   --gray-400: #8A8A90;
@@ -18,30 +19,64 @@
   --gray-700: #2C3039;
   --gray-800: #272A31;
   --gray-900: #1B1E24;
+  --gray-925: #171A21;
+  --gray-940: #121419;
   --gray-950: #0F1115;
+  --gray-975: #0C0E12;
   --blue-50: #E6EDFC;
+  --blue-60: #EAF0FC;
+  --blue-75: #DFE1FB;
+  --blue-90: #D9E6FC;
   --blue-100: #D9E5FB;
+  --blue-150: #CADAFB;
+  --blue-180: #C0CCFA;
   --blue-200: #C3D3F8;
   --blue-300: #9FBDF2;
+  --blue-350: #93ADEE;
   --blue-400: #8FB3F0;
+  --blue-450: #7FA4EC;
   --blue-500: #7A9CF5;
+  --blue-550: #3A5CA8;
   --blue-600: #2F6FD8;
   --blue-700: #2A55C4;
   --blue-800: #34487A;
+  --blue-820: #34448A;
+  --blue-850: #3A4F8F;
+  --blue-875: #2E3F7A;
   --blue-900: #1F2B47;
+  --blue-925: #1D2C4C;
+  --blue-940: #1A2440;
   --blue-950: #172638;
+  --blue-960: #161C2E;
   --indigo-50: #ECEEFB;
+  --indigo-75: #E8EDFF;
+  --indigo-100: #DADDFF;
   --indigo-200: #C9CEF6;
   --indigo-400: #8F98F5;
+  --indigo-450: #7A8AE8;
+  --indigo-550: #5068DD;
   --indigo-600: #4F62CC;
+  --indigo-650: #4253C2;
+  --indigo-700: #3F4FB8;
+  --indigo-750: #3F55C8;
   --indigo-800: #353B7A;
+  --indigo-850: #36409E;
   --indigo-900: #23264A;
+  --indigo-925: #232A4B;
+  --indigo-930: #27284A;
+  --indigo-940: #343C68;
+  --indigo-960: #232845;
   --violet-50: #EDE8F8;
+  --violet-60: #E4DEFA;
+  --violet-75: #EADDF9;
   --violet-100: #E3D4F0;
   --violet-200: #D2C4F6;
   --violet-300: #B9A2D4;
+  --violet-350: #A387E0;
   --violet-400: #A88AF2;
   --violet-600: #8B63E6;
+  --violet-850: #4E3F86;
+  --violet-925: #2B2449;
   --violet-950: #231F38;
   --pink-50: #F8E6F0;
   --pink-200: #F7C3D8;
@@ -61,6 +96,8 @@
   --yellow-50: #FDF6D8;
   --yellow-200: #F7DD86;
   --yellow-300: #FFE14D;
+  --yellow-350: #F2CC5E;
+  --yellow-450: #E3AE3A;
   --yellow-500: #D9A800;
   --yellow-600: #A88200;
   --yellow-800: #7A5A00;
@@ -85,13 +122,72 @@
   --alpha-white-10: #FFFFFF1A;
   --alpha-neutral-100-85: #F2F2F7D9;
   --alpha-ink-8: #1A1F4014;
+  --alpha-white-35: #FFFFFF59;
+  --alpha-white-80: #FFFFFFCC;
+  --alpha-white-90: #FFFFFFE5;
+  --alpha-gray-900-85: #1B1E24D9;
+  --alpha-rose-300-50: #FF9CB080;
+  --alpha-indigo-300-50: #A9B1FA80;
+  --alpha-blue-350-45: #8FA6EE73;
+  --alpha-white-40: #FFFFFF66;
+  --alpha-violet-400-5: #A88AF20D;
+  --alpha-white-12: #FFFFFF1F;
+  --alpha-pink-400-2: #E07BB505;
+  --alpha-indigo-200-50: #C9CEF680;
+  --alpha-indigo-400-15: #8F98F526;
+  --alpha-white-6: #FFFFFF0F;
+  --alpha-white-8: #FFFFFF14;
+  --alpha-white-55: #FFFFFF8C;
+  --alpha-indigo-shadow-10: #404D991A;
+  --alpha-black-35: #00000059;
+  --alpha-white-65: #FFFFFFA6;
+  --alpha-white-95: #FFFFFFF2;
+  --alpha-white-16: #FFFFFF29;
+  --neutral-50: #F6F7FA;
+  --neutral-80: #F8F9FD;
+  --neutral-90: #F3F5FA;
   --neutral-100: #F2F2F7;
+  --neutral-150: #EEF0F5;
+  --neutral-200: #E3E7EF;
+  --neutral-250: #E4E7F0;
   --rose-50: #FFEEF1;
+  --rose-100: #FFC9D3;
   --rose-300: #FF9CB0;
+  --rose-350: #FF8197;
   --rose-400: #FF6B85;
   --rose-500: #EF4F6C;
+  --rose-600: #E5405C;
   --rose-700: #C42648;
+  --rose-900: #4A2A36;
   --rose-950: #3A1B24;
+  --rose-975: #2F1F2A;
+  --honey-25: #FBF6F0;
+  --honey-40: #FFF6E5;
+  --honey-50: #FFF1D6;
+  --honey-75: #FBEDD6;
+  --honey-150: #F1E3C3;
+  --honey-200: #F7DDAA;
+  --honey-800: #6A5130;
+  --honey-950: #33281A;
+  --honey-960: #221A10;
+  --honey-975: #17140F;
+  --lavender-40: #F4F5F9;
+  --lavender-60: #ECEDF4;
+  --lavender-100: #E1E2F7;
+  --lavender-150: #DEE0EE;
+  --lavender-200: #D6D3EE;
+  --lavender-850: #2C2B4D;
+  --lavender-900: #1F2132;
+  --lavender-920: #1C1D23;
+  --lavender-940: #18191F;
+  --orchid-200: #E3B4F0;
+  --orchid-800: #642F78;
+  --cyan-150: #B0E2F5;
+  --cyan-800: #1F5A70;
+  --navy-400: #8E93AD;
+  --navy-500: #6E7395;
+  --navy-600: #5D6185;
+  --navy-900: #1D2150;
 
   /* Layout */
   --space-0: 0px; /* Spacing 0px — padding & gaps (8pt grid, 4/12 as half-steps, 2 for hairline groups) */
@@ -145,52 +241,66 @@
   --font-line-height-40: 40px;
 
   /* Colors — light */
-  --surface-canvas: var(--neutral-100); /* Screen background. Light: neutral/100 #F2F2F7 (iOS grouped background); Dark: gray/950. */
+  --surface-canvas: var(--neutral-90); /* Screen background. Light: neutral/100 #F2F2F7 (iOS grouped background); Dark: gray/950. */
   --surface-card: var(--base-white); /* Cards, input bar, chips */
-  --surface-subtle: var(--gray-100); /* Dividers, list rows, ring track */
+  --surface-subtle: var(--neutral-90); /* Dividers, list rows, ring track */
   --surface-nav: var(--gray-950); /* Floating menu capsule */
   --surface-scrim: var(--alpha-ink-40); /* Dim behind bottom sheets and modals */
   --surface-canvas-clear: var(--alpha-gray-50-0); /* Canvas at 0% — top stop of the bottom fade behind the tab bar. */
-  --surface-glass: var(--alpha-neutral-100-85); /* Tint of the frosted tab bar (with background blur). Light: #F2F2F7 at 85% (grey glass that separates from white cards without a shadow); Dark: gray/900 55%. */
-  --surface-panel: var(--base-white); /* Content cards and sections. Light: white on the #F2F2F7 canvas (iOS grouped pattern); Dark: gray/900. */
-  --text-primary: var(--gray-950); /* Main text and icons (also done checks, home indicator) */
-  --text-secondary: var(--gray-600); /* Supporting text (AA on white) */
+  --surface-glass: var(--alpha-white-60); /* Glass tab bar (with background blur) */
+  --surface-panel: var(--base-white); /* Glass cards and sections (with background blur); lighter than the background */
+  --surface-canvas-top: var(--lavender-40); /* Screen background, top of the vertical gradient */
+  --surface-canvas-bottom: var(--lavender-150); /* Screen background, bottom of the vertical gradient */
+  --surface-glow: var(--blue-300);
+  --surface-canvas-mid: var(--lavender-60); /* Screen background, middle stop (45%) */
+  --surface-haze: var(--lavender-200); /* Soft radial haze, bottom-right of the screen */
+  --surface-glow-1: var(--orchid-200); /* Top-right glow, orchid (largest, in the corner) */
+  --surface-glow-2: var(--blue-180); /* Right-edge glow, blue (below glow-1) */
+  --surface-glow-3: var(--cyan-150); /* Right-edge glow, cyan (lowest) */
+  --text-primary: var(--navy-900); /* Main text and icons (also done checks, home indicator) */
+  --text-secondary: var(--navy-600); /* Supporting text (AA on white) */
   --text-on-dark: var(--base-white); /* Text/icons on dark or accent */
   --text-on-dark-muted: var(--alpha-white-70);
   --text-tertiary: var(--gray-500); /* Completed / disabled text (crossed-out tasks). Not for essential info. */
   --text-on-accent: var(--base-white); /* Text and icons on accent/primary fills (buttons, badges). White in light, near-black in dark. */
-  --border-control: var(--gray-400); /* Unchecked check circle */
+  --text-field-label: var(--navy-500);
+  --border-control: var(--navy-400); /* Unchecked check circle */
   --border-glass-rim-start: var(--base-white); /* Rim of the glass tab bar (paint at 100%). Light: solid white hairline; Dark: Boo-coloured gradient at ~30%. */
   --border-glass-rim-mid: var(--base-white); /* Rim of the glass tab bar (paint at 100%). Light: solid white hairline; Dark: Boo-coloured gradient at ~30%. */
   --border-glass-rim-end: var(--base-white); /* Rim of the glass tab bar (paint at 100%). Light: solid white hairline; Dark: Boo-coloured gradient at ~30%. */
-  --border-card: var(--base-white); /* 1px inside hairline on cards. Light: white; Dark: white 10%. */
-  --accent-primary: var(--indigo-600); /* Buttons, active states, progress, mic */
+  --border-card: var(--neutral-250); /* 1px inside hairline on cards. Light: white; Dark: white 10%. */
+  --border-ai-card: var(--lavender-100);
+  --accent-primary: var(--indigo-550); /* Buttons, active states, progress, mic */
   --accent-primary-soft: var(--indigo-200); /* Soft accent fills (avatars) */
-  --accent-primary-subtle: var(--indigo-50); /* Very light accent tint — backgrounds of icons in circles, soft buttons, selected rows */
-  --status-waiting-bg: var(--rose-50); /* Coral — background of things that need attention (overdue, needs check) */
+  --accent-primary-subtle: var(--indigo-75); /* Very light accent tint — backgrounds of icons in circles, soft buttons, selected rows */
+  --accent-on-subtle: var(--indigo-750);
+  --status-waiting-bg: var(--honey-40); /* Coral — background of things that need attention (overdue, needs check) */
   --status-waiting-dot: var(--rose-500); /* Status dot */
   --status-waiting-text: var(--rose-700); /* Coral text on white or waiting-bg (≈6:1) */
   --status-due-dot: var(--violet-600); /* Scheduled / due — calendar dots */
   --status-done-dot: var(--green-600); /* Completed — calendar dots */
-  --status-check-bg: var(--yellow-50); /* Boo is not sure — tap to check */
+  --status-check-bg: var(--honey-40); /* Boo is not sure — tap to check */
   --status-check-text: var(--yellow-800); /* Boo is not sure — tap to check */
-  --status-check-border: var(--yellow-600); /* Boo is not sure — tap to check */
+  --status-check-border: var(--honey-150); /* Boo is not sure — tap to check */
   --status-error-border: var(--rose-700); /* Form field error outline */
   --status-error-text: var(--rose-700); /* Error message under a field */
+  --status-attention-bg: var(--honey-50);
+  --status-attention-border: var(--honey-200);
+  --status-waiting-border: var(--honey-150);
   --avatar-yellow: var(--yellow-300); /* Household member A */
-  --ai-card-mint: var(--green-50); /* Assistant card gradient 1 */
-  --ai-card-blue: var(--blue-50); /* Assistant card gradient 2 */
-  --ai-card-lilac: var(--violet-50); /* Assistant card gradient 3 */
-  --ai-card-pink: var(--pink-50); /* Assistant card gradient 4 */
-  --ai-petal-light: var(--blue-100); /* Boo petals 1 */
-  --ai-petal: var(--blue-200); /* Boo petals 2 */
-  --ai-petal-tint: var(--violet-100); /* Boo petals 3 */
+  --ai-card-mint: var(--blue-100); /* Assistant card gradient 1 */
+  --ai-card-blue: var(--blue-75); /* Assistant card gradient 2 */
+  --ai-card-lilac: var(--violet-60); /* Assistant card gradient 3 */
+  --ai-card-pink: var(--violet-75); /* Assistant card gradient 4 */
+  --ai-petal-light: var(--blue-150); /* Boo petals 1 */
+  --ai-petal: var(--blue-350); /* Boo petals 2 */
+  --ai-petal-tint: var(--violet-350); /* Boo petals 3 */
   --ai-core-light: var(--blue-400); /* Boo core 1 */
   --ai-core: var(--blue-600); /* Boo core 2 */
-  --ai-core-edge: var(--indigo-600); /* Boo core 3 */
-  --ai-glow: var(--blue-300); /* Boo glow */
+  --ai-core-edge: var(--indigo-700); /* Boo core 3 */
+  --ai-glow: var(--alpha-white-40); /* Boo glow */
   --ai-spark-pink: var(--pink-400); /* Pink end of AI sparkle gradient */
-  --ai-halo: var(--alpha-white-60); /* Soft halo around the Boo character */
+  --ai-halo: var(--alpha-white-12); /* Soft halo around the Boo character */
   --ai-highlight: var(--base-white); /* Gloss and inner light on the Boo core */
   --ai-aura-1: var(--alpha-gray-50-0); /* Soft background glow behind Boo (cool) */
   --ai-aura-2: var(--alpha-gray-50-0); /* Soft background glow behind Boo (warm) */
@@ -199,8 +309,9 @@
   --ai-backdrop-3: var(--violet-50); /* Welcome background gradient (light: pastel, dark: plain canvas) */
   --ai-backdrop-4: var(--pink-50); /* Welcome background gradient (light: pastel, dark: plain canvas) */
   --ai-sheen: var(--base-white); /* White wash in light, nothing in dark (Welcome background, glass, hint) */
-  --ai-float-shadow: var(--indigo-200); /* Soft shadow under the floating Boo */
+  --ai-float-shadow: var(--alpha-indigo-200-50); /* Soft shadow under the floating Boo */
   --ai-boo-backdrop: var(--blue-50); /* Soft blue patch behind Boo on light backgrounds (transparent in dark) */
+  --ai-petal-edge: var(--base-white);
   --pet-lavender: var(--violet-200); /* Pet colour — owner picks one per pet */
   --pet-mint: var(--green-200); /* Pet colour — owner picks one per pet */
   --pet-pink: var(--pink-200); /* Pet colour — owner picks one per pet */
@@ -210,47 +321,73 @@
   --overlay-photo-clear: var(--alpha-ink-0); /* Top of the photo gradient */
   --overlay-photo-dark: var(--alpha-ink-55); /* Bottom of the photo gradient — keeps white text readable on photos */
   --brand-logo-core: var(--blue-700); /* Core of the SmartBoo logo mark */
-  --brand-logo-petal-light: var(--blue-200); /* Logo petals gradient (separate from Boo’s ai/petal-*). Light: one step deeper so the mark holds on the grey canvas; Dark: same as Boo. */
-  --brand-logo-petal: var(--blue-300); /* Logo petals gradient (separate from Boo’s ai/petal-*). Light: one step deeper so the mark holds on the grey canvas; Dark: same as Boo. */
-  --brand-logo-petal-tint: var(--violet-200); /* Logo petals gradient (separate from Boo’s ai/petal-*). Light: one step deeper so the mark holds on the grey canvas; Dark: same as Boo. */
-  --nav-active-label: var(--indigo-600); /* Icon and label of the active tab (indigo in light, light grey in dark) */
+  --brand-logo-petal-light: var(--blue-150); /* Logo petals gradient (separate from Boo’s ai/petal-*). Light: one step deeper so the mark holds on the grey canvas; Dark: same as Boo. */
+  --brand-logo-petal: var(--blue-350); /* Logo petals gradient (separate from Boo’s ai/petal-*). Light: one step deeper so the mark holds on the grey canvas; Dark: same as Boo. */
+  --brand-logo-petal-tint: var(--violet-350); /* Logo petals gradient (separate from Boo’s ai/petal-*). Light: one step deeper so the mark holds on the grey canvas; Dark: same as Boo. */
+  --nav-active-label: var(--gray-950); /* Icon and label of the active tab (indigo in light, light grey in dark) */
   --nav-active-ring: var(--base-white); /* Ring of the active tab pill (invisible in light, soft grey in dark) */
-  --nav-active-fill: var(--base-white); /* Selected tab pill. Light: white (like the iOS segmented control); Dark: grey 500 at 45%. */
-  --nav-active-content: var(--gray-950); /* Label of the selected tab. Light: white on blue; Dark: white. */
+  --nav-active-fill: var(--indigo-550); /* Selected tab: bright glass pill */
+  --nav-active-content: var(--base-white); /* Label of the selected tab. Light: white on blue; Dark: white. */
   --nav-active-border: var(--alpha-ink-0); /* Outline of the selected tab. Light: same as the fill (invisible); Dark: none. */
-  --nav-active-shadow: var(--alpha-ink-8); /* Soft shadow under the selected tab pill (0 1 6). Light: ink 8%; Dark: none. */
-  --nav-active-icon: var(--indigo-600); /* Filled icon of the selected tab. Light: white on the blue pill; Dark: indigo/400 on the translucent grey pill. */
+  --nav-active-shadow: var(--alpha-ink-0); /* Soft shadow under the selected tab pill (0 1 6). Light: ink 8%; Dark: none. */
+  --nav-active-icon: var(--base-white); /* Filled icon of the selected tab. Light: white on the blue pill; Dark: indigo/400 on the translucent grey pill. */
   --nav-dot-ring-active: var(--base-white); /* Ring around the due dot on the selected tab (cut-out). Light: indigo/600 = pill; Dark: gray/700 ≈ the translucent pill. */
   --nav-dot-ring: var(--base-white); /* Ring around the due dot on an unselected tab (cut-out). Light: white; Dark: gray/800 ≈ the glass. */
   --icon-circle-ring: var(--indigo-50); /* Ring around soft icon circles (invisible in light, soft indigo in dark) */
+  --icon-status-chip-start: var(--rose-350);
+  --icon-status-chip-end: var(--rose-600);
+  --icon-status-chip-border: var(--alpha-white-35);
+  --icon-status-on-chip: var(--base-white);
+  --icon-category-chip-start: var(--indigo-450);
+  --icon-category-chip-end: var(--indigo-650);
+  --icon-category-chip-border: var(--alpha-white-35);
+  --icon-category-on-chip: var(--base-white);
+  --welcome-stop-1: var(--blue-90);
+  --welcome-stop-2: var(--blue-60);
+  --welcome-stop-3: var(--neutral-80);
+  --welcome-stop-4: var(--honey-25);
+  --welcome-stop-5: var(--honey-75);
+  --glass-highlight: var(--alpha-white-55); /* 1px inner top highlight on glass panels and tab bar */
+  --glass-shadow: var(--alpha-indigo-shadow-10); /* Soft drop shadow under glass panels and tab bar */
 }
 
 /* Colors — dark, following the phone */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --surface-canvas: var(--gray-950); /* Screen background. Light: neutral/100 #F2F2F7 (iOS grouped background); Dark: gray/950. */
+    --surface-canvas: var(--gray-940); /* Screen background. Light: neutral/100 #F2F2F7 (iOS grouped background); Dark: gray/950. */
     --surface-card: var(--gray-900); /* Cards, input bar, chips */
     --surface-subtle: var(--gray-800); /* Dividers, list rows, ring track */
     --surface-nav: var(--gray-700); /* Floating menu capsule */
     --surface-scrim: var(--alpha-black-60); /* Dim behind bottom sheets and modals */
     --surface-canvas-clear: var(--alpha-gray-950-0); /* Canvas at 0% — top stop of the bottom fade behind the tab bar. */
-    --surface-glass: var(--alpha-gray-900-55); /* Tint of the frosted tab bar (with background blur). Light: #F2F2F7 at 85% (grey glass that separates from white cards without a shadow); Dark: gray/900 55%. */
-    --surface-panel: var(--gray-900); /* Content cards and sections. Light: white on the #F2F2F7 canvas (iOS grouped pattern); Dark: gray/900. */
+    --surface-glass: var(--alpha-white-8); /* Glass tab bar (with background blur) */
+    --surface-panel: var(--alpha-white-6); /* Glass cards and sections (with background blur); lighter than the background */
+    --surface-canvas-top: var(--lavender-920); /* Screen background, top of the vertical gradient */
+    --surface-canvas-bottom: var(--lavender-900); /* Screen background, bottom of the vertical gradient */
+    --surface-glow: var(--blue-550);
+    --surface-canvas-mid: var(--lavender-940); /* Screen background, middle stop (45%) */
+    --surface-haze: var(--lavender-850); /* Soft radial haze, bottom-right of the screen */
+    --surface-glow-1: var(--orchid-800); /* Top-right glow, orchid (largest, in the corner) */
+    --surface-glow-2: var(--blue-820); /* Right-edge glow, blue (below glow-1) */
+    --surface-glow-3: var(--cyan-800); /* Right-edge glow, cyan (lowest) */
     --text-primary: var(--gray-100); /* Main text and icons (also done checks, home indicator) */
     --text-secondary: var(--gray-300); /* Supporting text (AA on white) */
     --text-on-dark: var(--base-white); /* Text/icons on dark or accent */
     --text-on-dark-muted: var(--alpha-white-70);
     --text-tertiary: var(--gray-400); /* Completed / disabled text (crossed-out tasks). Not for essential info. */
     --text-on-accent: var(--gray-950); /* Text and icons on accent/primary fills (buttons, badges). White in light, near-black in dark. */
+    --text-field-label: var(--gray-300);
     --border-control: var(--gray-500); /* Unchecked check circle */
     --border-glass-rim-start: var(--alpha-white-30); /* Rim of the glass tab bar (paint at 100%). Light: solid white hairline; Dark: Boo-coloured gradient at ~30%. */
     --border-glass-rim-mid: var(--alpha-blue-300-30); /* Rim of the glass tab bar (paint at 100%). Light: solid white hairline; Dark: Boo-coloured gradient at ~30%. */
     --border-glass-rim-end: var(--alpha-violet-300-30); /* Rim of the glass tab bar (paint at 100%). Light: solid white hairline; Dark: Boo-coloured gradient at ~30%. */
     --border-card: var(--alpha-white-10); /* 1px inside hairline on cards. Light: white; Dark: white 10%. */
+    --border-ai-card: var(--alpha-white-10);
     --accent-primary: var(--indigo-400); /* Buttons, active states, progress, mic */
     --accent-primary-soft: var(--indigo-800); /* Soft accent fills (avatars) */
     --accent-primary-subtle: var(--indigo-900); /* Very light accent tint — backgrounds of icons in circles, soft buttons, selected rows */
-    --status-waiting-bg: var(--rose-950); /* Coral — background of things that need attention (overdue, needs check) */
+    --accent-on-subtle: var(--indigo-400);
+    --status-waiting-bg: var(--honey-950); /* Coral — background of things that need attention (overdue, needs check) */
     --status-waiting-dot: var(--rose-400); /* Status dot */
     --status-waiting-text: var(--rose-300); /* Coral text on white or waiting-bg (≈6:1) */
     --status-due-dot: var(--violet-400); /* Scheduled / due — calendar dots */
@@ -260,20 +397,23 @@
     --status-check-border: var(--yellow-500); /* Boo is not sure — tap to check */
     --status-error-border: var(--rose-400); /* Form field error outline */
     --status-error-text: var(--rose-300); /* Error message under a field */
+    --status-attention-bg: var(--honey-950);
+    --status-attention-border: var(--honey-800);
+    --status-waiting-border: var(--alpha-white-10);
     --avatar-yellow: var(--yellow-300); /* Household member A */
-    --ai-card-mint: var(--green-950); /* Assistant card gradient 1 */
-    --ai-card-blue: var(--blue-950); /* Assistant card gradient 2 */
-    --ai-card-lilac: var(--violet-950); /* Assistant card gradient 3 */
-    --ai-card-pink: var(--pink-950); /* Assistant card gradient 4 */
-    --ai-petal-light: var(--blue-300); /* Boo petals 1 */
-    --ai-petal: var(--blue-400); /* Boo petals 2 */
-    --ai-petal-tint: var(--violet-300); /* Boo petals 3 */
-    --ai-core-light: var(--blue-400); /* Boo core 1 */
-    --ai-core: var(--blue-600); /* Boo core 2 */
-    --ai-core-edge: var(--indigo-600); /* Boo core 3 */
-    --ai-glow: var(--alpha-violet-400-18); /* Boo glow */
+    --ai-card-mint: var(--blue-925); /* Assistant card gradient 1 */
+    --ai-card-blue: var(--indigo-925); /* Assistant card gradient 2 */
+    --ai-card-lilac: var(--indigo-930); /* Assistant card gradient 3 */
+    --ai-card-pink: var(--violet-925); /* Assistant card gradient 4 */
+    --ai-petal-light: var(--blue-850); /* Boo petals 1 */
+    --ai-petal: var(--blue-875); /* Boo petals 2 */
+    --ai-petal-tint: var(--violet-850); /* Boo petals 3 */
+    --ai-core-light: var(--blue-450); /* Boo core 1 */
+    --ai-core: var(--blue-700); /* Boo core 2 */
+    --ai-core-edge: var(--indigo-850); /* Boo core 3 */
+    --ai-glow: var(--alpha-violet-400-5); /* Boo glow */
     --ai-spark-pink: var(--pink-400); /* Pink end of AI sparkle gradient */
-    --ai-halo: var(--alpha-pink-400-8); /* Soft halo around the Boo character */
+    --ai-halo: var(--alpha-pink-400-2); /* Soft halo around the Boo character */
     --ai-highlight: var(--alpha-white-85); /* Gloss and inner light on the Boo core */
     --ai-aura-1: var(--indigo-900); /* Soft background glow behind Boo (cool) */
     --ai-aura-2: var(--violet-600); /* Soft background glow behind Boo (warm) */
@@ -282,8 +422,9 @@
     --ai-backdrop-3: var(--gray-950); /* Welcome background gradient (light: pastel, dark: plain canvas) */
     --ai-backdrop-4: var(--gray-950); /* Welcome background gradient (light: pastel, dark: plain canvas) */
     --ai-sheen: var(--alpha-gray-950-0); /* White wash in light, nothing in dark (Welcome background, glass, hint) */
-    --ai-float-shadow: var(--alpha-indigo-400-50); /* Soft shadow under the floating Boo */
+    --ai-float-shadow: var(--alpha-indigo-400-15); /* Soft shadow under the floating Boo */
     --ai-boo-backdrop: var(--alpha-gray-950-0); /* Soft blue patch behind Boo on light backgrounds (transparent in dark) */
+    --ai-petal-edge: var(--alpha-blue-350-45);
     --pet-lavender: var(--violet-200); /* Pet colour — owner picks one per pet */
     --pet-mint: var(--green-200); /* Pet colour — owner picks one per pet */
     --pet-pink: var(--pink-200); /* Pet colour — owner picks one per pet */
@@ -293,47 +434,73 @@
     --overlay-photo-clear: var(--alpha-ink-0); /* Top of the photo gradient */
     --overlay-photo-dark: var(--alpha-ink-55); /* Bottom of the photo gradient — keeps white text readable on photos */
     --brand-logo-core: var(--blue-700); /* Core of the SmartBoo logo mark */
-    --brand-logo-petal-light: var(--blue-300); /* Logo petals gradient (separate from Boo’s ai/petal-*). Light: one step deeper so the mark holds on the grey canvas; Dark: same as Boo. */
-    --brand-logo-petal: var(--blue-400); /* Logo petals gradient (separate from Boo’s ai/petal-*). Light: one step deeper so the mark holds on the grey canvas; Dark: same as Boo. */
-    --brand-logo-petal-tint: var(--violet-300); /* Logo petals gradient (separate from Boo’s ai/petal-*). Light: one step deeper so the mark holds on the grey canvas; Dark: same as Boo. */
+    --brand-logo-petal-light: var(--blue-850); /* Logo petals gradient (separate from Boo’s ai/petal-*). Light: one step deeper so the mark holds on the grey canvas; Dark: same as Boo. */
+    --brand-logo-petal: var(--blue-875); /* Logo petals gradient (separate from Boo’s ai/petal-*). Light: one step deeper so the mark holds on the grey canvas; Dark: same as Boo. */
+    --brand-logo-petal-tint: var(--violet-850); /* Logo petals gradient (separate from Boo’s ai/petal-*). Light: one step deeper so the mark holds on the grey canvas; Dark: same as Boo. */
     --nav-active-label: var(--gray-100); /* Icon and label of the active tab (indigo in light, light grey in dark) */
     --nav-active-ring: var(--gray-500); /* Ring of the active tab pill (invisible in light, soft grey in dark) */
-    --nav-active-fill: var(--alpha-gray-500-45); /* Selected tab pill. Light: white (like the iOS segmented control); Dark: grey 500 at 45%. */
+    --nav-active-fill: var(--alpha-white-16); /* Selected tab: bright glass pill */
     --nav-active-content: var(--base-white); /* Label of the selected tab. Light: white on blue; Dark: white. */
     --nav-active-border: var(--alpha-ink-0); /* Outline of the selected tab. Light: same as the fill (invisible); Dark: none. */
     --nav-active-shadow: var(--alpha-ink-0); /* Soft shadow under the selected tab pill (0 1 6). Light: ink 8%; Dark: none. */
-    --nav-active-icon: var(--indigo-400); /* Filled icon of the selected tab. Light: white on the blue pill; Dark: indigo/400 on the translucent grey pill. */
+    --nav-active-icon: var(--base-white); /* Filled icon of the selected tab. Light: white on the blue pill; Dark: indigo/400 on the translucent grey pill. */
     --nav-dot-ring-active: var(--gray-700); /* Ring around the due dot on the selected tab (cut-out). Light: indigo/600 = pill; Dark: gray/700 ≈ the translucent pill. */
     --nav-dot-ring: var(--gray-800); /* Ring around the due dot on an unselected tab (cut-out). Light: white; Dark: gray/800 ≈ the glass. */
     --icon-circle-ring: var(--indigo-800); /* Ring around soft icon circles (invisible in light, soft indigo in dark) */
+    --icon-status-chip-start: var(--rose-900);
+    --icon-status-chip-end: var(--rose-975);
+    --icon-status-chip-border: var(--alpha-rose-300-50);
+    --icon-status-on-chip: var(--rose-100);
+    --icon-category-chip-start: var(--indigo-940);
+    --icon-category-chip-end: var(--indigo-960);
+    --icon-category-chip-border: var(--alpha-indigo-300-50);
+    --icon-category-on-chip: var(--indigo-100);
+    --welcome-stop-1: var(--blue-940);
+    --welcome-stop-2: var(--blue-960);
+    --welcome-stop-3: var(--gray-940);
+    --welcome-stop-4: var(--honey-975);
+    --welcome-stop-5: var(--honey-960);
+    --glass-highlight: var(--alpha-white-10); /* 1px inner top highlight on glass panels and tab bar */
+    --glass-shadow: var(--alpha-black-35); /* Soft drop shadow under glass panels and tab bar */
   }
 }
 
 /* Colors — dark, chosen in the app */
 [data-theme="dark"] {
-  --surface-canvas: var(--gray-950); /* Screen background. Light: neutral/100 #F2F2F7 (iOS grouped background); Dark: gray/950. */
+  --surface-canvas: var(--gray-940); /* Screen background. Light: neutral/100 #F2F2F7 (iOS grouped background); Dark: gray/950. */
   --surface-card: var(--gray-900); /* Cards, input bar, chips */
   --surface-subtle: var(--gray-800); /* Dividers, list rows, ring track */
   --surface-nav: var(--gray-700); /* Floating menu capsule */
   --surface-scrim: var(--alpha-black-60); /* Dim behind bottom sheets and modals */
   --surface-canvas-clear: var(--alpha-gray-950-0); /* Canvas at 0% — top stop of the bottom fade behind the tab bar. */
-  --surface-glass: var(--alpha-gray-900-55); /* Tint of the frosted tab bar (with background blur). Light: #F2F2F7 at 85% (grey glass that separates from white cards without a shadow); Dark: gray/900 55%. */
-  --surface-panel: var(--gray-900); /* Content cards and sections. Light: white on the #F2F2F7 canvas (iOS grouped pattern); Dark: gray/900. */
+  --surface-glass: var(--alpha-white-8); /* Glass tab bar (with background blur) */
+  --surface-panel: var(--alpha-white-6); /* Glass cards and sections (with background blur); lighter than the background */
+  --surface-canvas-top: var(--lavender-920); /* Screen background, top of the vertical gradient */
+  --surface-canvas-bottom: var(--lavender-900); /* Screen background, bottom of the vertical gradient */
+  --surface-glow: var(--blue-550);
+  --surface-canvas-mid: var(--lavender-940); /* Screen background, middle stop (45%) */
+  --surface-haze: var(--lavender-850); /* Soft radial haze, bottom-right of the screen */
+  --surface-glow-1: var(--orchid-800); /* Top-right glow, orchid (largest, in the corner) */
+  --surface-glow-2: var(--blue-820); /* Right-edge glow, blue (below glow-1) */
+  --surface-glow-3: var(--cyan-800); /* Right-edge glow, cyan (lowest) */
   --text-primary: var(--gray-100); /* Main text and icons (also done checks, home indicator) */
   --text-secondary: var(--gray-300); /* Supporting text (AA on white) */
   --text-on-dark: var(--base-white); /* Text/icons on dark or accent */
   --text-on-dark-muted: var(--alpha-white-70);
   --text-tertiary: var(--gray-400); /* Completed / disabled text (crossed-out tasks). Not for essential info. */
   --text-on-accent: var(--gray-950); /* Text and icons on accent/primary fills (buttons, badges). White in light, near-black in dark. */
+  --text-field-label: var(--gray-300);
   --border-control: var(--gray-500); /* Unchecked check circle */
   --border-glass-rim-start: var(--alpha-white-30); /* Rim of the glass tab bar (paint at 100%). Light: solid white hairline; Dark: Boo-coloured gradient at ~30%. */
   --border-glass-rim-mid: var(--alpha-blue-300-30); /* Rim of the glass tab bar (paint at 100%). Light: solid white hairline; Dark: Boo-coloured gradient at ~30%. */
   --border-glass-rim-end: var(--alpha-violet-300-30); /* Rim of the glass tab bar (paint at 100%). Light: solid white hairline; Dark: Boo-coloured gradient at ~30%. */
   --border-card: var(--alpha-white-10); /* 1px inside hairline on cards. Light: white; Dark: white 10%. */
+  --border-ai-card: var(--alpha-white-10);
   --accent-primary: var(--indigo-400); /* Buttons, active states, progress, mic */
   --accent-primary-soft: var(--indigo-800); /* Soft accent fills (avatars) */
   --accent-primary-subtle: var(--indigo-900); /* Very light accent tint — backgrounds of icons in circles, soft buttons, selected rows */
-  --status-waiting-bg: var(--rose-950); /* Coral — background of things that need attention (overdue, needs check) */
+  --accent-on-subtle: var(--indigo-400);
+  --status-waiting-bg: var(--honey-950); /* Coral — background of things that need attention (overdue, needs check) */
   --status-waiting-dot: var(--rose-400); /* Status dot */
   --status-waiting-text: var(--rose-300); /* Coral text on white or waiting-bg (≈6:1) */
   --status-due-dot: var(--violet-400); /* Scheduled / due — calendar dots */
@@ -343,20 +510,23 @@
   --status-check-border: var(--yellow-500); /* Boo is not sure — tap to check */
   --status-error-border: var(--rose-400); /* Form field error outline */
   --status-error-text: var(--rose-300); /* Error message under a field */
+  --status-attention-bg: var(--honey-950);
+  --status-attention-border: var(--honey-800);
+  --status-waiting-border: var(--alpha-white-10);
   --avatar-yellow: var(--yellow-300); /* Household member A */
-  --ai-card-mint: var(--green-950); /* Assistant card gradient 1 */
-  --ai-card-blue: var(--blue-950); /* Assistant card gradient 2 */
-  --ai-card-lilac: var(--violet-950); /* Assistant card gradient 3 */
-  --ai-card-pink: var(--pink-950); /* Assistant card gradient 4 */
-  --ai-petal-light: var(--blue-300); /* Boo petals 1 */
-  --ai-petal: var(--blue-400); /* Boo petals 2 */
-  --ai-petal-tint: var(--violet-300); /* Boo petals 3 */
-  --ai-core-light: var(--blue-400); /* Boo core 1 */
-  --ai-core: var(--blue-600); /* Boo core 2 */
-  --ai-core-edge: var(--indigo-600); /* Boo core 3 */
-  --ai-glow: var(--alpha-violet-400-18); /* Boo glow */
+  --ai-card-mint: var(--blue-925); /* Assistant card gradient 1 */
+  --ai-card-blue: var(--indigo-925); /* Assistant card gradient 2 */
+  --ai-card-lilac: var(--indigo-930); /* Assistant card gradient 3 */
+  --ai-card-pink: var(--violet-925); /* Assistant card gradient 4 */
+  --ai-petal-light: var(--blue-850); /* Boo petals 1 */
+  --ai-petal: var(--blue-875); /* Boo petals 2 */
+  --ai-petal-tint: var(--violet-850); /* Boo petals 3 */
+  --ai-core-light: var(--blue-450); /* Boo core 1 */
+  --ai-core: var(--blue-700); /* Boo core 2 */
+  --ai-core-edge: var(--indigo-850); /* Boo core 3 */
+  --ai-glow: var(--alpha-violet-400-5); /* Boo glow */
   --ai-spark-pink: var(--pink-400); /* Pink end of AI sparkle gradient */
-  --ai-halo: var(--alpha-pink-400-8); /* Soft halo around the Boo character */
+  --ai-halo: var(--alpha-pink-400-2); /* Soft halo around the Boo character */
   --ai-highlight: var(--alpha-white-85); /* Gloss and inner light on the Boo core */
   --ai-aura-1: var(--indigo-900); /* Soft background glow behind Boo (cool) */
   --ai-aura-2: var(--violet-600); /* Soft background glow behind Boo (warm) */
@@ -365,8 +535,9 @@
   --ai-backdrop-3: var(--gray-950); /* Welcome background gradient (light: pastel, dark: plain canvas) */
   --ai-backdrop-4: var(--gray-950); /* Welcome background gradient (light: pastel, dark: plain canvas) */
   --ai-sheen: var(--alpha-gray-950-0); /* White wash in light, nothing in dark (Welcome background, glass, hint) */
-  --ai-float-shadow: var(--alpha-indigo-400-50); /* Soft shadow under the floating Boo */
+  --ai-float-shadow: var(--alpha-indigo-400-15); /* Soft shadow under the floating Boo */
   --ai-boo-backdrop: var(--alpha-gray-950-0); /* Soft blue patch behind Boo on light backgrounds (transparent in dark) */
+  --ai-petal-edge: var(--alpha-blue-350-45);
   --pet-lavender: var(--violet-200); /* Pet colour — owner picks one per pet */
   --pet-mint: var(--green-200); /* Pet colour — owner picks one per pet */
   --pet-pink: var(--pink-200); /* Pet colour — owner picks one per pet */
@@ -376,17 +547,32 @@
   --overlay-photo-clear: var(--alpha-ink-0); /* Top of the photo gradient */
   --overlay-photo-dark: var(--alpha-ink-55); /* Bottom of the photo gradient — keeps white text readable on photos */
   --brand-logo-core: var(--blue-700); /* Core of the SmartBoo logo mark */
-  --brand-logo-petal-light: var(--blue-300); /* Logo petals gradient (separate from Boo’s ai/petal-*). Light: one step deeper so the mark holds on the grey canvas; Dark: same as Boo. */
-  --brand-logo-petal: var(--blue-400); /* Logo petals gradient (separate from Boo’s ai/petal-*). Light: one step deeper so the mark holds on the grey canvas; Dark: same as Boo. */
-  --brand-logo-petal-tint: var(--violet-300); /* Logo petals gradient (separate from Boo’s ai/petal-*). Light: one step deeper so the mark holds on the grey canvas; Dark: same as Boo. */
+  --brand-logo-petal-light: var(--blue-850); /* Logo petals gradient (separate from Boo’s ai/petal-*). Light: one step deeper so the mark holds on the grey canvas; Dark: same as Boo. */
+  --brand-logo-petal: var(--blue-875); /* Logo petals gradient (separate from Boo’s ai/petal-*). Light: one step deeper so the mark holds on the grey canvas; Dark: same as Boo. */
+  --brand-logo-petal-tint: var(--violet-850); /* Logo petals gradient (separate from Boo’s ai/petal-*). Light: one step deeper so the mark holds on the grey canvas; Dark: same as Boo. */
   --nav-active-label: var(--gray-100); /* Icon and label of the active tab (indigo in light, light grey in dark) */
   --nav-active-ring: var(--gray-500); /* Ring of the active tab pill (invisible in light, soft grey in dark) */
-  --nav-active-fill: var(--alpha-gray-500-45); /* Selected tab pill. Light: white (like the iOS segmented control); Dark: grey 500 at 45%. */
+  --nav-active-fill: var(--alpha-white-16); /* Selected tab: bright glass pill */
   --nav-active-content: var(--base-white); /* Label of the selected tab. Light: white on blue; Dark: white. */
   --nav-active-border: var(--alpha-ink-0); /* Outline of the selected tab. Light: same as the fill (invisible); Dark: none. */
   --nav-active-shadow: var(--alpha-ink-0); /* Soft shadow under the selected tab pill (0 1 6). Light: ink 8%; Dark: none. */
-  --nav-active-icon: var(--indigo-400); /* Filled icon of the selected tab. Light: white on the blue pill; Dark: indigo/400 on the translucent grey pill. */
+  --nav-active-icon: var(--base-white); /* Filled icon of the selected tab. Light: white on the blue pill; Dark: indigo/400 on the translucent grey pill. */
   --nav-dot-ring-active: var(--gray-700); /* Ring around the due dot on the selected tab (cut-out). Light: indigo/600 = pill; Dark: gray/700 ≈ the translucent pill. */
   --nav-dot-ring: var(--gray-800); /* Ring around the due dot on an unselected tab (cut-out). Light: white; Dark: gray/800 ≈ the glass. */
   --icon-circle-ring: var(--indigo-800); /* Ring around soft icon circles (invisible in light, soft indigo in dark) */
+  --icon-status-chip-start: var(--rose-900);
+  --icon-status-chip-end: var(--rose-975);
+  --icon-status-chip-border: var(--alpha-rose-300-50);
+  --icon-status-on-chip: var(--rose-100);
+  --icon-category-chip-start: var(--indigo-940);
+  --icon-category-chip-end: var(--indigo-960);
+  --icon-category-chip-border: var(--alpha-indigo-300-50);
+  --icon-category-on-chip: var(--indigo-100);
+  --welcome-stop-1: var(--blue-940);
+  --welcome-stop-2: var(--blue-960);
+  --welcome-stop-3: var(--gray-940);
+  --welcome-stop-4: var(--honey-975);
+  --welcome-stop-5: var(--honey-960);
+  --glass-highlight: var(--alpha-white-10); /* 1px inner top highlight on glass panels and tab bar */
+  --glass-shadow: var(--alpha-black-35); /* Soft drop shadow under glass panels and tab bar */
 }

@@ -46,7 +46,7 @@ export function Schedule() {
 
   const section = (title: string, trailing: string, list: Task[], showDate = false) =>
     list.length > 0 && (
-      <section aria-label={title} className="overflow-hidden rounded-24 bg-surface-panel ring-1 ring-inset ring-border-card">
+      <section aria-label={title} className="overflow-hidden rounded-24 bg-surface-panel ring-1 ring-inset ring-border-card shadow-card">
         {/* Figma "Section header": title and a grey count on one baseline */}
         <div className="flex items-baseline justify-between gap-16 px-24 pt-24 pb-16">
           <h2 className="min-w-0 font-display text-title font-medium">{title}</h2>
@@ -68,7 +68,7 @@ export function Schedule() {
       <header>
         <div className="flex h-control-44 items-center justify-between">
           <Logo />
-          <IconButton variant="plain" icon="settings" label="Settings" onClick={() => navigate('/settings')} className="-mr-2" />
+          <IconButton variant="secondary" icon="settings" label="Settings" onClick={() => navigate('/settings')} className="-mr-2" />
         </div>
         <div className="flex flex-col gap-8 pt-24 pb-16">
           <p className="text-body-s text-text-secondary">
@@ -100,7 +100,7 @@ export function Schedule() {
         {view === 'month' ? (
           <MonthCalendar month={month} selected={selected} today={t} dots={dots} onSelect={setSelected} onPrev={() => shiftMonth(-1)} onNext={() => shiftMonth(1)} />
         ) : (
-          <div role="tablist" aria-label="Days" className="grid grid-cols-7 rounded-24 bg-surface-panel ring-1 ring-inset ring-border-card p-12">
+          <div role="tablist" aria-label="Days" className="grid grid-cols-7 rounded-24 bg-surface-panel ring-1 ring-inset ring-border-card shadow-card p-12">
             {week.map((day) => {
               const active = day === selected
               const left = open(day)
@@ -119,11 +119,11 @@ export function Schedule() {
                   })}
                   onClick={() => setSelected(day)}
                   className={`press mx-auto flex h-[72px] w-full max-w-control-44 flex-col items-center justify-center gap-4 rounded-full ${
-                    active ? 'bg-accent-primary-subtle text-accent-primary ring-[1.5px] ring-accent-primary ring-inset' : ''
+                    active ? 'bg-accent-primary-subtle text-accent-on-subtle ring-[1.5px] ring-accent-primary ring-inset' : ''
                   }`}
                 >
-                  <span className={`text-caption ${active || day === t ? 'text-accent-primary' : 'text-text-secondary'}`}>{formatDay(day, { weekday: 'short' })}</span>
-                  <span className={`text-body font-medium ${active || day === t ? 'text-accent-primary' : 'text-text-primary'}`}>{fromDay(day).getDate()}</span>
+                  <span className={`text-caption ${active ? 'text-accent-on-subtle' : day === t ? 'text-accent-primary' : 'text-text-secondary'}`}>{formatDay(day, { weekday: 'short' })}</span>
+                  <span className={`text-body font-medium ${active ? 'text-accent-on-subtle' : day === t ? 'text-accent-primary' : 'text-text-primary'}`}>{fromDay(day).getDate()}</span>
                   <span className="flex h-4 gap-2" aria-hidden="true">
                     {late && <span className="size-4 rounded-full bg-status-waiting-dot" />}
                     {planned && <span className="size-4 rounded-full bg-status-due-dot" />}

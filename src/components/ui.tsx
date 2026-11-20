@@ -47,7 +47,7 @@ export function Chip({ children, active, onClick }: { children: ReactNode; activ
       role="tab"
       aria-selected={active}
       onClick={onClick}
-      className={`press min-h-control-44 shrink-0 rounded-full px-16 text-body-s font-medium ${active ? 'bg-surface-nav text-text-on-dark' : 'bg-surface-card text-text-secondary ring-1 ring-inset ring-surface-subtle'}`}
+      className={`press min-h-control-44 shrink-0 rounded-full px-16 text-body-s font-medium ${active ? 'bg-accent-primary text-text-on-accent' : 'bg-surface-card text-text-primary ring-1 ring-inset ring-border-control'}`}
     >
       {children}
     </button>
