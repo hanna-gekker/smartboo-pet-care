@@ -221,6 +221,7 @@
   --space-0: 0px; /* Spacing 0px — padding & gaps (8pt grid, 4/12 as half-steps, 2 for hairline groups) */
   --space-2: 2px; /* Spacing 2px — padding & gaps (8pt grid, 4/12 as half-steps, 2 for hairline groups) */
   --space-4: 4px; /* Spacing 4px — padding & gaps (8pt grid, 4/12 as half-steps, 2 for hairline groups) */
+  --space-6: 6px; /* Spacing 6px — calendar day tiles: between days and between rows */
   --space-8: 8px; /* Spacing 8px — padding & gaps (8pt grid, 4/12 as half-steps, 2 for hairline groups) */
   --space-12: 12px; /* Spacing 12px — padding & gaps (8pt grid, 4/12 as half-steps, 2 for hairline groups) */
   --space-16: 16px; /* Spacing 16px — padding & gaps (8pt grid, 4/12 as half-steps, 2 for hairline groups) */

@@ -26,3 +26,4 @@ export const Grid: Story = {
     </div>
   )],
 }
+export const Disabled: Story = { args: { disabled: true } }

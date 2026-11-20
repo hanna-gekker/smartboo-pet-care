@@ -1,5 +1,5 @@
 // Day tile — Figma "Day tile" (Schedule · unified): one day in the Week strip and the Month grid.
-// 46 × 58 (stretches to its column), radius 16; the number and the photos are centred, 4 apart (the number 6 from
+// 46 × 58: always this tall shape (aspect 46:58), sized by its column; radius 16; the number and the photos are centred, 4 apart (the number 6 from
 // the top, as in Figma). Default: surface/card with a 1px border/card edge inside.
 // The number on top (SB/Caption Strong, text/primary) in a 22 slot; today: the slot is an accent/primary circle with
 // text/on-accent. Selected: accent/primary-subtle fill with a 1px accent/primary edge (marked by fill, not by weight).
@@ -9,6 +9,7 @@
 
 import type { Pet } from '../data/types'
 import { PetAvatar } from './PetAvatar'
+import type { ShowState } from './showState'
 
 type DayTileProps = {
   /** The day number, "4". */
@@ -20,9 +21,10 @@ type DayTileProps = {
   /** Pets with something on that day. */
   pets?: Pet[]
   onSelect: () => void
+  'data-state'?: ShowState
 }
 
-export function DayTile({ day, label, today = false, selected = false, pets = [], onSelect }: DayTileProps) {
+export function DayTile({ day, label, today = false, selected = false, pets = [], onSelect, 'data-state': state }: DayTileProps) {
   const ring = selected ? 'ring-accent-primary-subtle' : 'ring-surface-card'
   const shown = pets.length > 2 ? pets.slice(0, 1) : pets
   const more = pets.length > 2 ? pets.length - 1 : 0
@@ -32,8 +34,11 @@ export function DayTile({ day, label, today = false, selected = false, pets = []
       aria-pressed={selected}
       aria-label={label}
       onClick={onSelect}
-      className={`press flex h-[58px] w-full flex-col items-center justify-center gap-4 rounded-16 ring-1 ring-inset ${
-        selected ? 'bg-accent-primary-subtle ring-accent-primary' : 'bg-surface-card ring-border-card'
+      data-state={state}
+      className={`press flex aspect-[46/58] w-full flex-col items-center justify-center gap-4 rounded-16 ring-1 ring-inset ${
+        selected
+          ? 'bg-accent-primary-subtle ring-accent-primary active:bg-accent-primary-soft data-[state=pressed]:bg-accent-primary-soft'
+          : 'bg-surface-card ring-border-card active:bg-surface-subtle data-[state=pressed]:bg-surface-subtle'
       }`}
     >
       <span className={`flex size-[22px] items-center justify-center rounded-full text-caption font-medium ${today ? 'bg-accent-primary text-text-on-accent' : 'text-text-primary'}`}>

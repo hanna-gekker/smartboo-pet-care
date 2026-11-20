@@ -14,6 +14,10 @@ import { IconButton, type IconButtonVariant } from '../components/IconButton'
 import { ListRow } from '../components/ListRow'
 import { Logo } from '../components/Logo'
 import { Calendar } from '../components/Calendar'
+import { ColorSwatches } from '../components/ColorSwatches'
+import { DayTile } from '../components/DayTile'
+import { SpeciesTile } from '../components/SpeciesTile'
+import { Chip } from '../components/ui'
 import { NextUpCard } from '../components/NextUpCard'
 import { PetAvatar } from '../components/PetAvatar'
 import { SegmentedControl } from '../components/SegmentedControl'
@@ -188,7 +192,7 @@ function Board({ theme }: { theme: 'light' | 'dark' }) {
         <CheckboxRow />
       </Section>
 
-      <Section title="Task row" note="Default · Done · Waiting (overdue). Tap the circle.">
+      <Section title="Task row" note="Default · Done · Waiting (overdue) · Pressed · Focus. Tap anywhere on the row.">
         <Card variant="list">
           <TaskRowDemo />
         </Card>
@@ -227,9 +231,53 @@ function Board({ theme }: { theme: 'light' | 'dark' }) {
         <NextUpCard pet={cleo} title="Ear drops" meta="Cleo · Otomax · 4 drops" status={{ kind: 'upcoming', label: '8 PM' }} onDone={() => {}} />
       </Section>
 
-      <Section title="Ask Boo input" note="Placeholder opens typing · camera · mic">
-        <div className="rounded-24 bg-ai-card p-16">
+      <Section title="Ask Boo input" note="Default · field focus · mic pressed · disabled · on a white card (Welcome)">
+        <div className="flex flex-col gap-12 rounded-24 bg-ai-card p-16">
           <AskBooInput placeholder="Tell Boo anything…" onType={() => {}} onSnap={() => {}} onTalk={() => {}} />
+          <AskBooInput placeholder="Tell Boo anything…" onType={() => {}} onSnap={() => {}} onTalk={() => {}} data-state="focus" />
+          <AskBooInput placeholder="Tell Boo anything…" onType={() => {}} onSnap={() => {}} onTalk={() => {}} data-state="pressed" />
+          <AskBooInput placeholder="Tell Boo anything…" onType={() => {}} onSnap={() => {}} onTalk={() => {}} disabled />
+        </div>
+        <div className="rounded-24 bg-surface-card p-16">
+          <AskBooInput surface="canvas" placeholder="Tell me about your pet…" onType={() => {}} onSnap={() => {}} onTalk={() => {}} />
+        </div>
+      </Section>
+
+      <Section title="Filter chip" note="Default · pressed · focus · disabled · selected · selected pressed">
+        <Row label="">
+          <Chip onClick={() => {}}>All</Chip>
+          <Chip onClick={() => {}} data-state="pressed">All</Chip>
+          <Chip onClick={() => {}} data-state="focus">All</Chip>
+          <Chip onClick={() => {}} disabled>All</Chip>
+          <Chip onClick={() => {}} active>All</Chip>
+          <Chip onClick={() => {}} active data-state="pressed">All</Chip>
+        </Row>
+      </Section>
+
+      <Section title="Colour swatch" note="Chosen · focus on the chosen one · disabled">
+        <ColorSwatches label="Frame colour" value="ocean" onChange={() => {}} />
+        <ColorSwatches label="Frame colour" value="ocean" onChange={() => {}} data-state="focus" />
+        <ColorSwatches label="Frame colour" value="ocean" onChange={() => {}} disabled />
+      </Section>
+
+      <Section title="Species tile" note="Default · pressed · focus · disabled · selected">
+        <div className="grid grid-cols-5 gap-8">
+          <SpeciesTile species="cat" label="Cat" color="pink" onSelect={() => {}} />
+          <SpeciesTile species="cat" label="Cat" color="pink" onSelect={() => {}} data-state="pressed" />
+          <SpeciesTile species="cat" label="Cat" color="pink" onSelect={() => {}} data-state="focus" />
+          <SpeciesTile species="cat" label="Cat" color="pink" onSelect={() => {}} disabled />
+          <SpeciesTile species="dog" label="Dog" color="ocean" onSelect={() => {}} selected />
+        </div>
+      </Section>
+
+      <Section title="Day tile" note="Default · pressed · focus · today · selected · today + selected">
+        <div className="grid grid-cols-6 gap-4">
+          <DayTile day={2} label="Monday, November 2" pets={[rocky]} onSelect={() => {}} />
+          <DayTile day={2} label="Monday, November 2" pets={[rocky]} onSelect={() => {}} data-state="pressed" />
+          <DayTile day={2} label="Monday, November 2" pets={[rocky]} onSelect={() => {}} data-state="focus" />
+          <DayTile day={4} label="Wednesday, November 4" today pets={[rocky, cleo, rocky]} onSelect={() => {}} />
+          <DayTile day={3} label="Tuesday, November 3" selected pets={[rocky, cleo]} onSelect={() => {}} />
+          <DayTile day={4} label="Wednesday, November 4" today selected pets={[rocky, cleo, rocky]} onSelect={() => {}} />
         </div>
       </Section>
 
@@ -253,14 +301,18 @@ function Board({ theme }: { theme: 'light' | 'dark' }) {
           <ListRow emoji="🩺" title="New vet" subtitle="Everything: history, vaccines, meds, documents" trailing="chevron" onClick={() => {}} />
           <ListRow icon="phone" label="Vet" title="Bayside Animal Clinic" trailing={{ label: 'Call', icon: 'phone' }} href="#" />
           <ListRow title="Microchip" value="—" />
+          <ListRow icon="heart-pulse" title="Pressed" subtitle="surface/subtle" trailing="chevron" onClick={() => {}} data-state="pressed" />
+          <ListRow icon="heart-pulse" title="Focus" subtitle="Ring inside the row" trailing="chevron" onClick={() => {}} data-state="focus" />
         </Card>
       </Section>
 
-      <Section title="Segmented control" note="Week chosen · Month chosen (tap to switch)">
+      <Section title="Segmented control" note="Week chosen · Month chosen (tap to switch) · Month pressed · Month focus">
         <SegmentedDemo />
+        <SegmentedControl label="View" options={[{ value: 'week', label: 'Week' }, { value: 'month', label: 'Month' }]} value="week" onChange={() => {}} data-state="pressed" />
+        <SegmentedControl label="View" options={[{ value: 'week', label: 'Week' }, { value: 'month', label: 'Month' }]} value="week" onChange={() => {}} data-state="focus" />
       </Section>
 
-      <Section title="Month calendar" note="Selected Nov 4 · today Nov 4 · dots: overdue, due, done · past days grey">
+      <Section title="Calendar" note="Month of Day tiles · selected and today Nov 4 · pets of each day (tap a day)">
         <MonthDemo />
       </Section>
 
@@ -270,6 +322,8 @@ function Board({ theme }: { theme: 'light' | 'dark' }) {
         ))}
         <TabBar active="today" overdue onBoo={() => {}} docked={false} />
         <TabBar active="schedule" overdue onBoo={() => {}} docked={false} />
+        <TabBar active="today" onBoo={() => {}} docked={false} data-state="pressed" />
+        <TabBar active="today" onBoo={() => {}} docked={false} data-state="focus" />
       </Section>
     </div>
   )
@@ -296,6 +350,8 @@ function TaskRowDemo() {
       <TaskRow title="Clean litter box" meta="Cleo · 12:00 PM" state={done ? 'done' : 'default'} pet={cleo} onToggle={() => setDone((d) => !d)} />
       <TaskRow title="Clean litter box" meta="Cleo · 12:00 PM" state="done" pet={cleo} onToggle={() => {}} />
       <TaskRow title="Ear drops" detail="Otomax · 4 drops" meta="Rocky · overdue since Nov 6" state="waiting" pet={rocky} onToggle={() => {}} />
+      <TaskRow title="Pressed" meta="surface/subtle" state="default" pet={cleo} onToggle={() => {}} data-state="pressed" />
+      <TaskRow title="Focus" meta="Ring inside the row" state="default" pet={cleo} onToggle={() => {}} data-state="focus" />
     </>
   )
 }

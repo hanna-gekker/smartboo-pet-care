@@ -20,6 +20,8 @@ type Story = StoryObj<typeof meta>
 
 export const Week: Story = {}
 export const Month: Story = { args: { value: 'month' } }
+/** Pressed: the segment that isn't chosen gets surface/subtle */
+export const Pressed: Story = { parameters: { pseudo: { active: ['[aria-checked="false"]'] } } }
 export const Focus: Story = { parameters: { pseudo: { focusVisible: ['[aria-checked="true"]'] } } }
 /** Tap to switch. */
 export const Interactive: Story = {

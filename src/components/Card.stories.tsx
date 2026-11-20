@@ -36,3 +36,5 @@ export const List: Story = {
 }
 export const Tappable: Story = { args: { children: text, onClick: fn() } }
 export const TappablePressed: Story = { args: { children: text, onClick: fn() }, parameters: { pseudo: { active: true } } }
+/** Focus: the ring follows the card's 24 radius */
+export const TappableFocus: Story = { ...Tappable, parameters: { pseudo: { focusVisible: ['button'] } } }

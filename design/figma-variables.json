@@ -1549,6 +1549,11 @@
           "$value": "4px",
           "$description": "Spacing 4px — padding & gaps (8pt grid, 4/12 as half-steps, 2 for hairline groups)"
         },
+        "6": {
+          "$type": "dimension",
+          "$value": "6px",
+          "$description": "Spacing 6px — calendar day tiles: between days and between rows"
+        },
         "8": {
           "$type": "dimension",
           "$value": "8px",

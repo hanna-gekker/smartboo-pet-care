@@ -11,9 +11,12 @@ type SegmentedControlProps<T extends string> = {
   onChange: (value: T) => void
   /** What VoiceOver reads for the group, e.g. "View". */
   label: string
+  /** /components only: show this state on the first segment that isn't chosen. */
+  'data-state'?: 'pressed' | 'focus'
 }
 
-export function SegmentedControl<T extends string>({ options, value, onChange, label }: SegmentedControlProps<T>) {
+export function SegmentedControl<T extends string>({ options, value, onChange, label, 'data-state': state }: SegmentedControlProps<T>) {
+  const target = options.find((o) => o.value !== value)?.value
   return (
     <div role="radiogroup" aria-label={label} className="shadow-card flex h-[46px] gap-4 rounded-full bg-surface-card p-4 ring-1 ring-inset ring-border-card">
       {options.map((o) => {
@@ -25,7 +28,8 @@ export function SegmentedControl<T extends string>({ options, value, onChange, l
             role="radio"
             aria-checked={on}
             onClick={() => onChange(o.value)}
-            className={`press flex-1 rounded-full px-16 text-body-s ${on ? 'bg-nav-active-fill font-medium text-nav-active-content' : 'text-text-secondary'}`}
+            data-state={o.value === target ? state : undefined}
+            className={`press focus-inside flex-1 rounded-full px-16 text-body-s ${on ? 'bg-nav-active-fill font-medium text-nav-active-content' : 'text-text-secondary active:bg-surface-subtle data-[state=pressed]:bg-surface-subtle'}`}
           >
             {o.label}
           </button>

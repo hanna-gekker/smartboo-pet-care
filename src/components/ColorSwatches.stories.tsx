@@ -15,9 +15,11 @@ type Story = StoryObj<typeof meta>
 
 export const Default: Story = {}
 export const Pink: Story = { args: { value: 'pink' } }
+export const Focus: Story = { parameters: { pseudo: { focusVisible: ['[aria-checked="true"]'] } } }
 /** Tap a colour */
 function Picker() {
   const [value, setValue] = useState<PetColor>('ocean')
   return <ColorSwatches label="Frame colour" value={value} onChange={setValue} />
 }
 export const Interactive: Story = { render: () => <Picker /> }
+export const Disabled: Story = { args: { disabled: true } }

@@ -4,6 +4,7 @@
 
 import type { PetColor, Species } from '../data/types'
 import { PetAvatar } from './PetAvatar'
+import type { ShowState } from './showState'
 
 type SpeciesTileProps = {
   species: Species
@@ -12,17 +13,23 @@ type SpeciesTileProps = {
   color: PetColor
   selected?: boolean
   onSelect: () => void
+  disabled?: boolean
+  'data-state'?: ShowState
 }
 
-export function SpeciesTile({ species, label, color, selected = false, onSelect }: SpeciesTileProps) {
+export function SpeciesTile({ species, label, color, selected = false, onSelect, disabled, 'data-state': state }: SpeciesTileProps) {
   return (
     <button
       type="button"
       role="radio"
       aria-checked={selected}
       onClick={onSelect}
-      className={`press flex min-h-control-44 w-full flex-col items-center gap-4 rounded-16 px-4 pt-12 pb-8 ring-1 ring-inset ${
-        selected ? 'bg-accent-primary-subtle ring-accent-primary' : 'bg-surface-card ring-border-card'
+      disabled={disabled}
+      data-state={state}
+      className={`press flex min-h-control-44 disabled:opacity-40 w-full flex-col items-center gap-4 rounded-16 px-4 pt-12 pb-8 ring-1 ring-inset ${
+        selected
+          ? 'bg-accent-primary-subtle ring-accent-primary active:bg-accent-primary-soft data-[state=pressed]:bg-accent-primary-soft'
+          : 'bg-surface-card ring-border-card active:bg-surface-subtle data-[state=pressed]:bg-surface-subtle'
       }`}
     >
       <PetAvatar pet={{ id: `species-${species}`, name: label, species, weightUnit: 'kg', allergies: [] }} size="md" petals={color} />

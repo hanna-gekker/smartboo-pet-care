@@ -25,9 +25,12 @@ type TabBarProps = {
   onBoo: () => void
   /** Pinned to the bottom of the screen (the app). Off on /components, where it sits in the page. */
   docked?: boolean
+  /** /components only: show this state on the first tab that isn't open. */
+  'data-state'?: 'pressed' | 'focus'
 }
 
-export function TabBar({ active, overdue = false, onBoo, docked = true }: TabBarProps) {
+export function TabBar({ active, overdue = false, onBoo, docked = true, 'data-state': state }: TabBarProps) {
+  const target = tabs.find((t) => t.key !== active)?.key
   const bar = (
     <div className="pointer-events-auto flex w-full max-w-420 items-center gap-8">
       <nav aria-label="Main" className="glass-bar flex h-[62px] flex-1 items-center rounded-full p-4 ring-1 ring-inset ring-border-card">
@@ -39,9 +42,10 @@ export function TabBar({ active, overdue = false, onBoo, docked = true }: TabBar
               key={t.key}
               to={t.to}
               aria-current={on ? 'page' : undefined}
+              data-state={t.key === target ? state : undefined}
               aria-label={dot ? `${t.label}, overdue` : undefined}
-              className={`press relative flex h-[54px] flex-1 flex-col items-center justify-center gap-2 rounded-full text-tab-label font-medium ${
-                on ? 'bg-nav-active-fill text-nav-active-content' : 'text-text-secondary'
+              className={`press focus-inside relative flex h-[54px] flex-1 flex-col items-center justify-center gap-2 rounded-full text-tab-label font-medium ${
+                on ? 'bg-nav-active-fill text-nav-active-content' : 'text-text-secondary active:bg-surface-subtle data-[state=pressed]:bg-surface-subtle'
               }`}
             >
               <Icon name={on ? t.iconOn : t.icon} size={20} className={on ? 'text-nav-active-icon' : ''} />

@@ -24,9 +24,10 @@ type ButtonProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'children' | 'o
 }
 
 const variants: Record<ButtonVariant, string> = {
-  primary: 'bg-accent-primary text-text-on-accent',
+  // Pressed: one step deeper (accent/on-subtle; in dark a darker accent, see .pressable-primary in base.css)
+  primary: 'pressable-primary bg-accent-primary text-text-on-accent',
   // Figma: a soft accent pill (accent/primary-subtle) with a 1px accent/primary edge inside and an accent/on-subtle label.
-  secondary: 'bg-accent-primary-subtle text-accent-on-subtle ring-1 ring-inset ring-accent-primary',
+  secondary: 'bg-accent-primary-subtle text-accent-on-subtle ring-1 ring-inset ring-accent-primary active:bg-accent-primary-soft data-[state=pressed]:bg-accent-primary-soft',
   // Figma Welcome "Add your pet": a white pill with a 1px accent outline, a black label and an accent icon.
   outline: 'bg-surface-card text-text-primary ring-1 ring-inset ring-accent-primary active:bg-surface-subtle data-[state=pressed]:bg-surface-subtle',
   ghost: 'bg-transparent text-text-primary active:bg-surface-subtle data-[state=pressed]:bg-surface-subtle',
@@ -65,11 +66,20 @@ export function Button({ children, variant = 'primary', size = 'medium', icon, f
       aria-disabled={isLoading || undefined}
       aria-busy={isLoading || undefined}
       onClick={handleClick}
-      className={`press inline-flex shrink-0 items-center justify-center gap-8 rounded-full text-body font-medium disabled:opacity-40 ${variants[variant]} ${sizes[size]} ${full ? 'w-full' : ''} ${className}`}
+      className={`press relative inline-flex shrink-0 items-center justify-center rounded-full text-body font-medium disabled:opacity-40 ${variants[variant]} ${sizes[size]} ${full ? 'w-full' : ''} ${className}`}
       {...rest}
     >
-      {isLoading ? <Spinner /> : icon && <Icon name={icon} size={20} className={variant === 'outline' ? 'text-accent-primary' : undefined} />}
-      {children}
+      {/* Loading (Figma "States"): an 18 spinner in the label colour instead of the label; the label stays in place,
+          hidden, so the button keeps its width */}
+      <span className={`inline-flex items-center gap-8 ${isLoading ? 'invisible' : ''}`}>
+        {icon && <Icon name={icon} size={20} className={variant === 'outline' ? 'text-accent-primary' : undefined} />}
+        {children}
+      </span>
+      {isLoading && (
+        <span className="absolute inset-0 flex items-center justify-center">
+          <Spinner size={18} />
+        </span>
+      )}
     </button>
   )
 }

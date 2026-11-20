@@ -17,9 +17,12 @@ type ColorSwatchesProps = {
   label: string
   value: PetColor
   onChange: (color: PetColor) => void
+  disabled?: boolean
+  /** /components only: show this state on the chosen swatch. */
+  'data-state'?: 'pressed' | 'focus'
 }
 
-export function ColorSwatches({ label, value, onChange }: ColorSwatchesProps) {
+export function ColorSwatches({ label, value, onChange, disabled, 'data-state': state }: ColorSwatchesProps) {
   return (
     <div role="radiogroup" aria-label={label} className="flex flex-wrap">
       {COLORS.map((c) => (
@@ -30,7 +33,9 @@ export function ColorSwatches({ label, value, onChange }: ColorSwatchesProps) {
           aria-checked={c.value === value}
           aria-label={c.label}
           onClick={() => onChange(c.value)}
-          className="press flex size-control-44 items-center justify-center rounded-full"
+          disabled={disabled}
+          data-state={c.value === value ? state : undefined}
+          className="press flex size-control-44 items-center justify-center rounded-full disabled:opacity-40"
         >
           <span className={`size-control-32 rounded-full ${c.fill} ${c.value === value ? 'ring-2 ring-accent-primary ring-offset-2 ring-offset-surface-card' : ''}`} />
         </button>

@@ -19,9 +19,9 @@ type IconButtonProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'children' 
 }
 
 const variants: Record<IconButtonVariant, string> = {
-  primary: 'bg-accent-primary text-text-on-accent',
+  primary: 'pressable-primary bg-accent-primary text-text-on-accent',
   secondary: 'glass-button bg-surface-panel text-text-primary ring-1 ring-inset ring-border-card group-active:bg-surface-subtle group-data-[state=pressed]:bg-surface-subtle',
-  soft: 'bg-accent-primary-subtle text-accent-primary',
+  soft: 'bg-accent-primary-subtle text-accent-primary group-active:bg-accent-primary-soft group-data-[state=pressed]:bg-accent-primary-soft',
   plain: 'text-text-primary group-active:bg-surface-subtle group-data-[state=pressed]:bg-surface-subtle',
 }
 

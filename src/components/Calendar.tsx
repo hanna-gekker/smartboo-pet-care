@@ -1,5 +1,6 @@
 // Calendar — Figma "Schedule · unified": the month title ("November" + the year in text/tertiary, SB/Title), the
-// weekday row and Day tiles. Week: one row of 7 tiles. Month: the same tiles in a 7-column grid, rows 12 apart.
+// weekday row and Day tiles. Week: one row of 7 tiles. Month: the same tiles in a 7-column grid. Days and rows are the
+// same 6 apart (space/6), as in Figma; tiles keep their tall 46 × 58 shape (aspect) and fill the width like the cards below (46 × 58 on a 390 phone).
 // The selected day's weekday is text/primary, Caption Strong. ‹ › move by a week or a month (not in Figma: without
 // them another month can't be reached). Data comes in as props.
 
@@ -67,7 +68,7 @@ export function Calendar({ view, anchor, selected, today, petsByDay, countByDay,
         </div>
       </div>
 
-      <div className="grid grid-cols-7 gap-4" aria-hidden="true">
+      <div className="grid grid-cols-7 gap-6" aria-hidden="true">
         {weekOf(anchor).map((d, i) => (
           <span key={d} className={`text-center text-caption ${i === selectedColumn ? 'font-medium text-text-primary' : 'text-text-secondary'}`}>
             {formatDay(d, { weekday: 'short' })}
@@ -75,9 +76,9 @@ export function Calendar({ view, anchor, selected, today, petsByDay, countByDay,
         ))}
       </div>
 
-      <div role="group" aria-label={view === 'month' ? 'Days of the month' : 'Days of the week'} className="flex flex-col gap-12">
+      <div role="group" aria-label={view === 'month' ? 'Days of the month' : 'Days of the week'} className="grid grid-cols-7 gap-6">
         {weeks.map((week, i) => (
-          <div key={i} className="grid grid-cols-7 gap-4">
+          <div key={i} className="contents">
             {week.map((day, j) => (day ? <div key={day}>{tile(day)}</div> : <span key={j} />))}
           </div>
         ))}
