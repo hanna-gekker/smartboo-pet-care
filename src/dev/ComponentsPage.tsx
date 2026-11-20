@@ -13,7 +13,7 @@ import { Icon, type IconName } from '../components/Icon'
 import { IconButton, type IconButtonVariant } from '../components/IconButton'
 import { ListRow } from '../components/ListRow'
 import { Logo } from '../components/Logo'
-import { MonthCalendar } from '../components/MonthCalendar'
+import { Calendar } from '../components/Calendar'
 import { NextUpCard } from '../components/NextUpCard'
 import { PetAvatar } from '../components/PetAvatar'
 import { SegmentedControl } from '../components/SegmentedControl'
@@ -317,11 +317,13 @@ function SegmentedDemo() {
 function MonthDemo() {
   const [selected, setSelected] = useState('2026-11-04')
   return (
-    <MonthCalendar
-      month="2026-11-04"
+    <Calendar
+      view="month"
+      anchor="2026-11-04"
       selected={selected}
       today="2026-11-04"
-      dots={{ '2026-11-01': 'done', '2026-11-02': 'overdue', '2026-11-03': 'done', '2026-11-04': 'overdue', '2026-11-05': 'due', '2026-11-12': 'due', '2026-11-27': 'due' }}
+      petsByDay={{ '2026-11-02': [rocky], '2026-11-03': [rocky, cleo], '2026-11-04': [rocky, cleo, rocky, cleo], '2026-11-08': [cleo] }}
+      countByDay={{ '2026-11-02': 1, '2026-11-03': 2, '2026-11-04': 4, '2026-11-08': 1 }}
       onSelect={setSelected}
       onPrev={() => {}}
       onNext={() => {}}

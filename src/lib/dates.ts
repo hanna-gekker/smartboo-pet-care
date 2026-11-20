@@ -15,6 +15,12 @@ export function today(): string {
   return toDay(new Date())
 }
 
+/** The time now, "09:20", for a record logged now. */
+export function nowTime(): string {
+  const d = new Date()
+  return `${pad(d.getHours())}:${pad(d.getMinutes())}`
+}
+
 export function addDays(day: string, n: number): string {
   const d = fromDay(day)
   d.setDate(d.getDate() + n)

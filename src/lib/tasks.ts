@@ -16,12 +16,15 @@ export function taskState(task: Task, now = new Date()): TaskState {
   return 'default'
 }
 
-/** "Rocky · 8 AM", "Rocky · Thu, Nov 19 · 8 AM", "Rocky · waiting since 8 AM", "Rocky · overdue since Nov 6" */
-export function taskMeta(task: Task, petName: string | undefined, { showDate = false, now = new Date() } = {}): string {
+/** "Rocky · 8 AM", "Rocky · Thu, Nov 19 · 8 AM", "Rocky · waiting since 8 AM", "Rocky · overdue since Nov 6".
+ *  `weekday` (Schedule, a past day): "Cleo · waiting since Tue 12 PM". */
+export function taskMeta(task: Task, petName: string | undefined, { showDate = false, weekday = false, now = new Date() } = {}): string {
   let when = showDate ? formatDay(task.date, { weekday: 'short', month: 'short', day: 'numeric' }) : ''
   if (task.time) when = [when, formatTime(task.time)].filter(Boolean).join(' · ')
   if (taskState(task, now) === 'waiting') {
-    when = task.date === today() ? `waiting since ${formatTime(task.time)}` : `overdue since ${formatDay(task.date)}`
+    if (task.date === today()) when = `waiting since ${formatTime(task.time)}`
+    else if (weekday) when = `waiting since ${[formatDay(task.date, { weekday: 'short' }), task.time && formatTime(task.time)].filter(Boolean).join(' ')}`
+    else when = `overdue since ${formatDay(task.date)}`
   }
   return [petName, when].filter(Boolean).join(' · ')
 }

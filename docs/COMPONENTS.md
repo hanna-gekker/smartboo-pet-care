@@ -263,17 +263,18 @@ Data (built): weight units are `lb` / `kg` / `g` / `oz` (`src/lib/weight.ts`). `
 
 Colours: the placeholder's deeper inner circle uses the role tokens `pet/<colour>-deep` (ocean, lavender, pink, mint, slate) and `pet/butter-deep → pet/butter-deep-end` (a gradient for butter); in dark all `pet/*` colours are muted (photo frame petals too, on purpose).
 
-## 17. Unified Schedule (proposed, Nov 19, 2026)
+## 17. Unified Schedule (built, Nov 19, 2026)
 
-Figma: ★ Screens → section "Schedule · unified" (S1 Week, S2 Month, S3 Past day, S4 Empty day, S5 Dark). Waiting for approval before code.
+Figma: ★ Screens → section "Schedule · unified" (S1 Week, S2 Month, S3 Past day, S4 Empty day, S5 Dark). Built with the audit values in §18.
 
 | Component | Status | Variants and states | Props | Notes |
 |---|---|---|---|---|
-| **Day tile** | new, `DayTile.tsx` (Week strip and Month grid; replaces the day buttons in `Schedule.tsx` and `MonthCalendar.tsx`) | default · today · selected · today + selected · pressed · focus · with 0, 1, 2 or more pets | `date`, `today`, `selected`, `pets` (whose tasks are that day), `onSelect` | 46 × 58, radius 12. Default: `surface/card`, 1px `border/card` inside; the number on top (13, `text/primary`) in a 22 slot. Today: the number in a 22 `accent/primary` circle, `text/on-accent`. Selected: `accent/primary-subtle` fill + 1px `accent/primary` edge, the number in `text/primary`; the weekday above that column in `text/primary`. Under the number up to two 20 pet photos with a 2px ring in the tile's own fill (placeholders without a face, see 16); more than two → one photo + a 20 "+N" badge (`text/secondary` fill, the number in `surface/card`, N = pets − 1). A real button with an aria-label like "Wednesday, November 4, 3 tasks"; the tap area is the whole tile |
+| **Day tile** | **built**, `DayTile.tsx` | default · today · selected · today + selected · pressed · focus · with 0, 1, 2 or more pets | `day`, `label`, `today`, `selected`, `pets`, `onSelect` | 46 × 58 (stretches to its column), radius 16. Default: `surface/card`, 1px `border/card` inside; the number on top (Caption Strong, `text/primary`) in a 22 slot. Today: the number in a 22 `accent/primary` circle, `text/on-accent`. Selected: `accent/primary-subtle` fill + 1px `accent/primary` edge. Under the number up to two 20 pet photos with a 2px ring in the tile's own fill; more than two → one photo + a 20 "+N" badge (`text/secondary` fill, Tab label in `surface/card`, N = pets − 1). A real button with an aria-label like "Wednesday, November 4, today, 3 tasks"; the tap area is the whole tile |
+| **Calendar** | **built**, `Calendar.tsx` (replaces `MonthCalendar.tsx`) | week · month | `view`, `anchor`, `selected`, `today`, `petsByDay`, `countByDay`, `onSelect`, `onPrev`, `onNext` | The month title ("November" + the year in `text/tertiary`, SB/Title), the weekday row (the selected day's column in `text/primary`, Caption Strong) and Day tiles: one row in Week, a 7-column grid in Month with rows 12 apart. Columns 4 apart (Figma 6, no token). ‹ › move by a week or a month: not in Figma, kept so another month can be reached. The old dots and legend are gone |
 
-The day under the calendar is built from existing parts: Section header, Card, Task row (To do), List row with a pet photo (Happened), Boo (empty day).
+The day under the calendar is built from existing parts: the day's title (SB/Title), **To do** (Task rows, "{done} of {total} done"; overdue first, then open, then done; on a past day "Cleo · waiting since Tue 12 PM"), **Happened** (List rows with the pet photo: "Cleo weighs 3.9 kg" · "9:20 AM · −0.3 kg since Nov 10", other records with their own title and detail; records now keep the time they were logged), and on an empty day a Boo hint with a title (`BooHint title="All good."`, "Next: {task} for {pet} {when}."). "Today", "Tomorrow" and "Later this week" sections are gone. Happened has no count (the Figma "2 of 5 done" there is a copy of To do's).
 
-Deviations to confirm: Figma uses Semibold for today's and the selected number and a 10px "+N"; there is no Semibold weight or 10px size token, so code uses Medium and the 11 tab-label size until Figma has them.
+Settled by the audit (§18): no Semibold, radius 16, Month rows 12 apart. Not built: the small rose dot on Nov 1 in the Month mockup (its meaning isn't specified).
 
 ## 18. Design system audit (Nov 19, 2026)
 

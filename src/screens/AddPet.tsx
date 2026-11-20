@@ -13,7 +13,7 @@ import { Chip, StackScreen } from '../components/ui'
 import { newId, useApp } from '../data/useApp'
 import { useUi } from '../data/useUi'
 import type { Pet, PetColor, Species, WeightUnit } from '../data/types'
-import { ageLong, today } from '../lib/dates'
+import { ageLong, nowTime, today } from '../lib/dates'
 import { pickPetColor, SPECIES_COLOR } from '../lib/petColors'
 import { getsVaccines, POPULAR_BREEDS, SPECIES, speciesLabel } from '../lib/species'
 import { getsWeighed, weightUnits } from '../lib/weight'
@@ -72,7 +72,7 @@ export function AddPet() {
     }
     addPet(final)
     const value = skipWeight || step !== 'weight' ? 0 : parseFloat(weight.replace(',', '.'))
-    if (value > 0) addRecord({ id: newId('rec'), petId: final.id, type: 'weight', date: today(), title: 'Weight', value })
+    if (value > 0) addRecord({ id: newId('rec'), petId: final.id, type: 'weight', date: today(), time: nowTime(), title: 'Weight', value })
     setSaved(final)
     setSavedWeight(value > 0 ? value : 0)
     setStep('done')

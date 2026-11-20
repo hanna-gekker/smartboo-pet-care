@@ -35,6 +35,8 @@ export type PetRecord = {
   petId: string
   type: RecordType
   date: string // YYYY-MM-DD
+  /** When it was logged, "09:20". Older records have none. */
+  time?: string
   title: string
   detail?: string
   value?: number // weight

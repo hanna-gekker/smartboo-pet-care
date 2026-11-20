@@ -7,7 +7,7 @@ import { newId, petById, useApp } from '../data/useApp'
 import { useUi } from '../data/useUi'
 import type { Pet, PetRecord, Task, Vaccine } from '../data/types'
 import { readPaper, understand, type BooResult, type ParsedPaper } from '../lib/boo'
-import { addDays, formatDay, today } from '../lib/dates'
+import { addDays, formatDay, nowTime, today } from '../lib/dates'
 import { convertWeight } from '../lib/weight'
 import { BottomSheet } from './BottomSheet'
 import { BooCharacter } from './BooCharacter'
@@ -85,12 +85,12 @@ function StepView({ step, setStep, text, setText }: { step: Step; setStep: (s: S
     if (result.kind === 'weight') {
       const last = app.records.filter((r) => r.petId === pet.id && r.type === 'weight').sort((a, b) => b.date.localeCompare(a.date))[0]
       const value = convertWeight(result.value, result.unit, pet.weightUnit)
-      app.addRecord({ id, petId: pet.id, type: 'weight', date: today(), title: 'Weight', value })
+      app.addRecord({ id, petId: pet.id, type: 'weight', date: today(), time: nowTime(), title: 'Weight', value })
       const diff = last?.value !== undefined ? Math.round((value - last.value) * 10) / 10 : undefined
       const change = diff === undefined ? '' : diff === 0 ? ' · same as last time' : ` · ${diff > 0 ? '+' : '−'}${Math.abs(diff)} ${pet.weightUnit} since ${formatDay(last.date)}`
       showToast(`Saved · ${pet.name}, ${value} ${pet.weightUnit}${change}`, () => app.removeRecord(id))
     } else {
-      app.addRecord({ id, petId: pet.id, type: result.type, date: today(), title: result.title })
+      app.addRecord({ id, petId: pet.id, type: result.type, date: today(), time: nowTime(), title: result.title })
       showToast(`Saved to ${pet.name}'s folder`, () => app.removeRecord(id))
     }
     navigator.vibrate?.(10)
@@ -453,7 +453,7 @@ function ResultView({ result, onBack, onPick }: { result: BooResult; onBack: () 
         kind="Symptom"
         title={result.title}
         onConfirm={() => {
-          app.addRecord({ id: newId('rec'), petId: pet.id, type: 'health', date: today(), title: result.title })
+          app.addRecord({ id: newId('rec'), petId: pet.id, type: 'health', date: today(), time: nowTime(), title: result.title })
           showToast(`Saved to ${pet.name}'s history`)
           closeBoo()
         }}
