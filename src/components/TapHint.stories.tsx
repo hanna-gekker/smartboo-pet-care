@@ -14,4 +14,4 @@ type Story = StoryObj<typeof meta>
 
 export const Default: Story = {}
 export const Pressed: Story = { parameters: { pseudo: { active: true } } }
-export const Focus: Story = { parameters: { pseudo: { focusVisible: true } } }
+export const Focus: Story = { parameters: { pseudo: { focusVisible: ['button'] } } }

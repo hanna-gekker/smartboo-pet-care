@@ -18,8 +18,8 @@ type AskBooInputProps = {
 export function AskBooInput({ placeholder, onType, onSnap, onTalk, surface = 'card' }: AskBooInputProps) {
   return (
     <div className="flex items-center gap-8">
-      <div className={`flex h-control-56 min-w-0 flex-1 items-center gap-8 rounded-full p-8 pl-24 ring-1 ring-inset ring-border-card ${surface === 'canvas' ? 'bg-surface-canvas' : 'bg-surface-card'}`}>
-        <button type="button" onClick={onType} className="press -my-2 min-h-control-44 min-w-0 flex-1 truncate text-left text-body text-text-secondary">
+      <div className={`flex h-control-56 min-w-0 flex-1 items-center gap-8 rounded-full p-8 ring-1 ring-inset ring-border-card ${surface === 'canvas' ? 'bg-surface-canvas' : 'bg-surface-card'}`}>
+        <button type="button" onClick={onType} className="press -my-2 min-h-control-44 min-w-0 flex-1 truncate rounded-full pr-8 pl-16 text-left text-body text-text-secondary">
           {placeholder}
         </button>
         <IconButton variant="soft" icon="camera" label="Snap a vet paper" onClick={onSnap} className="-m-2" />

@@ -209,11 +209,19 @@ button {
 
 /* Focus: a visible outline for the keyboard and VoiceOver, never removed for looks.
    [data-state="focus"] shows the same outline on /components and in Storybook. */
-/* Text fields show focus on their own box (TextField), so the outline skips them. */
-:focus-visible:not(input, select, textarea),
+/* Text fields show focus on their own box (TextField), so the outline skips them. Only things you can tap
+   get it: Storybook's "focus" switch marks every element, and boxes like text and icons must stay clean. */
+:where(button, a[href], [role="button"], [tabindex]:not([tabindex="-1"]), summary):focus-visible,
 [data-state="focus"]:not(div) {
   outline: 2px solid var(--accent-primary);
   outline-offset: 2px;
+}
+/* Rows inside cards: the card clips its corners, so the outline goes inside the row and follows the card's
+   rounding (radius/24) instead of being a square box. */
+.focus-inset:focus-visible,
+[data-state="focus"].focus-inset {
+  outline-offset: -2px;
+  border-radius: var(--radius-24);
 }
 
 /* Screen background (Figma "S1 v2"), pinned to the screen, not to the page, so a long screen

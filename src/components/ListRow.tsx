@@ -58,7 +58,8 @@ export function ListRow({ title, subtitle, label, value, icon, pet, emoji, trail
       )}
     </>
   )
-  const cls = 'flex w-full min-h-control-56 items-center gap-16 px-24 py-16'
+  // Rows sit inside cards that clip their corners, so the focus outline is drawn inside the row
+  const cls = 'flex w-full min-h-control-56 items-center gap-16 px-24 py-16 focus-inset'
   if (href)
     return (
       <a href={href} className={`press ${cls} active:bg-surface-subtle`}>

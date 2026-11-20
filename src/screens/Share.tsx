@@ -62,7 +62,7 @@ export function Share() {
                 role="checkbox"
                 aria-checked={chosen.includes(p.id)}
                 onClick={() => toggle(p.id)}
-                className="press flex w-full items-center gap-16 px-24 py-16 text-left active:bg-surface-subtle"
+                className="press focus-inset flex w-full items-center gap-16 px-24 py-16 text-left active:bg-surface-subtle"
               >
                 <PetAvatar pet={p} size="md" />
                 <span className="flex-1 text-body font-medium">{p.name}</span>

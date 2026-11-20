@@ -169,7 +169,7 @@ export function AddPet() {
                 if (last) save(true)
                 else setStep(flow[index + 1])
               }}
-              className="press min-h-control-44 px-16 text-body font-medium text-accent-on-subtle"
+              className="press min-h-control-44 rounded-full px-16 text-body font-medium text-accent-on-subtle"
             >
               Skip
             </button>
@@ -177,7 +177,7 @@ export function AddPet() {
           <Button full size="large" disabled={!canGoOn} onClick={() => next()}>
             {last ? 'Save pet' : 'Next'}
           </Button>
-          <button type="button" onClick={() => openBoo('talk')} className="press min-h-control-44 px-16 text-body-s font-medium text-accent-on-subtle">
+          <button type="button" onClick={() => openBoo('talk')} className="press min-h-control-44 rounded-full px-16 text-body-s font-medium text-accent-on-subtle">
             Or just tell Boo
           </button>
         </div>
@@ -202,7 +202,7 @@ export function AddPet() {
             <Question title="What's their name?" />
             <div className="flex flex-col items-center gap-12">
               <PetAvatar pet={pet} size="hero" petals={color} onAddPhoto={() => photoInput.current?.click()} />
-              <button type="button" onClick={() => photoInput.current?.click()} className="press min-h-control-44 px-16 text-body-s font-medium text-accent-on-subtle">
+              <button type="button" onClick={() => photoInput.current?.click()} className="press min-h-control-44 rounded-full px-16 text-body-s font-medium text-accent-on-subtle">
                 {photo ? 'Change photo' : 'Add a photo'}
               </button>
               <input
