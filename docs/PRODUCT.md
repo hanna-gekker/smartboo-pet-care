@@ -37,9 +37,22 @@ The first screen puts talking to Boo first. Most owners don't have a vet paper a
   4. "Remind you 2 weeks before each one?" → **Yes** → only now does iOS ask for notification permission.
   5. "Add a photo of Rocky?" [Take photo] [Later].
   6. Done: the pet's folder holds the paper and the vaccines; Today shows "Next: Bordetella in 5 months".
-- **Add your pet** — a secondary button: name, species, breed, date of birth, photo. Papers can come later.
+- **Add your pet** — a secondary button that opens a short step-by-step form, one question per screen (see "Add your pet" below). Papers can come later.
 
 If a pet with the same name already exists, the paper goes into that pet's folder; when unsure, Boo asks "Is this the same Rocky?". If a paper covers several pets, Boo finds or creates each of them.
+
+## Add your pet — step by step
+
+One question per screen. A nav bar ("Add your pet", back), a step bar under it, the question, and at the bottom an optional "Skip", the main button and "Or just tell Boo" (opens the Boo sheet). The steps adapt to the species.
+
+1. **"Who's joining the family?"** / "Pick one. You can add more pets later." — 17 species in a 4-column grid: dog, cat, rabbit, hamster, guinea pig, rat, chinchilla, ferret, hedgehog, bird, parrot, fish, turtle, lizard, snake, frog, other. Button "Next".
+2. **"What's their name?"** — the species placeholder with an add-photo badge, "Add a photo", the frame colour swatches, the field "Name". "Next".
+3. **"Do you know the breed?"** / "Optional. You can change it later." — a breed search ("Search breeds") and popular choices for the species (for fish: "What kind of fish?"), each list ending with "I'm not sure". Skip + "Next".
+4. **"When was {Name} born?"** — "Date of birth", or "I don't know the exact date" ("If unsure, Boo asks for an approximate age instead."). "Next".
+5. **"How much does {Name} weigh?"** / "Optional. Helps Boo track changes." — lb or kg for dogs, cats and other larger pets; g or oz for small mammals, birds and reptiles ("Optional. Small pets are weighed in grams."). Fish have no weight step: their flow has 4 steps and step 4 saves the pet. Skip + "Save pet".
+6. **"{Name} is all set"** — the pet's card (photo or placeholder, name, "Dog · Beagle · 7 years · 24.6 lb"). For species that get vaccines, a Boo hint: "I don't know {Name}'s shots yet. Snap the last vet paper?" [Snap a vet paper] [Not now]. No back button. "Done".
+
+A pet without a photo shows a drawing of its species in its frame colour, the same on every screen. A new pet gets a frame colour that no other pet of the same species uses; when all are taken, a small initial badge tells them apart.
 
 ## Boo — how it works
 
@@ -69,6 +82,20 @@ Boo takes three kinds of input:
 - Boo says plainly that it isn't a vet: on the first-use screen and in Settings → About ("Boo keeps your pet's records. It isn't a vet.").
 - There is always a non-AI path: manual add and edit.
 
+### When something goes wrong
+
+Same sheet as a Boo answer: what you gave Boo (a small thumbnail of the paper, or "…" for voice), Boo's reply, and two buttons. Every case offers a way that doesn't need the AI.
+
+| Case | Boo says | Buttons |
+|---|---|---|
+| Photo too blurry | "This photo is a bit blurry, so I can't read it well. Try again in good light?" | Retake photo · Choose another |
+| Not a vet paper | "I couldn't find pet records on this one. Is it a vet paper?" | Try another · Add by hand |
+| Camera access off | "Camera access is off. You can turn it on in Settings, or pick a photo instead." | Open Settings (the app's iOS settings) · Choose a photo |
+| Offline | "You're offline. I'll read this paper as soon as you're back online." The photo waits on the phone and is read when the connection is back. | Got it · Add by hand |
+| Didn't catch that (voice) | "Sorry, I didn't catch that. Want to try again?" | Talk again · Type instead |
+
+Microphone access off can reuse the same pattern later.
+
 ## Screens in the first version
 
 Tab bar: a floating capsule with **Today · Schedule · Pets**, and **Boo** to the right of it. Settings: icon in the top-right corner of Today.
@@ -80,12 +107,13 @@ Tab bar: a floating capsule with **Today · Schedule · Pets**, and **Boo** to t
    - **Coming up** — the next few items (vaccines, med courses, lab rechecks, insurance deadlines), overdue on top, with "See schedule"; daily chores only if the owner set them up. Works like a checklist: a task done today stays in place, checked and crossed out;
    - **Your pack** — avatars with a dot when a pet has something due soon;
    - empty day: "All good. Next: Rocky's rabies in 3 weeks." + one Boo hint about a gap ("I don't know Milo's shots yet. Snap his last vet paper?"); "Not now" hides it for a week.
-3. **Schedule** — the plan by day:
-   - a week strip at the top (dots under days that have something due); swipe for other weeks;
-   - for the selected day: *Due today*, *Tomorrow*, *Later this week*;
-   - each task: pet avatar, what (with dose), pet name and time; overdue shows "waiting since 8 AM";
-   - tapping a task's circle checks it and crosses it out in place (tap again to undo);
-   - past days show what was done — the answer to "did anyone give the pill yesterday?".
+3. **Schedule** — a calendar on top and the selected day below:
+   - Week / Month switch; Week is a strip of day tiles, Month the same tiles in a 7-column grid. A tile shows the date and up to two pet photos of that day (or one photo and "+N"); today has the date in a blue circle;
+   - the selected day's title, e.g. "Wednesday, Nov 4";
+   - **To do** ("{done} of {total} done"): that day's tasks, overdue first ("{Pet} · waiting since 8 AM", or "waiting since Tue 12 PM" on a past day), then open ones, then done ones (checked and crossed out). Tapping a task's circle checks it in place; tap again to undo;
+   - **Happened**: what was logged that day (weight, a symptom, a note…), e.g. "Cleo weighs 950 g" · "9:20 AM · 30 g less than last week";
+   - past days work the same — the answer to "did anyone give the pill yesterday?";
+   - an empty day: one card with Boo, "All good." and "Next: {next item}.", e.g. "Next: Change water for Tank tomorrow."
 4. **Boo (bottom sheet)** — Talk / Snap / Type → toast, review card, or answer.
 5. **Pet folder**:
    - header: photo in the flower frame, name, species and breed, age, **Share** button;

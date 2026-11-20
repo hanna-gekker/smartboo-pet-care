@@ -242,3 +242,31 @@ Decisions (Nov 19, 2026):
 - **No 20px padding token**, so cards keep 24 where Figma has 20.
 - `GlassCard` and `TapHint` are no longer used on screens; they stay in Storybook for now.
 - Pet folder keeps its current layout with the new look. The Figma layout (Attention card, Health list, "Share records" under the name) is a separate step.
+
+## 16. Pet photo placeholders and step-by-step Add your pet (proposed, Nov 19, 2026)
+
+Figma: page "✏️ Drafts" → "Pet avatars · final" (557:135773, section "Pet placeholders") and page "★ Screens" → section "Add your pet · step by step" (A1–A6 dog, A3h/A5h/A6h hamster, A3f/A6f fish). Waiting for approval before code.
+
+| Component | Status | Variants and states | Props | Notes |
+|---|---|---|---|---|
+| **Pet avatar · placeholder** | change to `PetAvatar.tsx` | 17 species (`other` = paw) · large (flower frame) and ≤24 (plain circle) · Pet hero with an "add photo" badge | `pet` (no photo → placeholder by `pet.species`), `size`, `petals`; hero: `onAddPhoto` | Large: the flower in the pet's frame colour; inner circle = the pet colour with a deeper shade and a soft white top light at 75%; the animal in `pet/animal` (white; off-white in dark) with eyes, nose and smile in `pet/animal-eye`, ≈117% of the circle, clipped. ≤24: plain circle with a 1.5px `surface/card` ring, white silhouette without a face. Hero badge: 32, `surface/card` + `border/card` + card shadow, camera 18, bottom right outside the inner circle, tap area ≥44. All frame colours of one species taken → a 22 initial badge (`surface/card`, `text/primary`, `border/card`). The drawing is decorative (`aria-hidden`); alone it reads "<Name>, no photo". The 17 drawings are SVGs in `src/assets/pets/` |
+| **Species tile** | new, `SpeciesTile.tsx` | default · selected · pressed · focus | `species`, `label`, `selected`, `onSelect` | `surface/card`, 1px `border/card`, radius 16, ~84 high: the placeholder flower 48 and the label (SB/Caption, `text/secondary`). Selected: `accent/primary-subtle` fill + 1px `accent/primary` edge, label `text/primary`. A radio in a radio group ("Species"), tap area ≥44 |
+| **Step bar** | new, `StepBar.tsx` | — | `steps`, `current` | One segment per step, 4 high, radius 2, gap 6; done and current = `accent/primary`, the rest `border/card`. VoiceOver reads "Step 2 of 5" |
+
+Also used, already built: Nav bar (`StackScreen`), Form field (`TextField`), Filter chip (`Chip`), Checkbox, Button, Colour swatch, Boo hint.
+
+Data: `Species` grows to the 17 species above (old `reptile` → `lizard`, `small mammal` → `hamster` for stored pets). Weight units: lb / kg for larger pets, g / oz for small mammals, birds and reptiles; fish have none.
+
+Colours: the placeholder's deeper inner circle uses the role tokens `pet/<colour>-deep` (ocean, lavender, pink, mint, slate) and `pet/butter-deep → pet/butter-deep-end` (a gradient for butter); in dark all `pet/*` colours are muted (photo frame petals too, on purpose).
+
+## 17. Unified Schedule (proposed, Nov 19, 2026)
+
+Figma: ★ Screens → section "Schedule · unified" (S1 Week, S2 Month, S3 Past day, S4 Empty day, S5 Dark). Waiting for approval before code.
+
+| Component | Status | Variants and states | Props | Notes |
+|---|---|---|---|---|
+| **Day tile** | new, `DayTile.tsx` (Week strip and Month grid; replaces the day buttons in `Schedule.tsx` and `MonthCalendar.tsx`) | default · today · selected · today + selected · pressed · focus · with 0, 1, 2 or more pets | `date`, `today`, `selected`, `pets` (whose tasks are that day), `onSelect` | 46 × 58, radius 12. Default: `surface/card`, 1px `border/card` inside; the number on top (13, `text/primary`) in a 22 slot. Today: the number in a 22 `accent/primary` circle, `text/on-accent`. Selected: `accent/primary-subtle` fill + 1px `accent/primary` edge, the number in `text/primary`; the weekday above that column in `text/primary`. Under the number up to two 20 pet photos with a 2px ring in the tile's own fill (placeholders without a face, see 16); more than two → one photo + a 20 "+N" badge (`text/secondary` fill, the number in `surface/card`, N = pets − 1). A real button with an aria-label like "Wednesday, November 4, 3 tasks"; the tap area is the whole tile |
+
+The day under the calendar is built from existing parts: Section header, Card, Task row (To do), List row with a pet photo (Happened), Boo (empty day).
+
+Deviations to confirm: Figma uses Semibold for today's and the selected number and a 10px "+N"; there is no Semibold weight or 10px size token, so code uses Medium and the 11 tab-label size until Figma has them.
