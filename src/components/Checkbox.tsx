@@ -1,4 +1,4 @@
-// Checkbox — Figma "Checkbox" (Core components): a 24 circle, empty or filled with a 14 check.
+// Checkbox — Figma "Checkbox" (Core components): a 24 circle, empty or filled with a 14 check drawn with a 2px line.
 // The circle sits inside a 44×44 tap area. VoiceOver reads the label, then "checkbox, checked / not checked".
 // Without onChange it is only the picture, for a row where the whole row is the checkbox (Share · Pick pets).
 
@@ -18,7 +18,7 @@ export function Checkbox({ checked, label, onChange, tone = 'default', className
   const empty = tone === 'waiting' ? 'bg-surface-card ring-[1.5px] ring-inset ring-status-waiting-text' : 'bg-surface-card ring-[1.5px] ring-inset ring-border-control'
   const circle = (
     <span className={`flex size-icon-24 shrink-0 items-center justify-center rounded-full ${checked ? 'bg-accent-primary text-text-on-accent' : empty}`} aria-hidden={onChange ? undefined : true}>
-      {checked && <Icon name="check" size={14} />}
+      {checked && <Icon name="check" size={14} weight={2} />}
     </span>
   )
   if (!onChange) return circle

@@ -69,7 +69,9 @@ const SPARKLE = 'M12 1.5C13.26 7.24 16.76 10.74 22.5 12C16.76 13.26 13.26 16.76 
 
 export type IconName = keyof typeof figma | keyof typeof filled | keyof typeof extra | 'sparkle-ai'
 
-export function Icon({ name, size = 24, className = '' }: { name: IconName; size?: number; className?: string }) {
+/** `weight`: the line thickness in px at the drawn size (default 1.5 on the 24 grid, thinner when the icon is small). */
+export function Icon({ name, size = 24, weight, className = '' }: { name: IconName; size?: number; weight?: number; className?: string }) {
+  const stroke = weight ? (weight * 24) / size : 1.5
   const id = useId().replace(/:/g, '')
   if (name === 'sparkle-ai') {
     return (
@@ -87,7 +89,7 @@ export function Icon({ name, size = 24, className = '' }: { name: IconName; size
   }
   if (name in filled) {
     return (
-      <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden="true">
+      <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={stroke} strokeLinecap="round" strokeLinejoin="round" className={className} aria-hidden="true">
         {filled[name as keyof typeof filled].map(([d, fill]) => (
           <path key={d} d={d} fill={fill ? 'currentColor' : undefined} />
         ))}
@@ -102,7 +104,7 @@ export function Icon({ name, size = 24, className = '' }: { name: IconName; size
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      strokeWidth={1.5}
+      strokeWidth={stroke}
       strokeLinecap="round"
       strokeLinejoin="round"
       className={className}

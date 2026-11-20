@@ -109,6 +109,7 @@ export function sampleData(): AppData {
       { id: 'r15', petId: 'cleo', type: 'document', date: addMonths(t, -4), title: 'Spay surgery discharge', documentId: 'doc-cleo-1' },
       { id: 'r16', petId: 'cleo', type: 'vaccine', date: addMonths(t, -4), title: 'FVRCP and Rabies given' },
       { id: 'r17', petId: 'tank', type: 'note', date: d(-3), title: 'Changed 20% of the water' },
+      { id: 'r18', petId: 'rocky', type: 'health', date: d(-1), time: '09:10', title: 'Rocky threw up', detail: 'once, still eating' },
     ],
     tasks: [
       { id: 't1', petId: 'rocky', kind: 'med', title: 'Ear drops', detail: 'Otomax · 4 drops', date: t, time: '08:00' },
