@@ -15,7 +15,7 @@ Owners forget vaccines, meds and rechecks because the dates live on paper; Smart
    - **Before** — at 9:00 AM, as many days before as set in Settings → Reminders (2 weeks by default), for dated items: vaccines, lab and vet rechecks, insurance.
    - **On the day** — at 9:00 AM for items without a time; at the dose time for meds and visits that have one (e.g. ear drops at 8:00 AM and 8:00 PM).
 5. A toast confirms: "3 reminders set".
-6. Two weeks later, the lock screen shows the reminder. Anna taps it → SmartBoo opens **Schedule** on that day, with the task in **To do**, so she can check it off or see what else is due.
+6. Two weeks later, the lock screen shows the reminder (if SmartBoo is open at that moment, it shows as a banner on top of the app). Anna taps it → SmartBoo opens **Schedule** on that day, with the task in **To do**, so she can check it off or see what else is due.
 7. When a task is checked off, moved or deleted, its reminders are updated; when it's done, they're gone.
 
 Notification copy:
