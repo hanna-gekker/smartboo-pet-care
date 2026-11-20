@@ -1,6 +1,13 @@
 // The shape of SmartBoo's data. Everything lives on the phone until the demo.
 
-export type Species = 'dog' | 'cat' | 'fish' | 'bird' | 'reptile' | 'small mammal' | 'other'
+export const SPECIES = [
+  'dog', 'cat', 'rabbit', 'hamster', 'guinea-pig', 'rat', 'chinchilla', 'ferret', 'hedgehog',
+  'bird', 'parrot', 'fish', 'turtle', 'lizard', 'snake', 'frog', 'other',
+] as const
+export type Species = (typeof SPECIES)[number]
+
+/** Frame colour of a pet (Figma pet/*): the petals around its photo, and its placeholder. */
+export type PetColor = 'ocean' | 'lavender' | 'butter' | 'mint' | 'pink' | 'slate'
 
 export type Pet = {
   id: string
@@ -9,6 +16,8 @@ export type Pet = {
   breed?: string
   birthDate?: string // YYYY-MM-DD
   photo?: string
+  /** Frame colour, picked when the pet is added. Older pets have none and get one by their place in the list. */
+  color?: PetColor
   weightUnit: 'kg' | 'g'
   allergies: string[]
   microchip?: string

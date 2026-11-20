@@ -6,8 +6,8 @@ import { TextField } from '../components/TextField'
 import { StackScreen } from '../components/ui'
 import { newId, petById, useApp } from '../data/useApp'
 import type { Pet, Species } from '../data/types'
+import { SPECIES, speciesLabel } from '../lib/species'
 
-const SPECIES: Species[] = ['dog', 'cat', 'small mammal', 'bird', 'reptile', 'fish', 'other']
 
 /** Add your pet (new) or Edit profile (existing). */
 export function PetForm() {
@@ -70,7 +70,7 @@ export function PetForm() {
           label="Species"
           value={pet.species}
           onChange={(e: ChangeEvent<HTMLSelectElement>) => set({ species: e.target.value as Species })}
-          options={SPECIES.map((s) => ({ value: s, label: s[0].toUpperCase() + s.slice(1) }))}
+          options={SPECIES.map((s) => ({ value: s, label: speciesLabel(s) }))}
         />
         <TextField label="Breed" value={pet.breed ?? ''} onChange={(e) => set({ breed: e.target.value })} placeholder="Labrador Retriever" />
         <TextField label="Date of birth" type="date" value={pet.birthDate ?? ''} onChange={(e) => set({ birthDate: e.target.value })} />

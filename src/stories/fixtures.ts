@@ -17,7 +17,7 @@ export const milo: Pet = { id: 'milo', name: 'Milo', species: 'cat', breed: 'Dom
 export const cleo: Pet = { id: 'cleo', name: 'Cleo', species: 'cat', breed: 'Tabby', birthDate: '2023-02-14', photo: '/pets/cleo.jpg', weightUnit: 'kg', allergies: [] }
 export const tank: Pet = { id: 'tank', name: 'Tank', species: 'fish', breed: 'Clownfish', birthDate: '2024-05-20', photo: '/pets/tank.jpg', weightUnit: 'g', allergies: [] }
 /** A pet without a photo: the avatar shows the first letter. */
-export const bella: Pet = { id: 'bella', name: 'Bella', species: 'dog', breed: 'Golden Retriever', weightUnit: 'kg', allergies: [] }
+export const bella: Pet = { id: 'bella', name: 'Bella', species: 'dog', color: 'butter', breed: 'Golden Retriever', weightUnit: 'kg', allergies: [] }
 
 const noop = () => {}
 export { noop }

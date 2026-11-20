@@ -12,7 +12,7 @@ import { petById, useApp } from '../data/useApp'
 import { useUi } from '../data/useUi'
 import type { Task } from '../data/types'
 import { addDays, formatDay, greeting, relative, today } from '../lib/dates'
-import { petColorAt } from '../lib/petColors'
+import { petColor } from '../lib/petColors'
 import { nextUpMeta, taskMeta, taskPill, taskState } from '../lib/tasks'
 
 const byUrgency = (a: Task, b: Task) => (a.date + (a.time ?? '99')).localeCompare(b.date + (b.time ?? '99'))
@@ -119,9 +119,9 @@ export function Today() {
             )}
           </div>
           <div className="swipe-row flex gap-16 px-24">
-            {pets.map((p, i) => (
+            {pets.map((p) => (
               <button key={p.id} type="button" onClick={() => navigate(`/pets/${p.id}`)} className="press flex w-avatar-80 shrink-0 flex-col items-center gap-8">
-                <PetAvatar pet={p} petals={petColorAt(i)} dueSoon={dueSoon.has(p.id)} />
+                <PetAvatar pet={p} petals={petColor(p, pets)} dueSoon={dueSoon.has(p.id)} />
                 <span className="w-full truncate text-center text-body">{p.name}</span>
               </button>
             ))}
