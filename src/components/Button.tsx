@@ -25,8 +25,8 @@ type ButtonProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'children' | 'o
 
 const variants: Record<ButtonVariant, string> = {
   primary: 'bg-accent-primary text-text-on-accent',
-  // Figma: a soft accent pill (accent/primary-subtle) with an accent/on-subtle label.
-  secondary: 'bg-accent-primary-subtle text-accent-on-subtle',
+  // Figma: a soft accent pill (accent/primary-subtle) with a 1px accent/primary edge inside and an accent/on-subtle label.
+  secondary: 'bg-accent-primary-subtle text-accent-on-subtle ring-1 ring-inset ring-accent-primary',
   // Figma Welcome "Add your pet": a white pill with a 1px accent outline, a black label and an accent icon.
   outline: 'bg-surface-card text-text-primary ring-1 ring-inset ring-accent-primary active:bg-surface-subtle data-[state=pressed]:bg-surface-subtle',
   ghost: 'bg-transparent text-text-primary active:bg-surface-subtle data-[state=pressed]:bg-surface-subtle',
