@@ -23,3 +23,5 @@ export const OverdueDot: Story = { args: { overdue: true } }
 /** The dot on the selected Schedule tab, ringed in the pill color. */
 export const OverdueDotOnSelected: Story = { args: { active: 'schedule', overdue: true } }
 export const Pressed: Story = { parameters: { pseudo: { active: true } } }
+/** Focus on one tab: the ring around it */
+export const Focus: Story = { parameters: { pseudo: { focusVisible: ['a[href="/schedule"]'] } } }

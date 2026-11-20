@@ -270,7 +270,7 @@ Figma: ★ Screens → section "Schedule · unified" (S1 Week, S2 Month, S3 Past
 | Component | Status | Variants and states | Props | Notes |
 |---|---|---|---|---|
 | **Day tile** | **built**, `DayTile.tsx` | default · today · selected · today + selected · pressed · focus · with 0, 1, 2 or more pets | `day`, `label`, `today`, `selected`, `pets`, `onSelect` | 46 × 58 (stretches to its column), radius 16. Default: `surface/card`, 1px `border/card` inside; the number on top (Caption Strong, `text/primary`) in a 22 slot. Today: the number in a 22 `accent/primary` circle, `text/on-accent`. Selected: `accent/primary-subtle` fill + 1px `accent/primary` edge. Under the number up to two 20 pet photos with a 2px ring in the tile's own fill; more than two → one photo + a 20 "+N" badge (`text/secondary` fill, Tab label in `surface/card`, N = pets − 1). A real button with an aria-label like "Wednesday, November 4, today, 3 tasks"; the tap area is the whole tile |
-| **Calendar** | **built**, `Calendar.tsx` (replaces `MonthCalendar.tsx`) | week · month | `view`, `anchor`, `selected`, `today`, `petsByDay`, `countByDay`, `onSelect`, `onPrev`, `onNext` | The month title ("November" + the year in `text/tertiary`, SB/Title), the weekday row (the selected day's column in `text/primary`, Caption Strong) and Day tiles: one row in Week, a 7-column grid in Month with rows 12 apart. Columns 4 apart (Figma 6, no token). ‹ › move by a week or a month: not in Figma, kept so another month can be reached. The old dots and legend are gone |
+| **Calendar** | **built**, `Calendar.tsx` (replaces `MonthCalendar.tsx`) | week · month | `view`, `anchor`, `selected`, `today`, `petsByDay`, `countByDay`, `onSelect`, `onPrev`, `onNext` | The month title ("November" + the year in `text/tertiary`, SB/Title), the weekday row (the selected day's column in `text/primary`, Caption Strong) and Day tiles: one row in Week, a 7-column grid in Month. Days and rows are the same 6 apart (`space/6`, added to Figma for this, Nov 19), as in Figma; the 12 is only between the weekday row and the tiles. Tiles keep their tall 46 × 58 shape (aspect 46:58) and the grid fills the width like the cards: 46 × 58 on 390, about 42 × 53 on 360, 48 × 60 on 402 (iPhone 17 Pro), 52 × 65 on 430. ‹ › move by a week or a month: not in Figma, kept so another month can be reached. The old dots and legend are gone |
 
 The day under the calendar is built from existing parts: the day's title (SB/Title), **To do** (Task rows, "{done} of {total} done"; overdue first, then open, then done; on a past day "Cleo · waiting since Tue 12 PM"), **Happened** (List rows with the pet photo: "Cleo weighs 3.9 kg" · "9:20 AM · −0.3 kg since Nov 10", other records with their own title and detail; records now keep the time they were logged), and on an empty day a Boo hint with a title (`BooHint title="All good."`, "Next: {task} for {pet} {when}."). "Today", "Tomorrow" and "Later this week" sections are gone. Happened has no count (the Figma "2 of 5 done" there is a copy of To do's).
 
@@ -285,3 +285,20 @@ Settled by the audit (§18): no Semibold, radius 16, Month rows 12 apart. Not bu
 | Welcome card | `Welcome.tsx` | Radius 24, padding 24 on every side |
 | Boo colours | `BooFlower.tsx` | The jelly flower uses the Figma Variables `boo/*` (light and dark); the raw `--boo-*` values in `base.css` are gone. In dark the white glow around the face is hidden, as in the Figma dark variant |
 | Day tile (§17) | `DayTile.tsx` | Radius 16 (not 12); Month rows 12 apart. No Semibold anywhere: today and the selected day are marked by their fill, not by weight. Labels use Caption Strong (Medium 13), "+N" uses the Tab label (Medium 11). Empty day: Body Strong / Body S. This settles the deviations listed in §17 |
+
+## 19. States (Nov 19, 2026)
+
+Figma: Design system → section "States" ("States · interactive components", "States · Dark"). No hover on phones.
+
+| State | Rule | Where |
+|---|---|---|
+| Pressed | One step deeper fill. Primary → `accent/on-subtle` (in dark, where it equals `accent/primary`, a darker accent instead: `.pressable-primary` in `base.css`); Secondary and selected tiles → `accent/primary-soft`; Ghost, Outline, Secondary icon button, chips, segments, tabs, list and task rows, tappable cards, day and species tiles → `surface/subtle`. The small shrink (`.press`) stays | `Button`, `IconButton`, `Chip`, `SegmentedControl`, `TabBar`, `TaskRow`, `ListRow`, `Card`, `DayTile`, `SpeciesTile` |
+| Focus | A 2px `accent/primary` ring with a 2px gap; inside the row (radius 24) for rows in a card (`focus-inset`); on the pill's own edge for tab bar items and Week / Month segments (`focus-inside`, with a thin `surface/card` line inside so it shows on a chosen pill too). Fields: their own 2px `accent/primary` border (TextField; the whole Ask Boo field) | everything tappable (§ rule in CLAUDE.md, `scripts/check-focus.mjs`) |
+| Disabled | 40% opacity | all controls |
+| Loading | An 18 spinner in the label colour instead of the label; the button keeps its width and ignores taps | `Button` |
+| Error | The Form field Error variant (rose border, icon, message) | `TextField` |
+
+Task row: the whole row is one checkbox now (a tap anywhere checks it; VoiceOver reads "Clean litter box, Cleo · 12:00 PM, checkbox"); the circle is only the picture.
+
+Shown everywhere: every component in the list above has a story per state in Storybook (Pressed, Focus, Disabled, Loading, Error, Selected / Checked / Waiting / Today where they apply; `Button` and `IconButton` also have an **AllStates** table like the Figma board) and a row on `/components`, light and dark. For `/components`, components take an optional `data-state` ("pressed" / "focus") that only forces the look; screens never pass it. New `disabled` on `Chip`, `ColorSwatches`, `SpeciesTile` and `AskBooInput` (the whole input at 40%, inert).
+

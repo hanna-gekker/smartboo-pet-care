@@ -28,3 +28,32 @@ export const Focus: Story = { parameters: { pseudo: { focusVisible: ['button'] }
 export const Disabled: Story = { args: { disabled: true } }
 export const SecondaryDisabled: Story = { args: { variant: 'secondary', children: 'Add your pet', icon: 'plus', disabled: true } }
 export const Loading: Story = { args: { loading: true, children: 'Save' } }
+export const SecondaryLoading: Story = { args: { variant: 'secondary', loading: true, children: 'Book vet' } }
+export const GhostLoading: Story = { args: { variant: 'ghost', loading: true, children: 'Not now' } }
+export const GhostPressed: Story = { args: { variant: 'ghost', children: 'Not now' }, parameters: { pseudo: { active: true } } }
+
+/** All states, as on the Figma "States" board: variant × size × default · pressed · focus · disabled · loading */
+export const AllStates: Story = {
+  render: () => (
+    <div className="grid grid-cols-[auto_repeat(5,auto)] items-center gap-12 text-caption text-text-secondary">
+      <span />
+      {['Default', 'Pressed', 'Focus', 'Disabled', 'Loading'].map((h) => (
+        <span key={h}>{h}</span>
+      ))}
+      {(['primary', 'secondary', 'ghost', 'outline'] as const).flatMap((variant) =>
+        (['medium', 'large'] as const).map((size) => (
+          <div key={variant + size} className="contents">
+            <span>
+              {variant} · {size}
+            </span>
+            <Button variant={variant} size={size}>Button</Button>
+            <Button variant={variant} size={size} data-state="pressed">Button</Button>
+            <Button variant={variant} size={size} data-state="focus">Button</Button>
+            <Button variant={variant} size={size} disabled>Button</Button>
+            <Button variant={variant} size={size} loading>Button</Button>
+          </div>
+        )),
+      )}
+    </div>
+  ),
+}

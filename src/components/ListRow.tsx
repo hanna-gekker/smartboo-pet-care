@@ -9,6 +9,7 @@ import type { ReactNode } from 'react'
 import type { Pet } from '../data/types'
 import { Icon, type IconName } from './Icon'
 import { PetAvatar } from './PetAvatar'
+import type { ShowState } from './showState'
 
 type ListRowProps = {
   title: ReactNode
@@ -27,9 +28,10 @@ type ListRowProps = {
   trailing?: 'chevron' | { label: string; icon?: IconName }
   href?: string
   onClick?: () => void
+  'data-state'?: ShowState
 }
 
-export function ListRow({ title, subtitle, label, value, icon, pet, emoji, trailing, href, onClick }: ListRowProps) {
+export function ListRow({ title, subtitle, label, value, icon, pet, emoji, trailing, href, onClick, 'data-state': state }: ListRowProps) {
   const content = (
     <>
       {icon && (
@@ -62,13 +64,13 @@ export function ListRow({ title, subtitle, label, value, icon, pet, emoji, trail
   const cls = 'flex w-full min-h-control-56 items-center gap-16 px-24 py-16 focus-inset'
   if (href)
     return (
-      <a href={href} className={`press ${cls} active:bg-surface-subtle`}>
+      <a href={href} data-state={state} className={`press ${cls} active:bg-surface-subtle data-[state=pressed]:bg-surface-subtle`}>
         {content}
       </a>
     )
   if (onClick)
     return (
-      <button type="button" onClick={onClick} className={`press ${cls} active:bg-surface-subtle`}>
+      <button type="button" onClick={onClick} data-state={state} className={`press ${cls} active:bg-surface-subtle data-[state=pressed]:bg-surface-subtle`}>
         {content}
       </button>
     )

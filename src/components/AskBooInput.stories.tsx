@@ -21,3 +21,7 @@ export const WelcomeField: Story = {
   args: { surface: 'canvas', placeholder: 'Tell me about your pet…' },
   decorators: [(Story) => <div className="rounded-24 bg-surface-card p-24"><Story /></div>],
 }
+/** The mic pressed: Primary one step deeper */
+export const MicPressed: Story = { parameters: { pseudo: { active: ['[aria-label="Talk to Boo"]'] } } }
+/** Disabled: the whole input at 40%, no taps */
+export const Disabled: Story = { args: { disabled: true } }

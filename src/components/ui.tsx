@@ -4,6 +4,7 @@
 import type { ReactNode } from 'react'
 import { useNavigate } from 'react-router'
 import { IconButton } from './IconButton'
+import type { ShowState } from './showState'
 
 /** Figma "Section header": a title with an optional action link on the right. */
 export function SectionTitle({ children, action }: { children: ReactNode; action?: ReactNode }) {
@@ -65,7 +66,21 @@ export function StackScreen({
 }
 
 /** Figma "Filter chip": a pill in a swipeable row; the selected one is accent. A tab (filters) or a radio (one answer). */
-export function Chip({ children, active, onClick, role = 'tab' }: { children: ReactNode; active?: boolean; onClick: () => void; role?: 'tab' | 'radio' }) {
+export function Chip({
+  children,
+  active,
+  onClick,
+  role = 'tab',
+  disabled,
+  'data-state': state,
+}: {
+  children: ReactNode
+  active?: boolean
+  onClick: () => void
+  role?: 'tab' | 'radio'
+  disabled?: boolean
+  'data-state'?: ShowState
+}) {
   return (
     <button
       type="button"
@@ -73,7 +88,9 @@ export function Chip({ children, active, onClick, role = 'tab' }: { children: Re
       aria-selected={role === 'tab' ? active : undefined}
       aria-checked={role === 'radio' ? Boolean(active) : undefined}
       onClick={onClick}
-      className={`press min-h-control-44 shrink-0 rounded-full px-16 text-body-s font-medium ${active ? 'bg-accent-primary text-text-on-accent' : 'bg-surface-card text-text-primary ring-1 ring-inset ring-border-control'}`}
+      disabled={disabled}
+      data-state={state}
+      className={`press min-h-control-44 shrink-0 rounded-full px-16 text-body-s font-medium disabled:opacity-40 ${active ? 'pressable-primary bg-accent-primary text-text-on-accent' : 'bg-surface-card text-text-primary ring-1 ring-inset ring-border-control active:bg-surface-subtle data-[state=pressed]:bg-surface-subtle'}`}
     >
       {children}
     </button>

@@ -74,6 +74,7 @@
   --spacing-0: var(--space-0);
   --spacing-2: var(--space-2);
   --spacing-4: var(--space-4);
+  --spacing-6: var(--space-6);
   --spacing-8: var(--space-8);
   --spacing-12: var(--space-12);
   --spacing-16: var(--space-16);
@@ -216,6 +217,22 @@ button {
   outline: 2px solid var(--accent-primary);
   outline-offset: 2px;
 }
+/* A field-like button (Ask Boo input): focus shows as the whole field's 2px accent/primary border, not an outline. */
+.field-focus:focus-visible {
+  outline: none;
+}
+.field-box:has(.field-focus:focus-visible),
+.field-box-focus {
+  box-shadow: inset 0 0 0 2px var(--accent-primary);
+}
+/* Pills inside a capsule (tab bar items, Week / Month segments): the outline sits on the pill's own edge, the size
+   of the button, so it doesn't spill onto its neighbours or the capsule's edge. A 2px surface/card line inside it
+   keeps the ring visible on a filled (chosen) pill too. */
+.focus-inside:focus-visible,
+[data-state="focus"].focus-inside {
+  outline-offset: -2px;
+  box-shadow: inset 0 0 0 4px var(--surface-card);
+}
 /* Rows inside cards: the card clips its corners, so the outline goes inside the row and follows the card's
    rounding (radius/24) instead of being a square box. */
 .focus-inset:focus-visible,
@@ -337,6 +354,27 @@ body:has(.bg-welcome)::before {
 .press:active,
 .press[data-state="pressed"] {
   transform: scale(0.97);
+}
+
+/* Figma "States": a Primary fill pressed goes one step deeper (accent/on-subtle). In dark accent/on-subtle is the same
+   colour as accent/primary, so there it is darkened instead, to keep the press visible. A variable, so the theme
+   selectors stay apart from the :active ones. */
+:root {
+  --pressed-primary: var(--accent-on-subtle);
+}
+:root[data-theme="dark"] {
+  --pressed-primary: color-mix(in srgb, var(--accent-primary) 82%, black);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --pressed-primary: color-mix(in srgb, var(--accent-primary) 82%, black);
+  }
+}
+.pressable-primary:active,
+.pressable-primary[data-state="pressed"],
+.group:active > .pressable-primary,
+.group[data-state="pressed"] > .pressable-primary {
+  background-color: var(--pressed-primary);
 }
 
 @keyframes sheet-in {

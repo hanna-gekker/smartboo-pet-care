@@ -27,7 +27,8 @@ type SelectProps = Common &
   }
 
 const box = {
-  default: 'bg-surface-card ring-1 ring-border-control focus-within:ring-2 focus-within:ring-text-primary data-[state=focus]:ring-2 data-[state=focus]:ring-text-primary',
+  // Figma "States": a focused field gets its own 2px accent/primary border
+  default: 'bg-surface-card ring-1 ring-border-control focus-within:ring-2 focus-within:ring-accent-primary data-[state=focus]:ring-2 data-[state=focus]:ring-accent-primary',
   check: 'bg-status-check-bg ring-1 ring-status-check-border focus-within:ring-2',
   error: 'bg-surface-card ring-2 ring-status-error-border',
 }
