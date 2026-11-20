@@ -1,0 +1,121 @@
+// Reminders as iOS local notifications (docs/features/reminders.md).
+// Which tasks get reminders and what they say is worked out here, in plain code (planReminders); the plugin only
+// shows them. The whole list is rebuilt whenever tasks, pets or settings change, so a task that is done, moved or
+// deleted never leaves a stale reminder. In the browser there are no notifications: nothing is scheduled and
+// nothing breaks.
+
+import { Capacitor } from '@capacitor/core'
+import { LocalNotifications } from '@capacitor/local-notifications'
+import type { Pet, Task, TaskKind } from '../data/types'
+import { addDays, formatDay, formatTime, fromDay } from './dates'
+
+export type Permission = 'granted' | 'denied' | 'prompt'
+
+export type PlannedReminder = {
+  /** iOS needs a number; ids are given in time order. */
+  id: number
+  title: string
+  body: string
+  at: Date
+  /** The task's day: tapping the reminder opens Schedule there. */
+  day: string
+}
+
+/** Dated things get a reminder some days before; meds only on the day, at their time. Chores get none. */
+const BEFORE: TaskKind[] = ['vaccine', 'lab', 'vet', 'insurance']
+const MORNING = '09:00'
+/** iOS keeps at most 64 pending local notifications per app; the soonest ones win. */
+const LIMIT = 60
+
+export const isNative = () => Capacitor.isNativePlatform()
+
+/** "in 3 days", "in 1 week", "in 2 weeks", "in 1 month" (Settings → Reminders). */
+export function spanLabel(days: number): string {
+  if (days === 30) return 'in 1 month'
+  if (days % 7 === 0) return `in ${days / 7} week${days === 7 ? '' : 's'}`
+  return `in ${days} day${days === 1 ? '' : 's'}`
+}
+
+const at = (day: string, time: string) => {
+  const d = fromDay(day)
+  const [h, m] = time.split(':').map(Number)
+  d.setHours(h, m, 0, 0)
+  return d
+}
+/** "Rabies booster" → "rabies booster" after a name; a product name like "Revolution Plus" keeps its capitals. */
+const lower = (s: string) => (/[A-Z]/.test(s.slice(1)) ? s : s[0].toLowerCase() + s.slice(1))
+
+/** Every reminder the open tasks should have right now, soonest first. */
+export function planReminders(tasks: Task[], pets: Pet[], daysBefore: number, now = new Date()): PlannedReminder[] {
+  const out: Omit<PlannedReminder, 'id'>[] = []
+  for (const t of tasks) {
+    if (t.doneAt || t.kind === 'chore') continue
+    const pet = pets.find((p) => p.id === t.petId)
+    if (!pet) continue
+    const what = t.kind === 'insurance' ? t.title : `${pet.name}'s ${lower(t.title)}`
+    const due = formatDay(t.date, { weekday: 'short', month: 'short', day: 'numeric' })
+
+    if (BEFORE.includes(t.kind)) {
+      out.push({
+        title: t.kind === 'insurance' ? `${t.title} · ${spanLabel(daysBefore)}` : `${what} is ${spanLabel(daysBefore)}`,
+        body:
+          t.kind === 'vaccine'
+            ? `Due ${due}. Book the vet or snap the new certificate.`
+            : t.kind === 'insurance'
+              ? `For ${pet.name} · due ${due}.`
+              : `Due ${due}. Tap to see ${pet.name}'s day.`,
+        at: at(addDays(t.date, -daysBefore), MORNING),
+        day: t.date,
+      })
+    }
+
+    if (t.time && t.kind === 'med') {
+      out.push({ title: `Time for ${pet.name}'s ${lower(t.title)}`, body: t.detail ?? `Tap to see ${pet.name}'s day.`, at: at(t.date, t.time), day: t.date })
+    } else if (t.time) {
+      out.push({ title: `Today at ${formatTime(t.time)}: ${what}`, body: t.detail ?? `Tap to see ${pet.name}'s day.`, at: at(t.date, t.time), day: t.date })
+    } else {
+      out.push({ title: `Today: ${what}`, body: `Due today. Tap to see ${pet.name}'s day.`, at: at(t.date, MORNING), day: t.date })
+    }
+  }
+  return out
+    .filter((r) => r.at > now)
+    .sort((a, b) => a.at.getTime() - b.at.getTime())
+    .slice(0, LIMIT)
+    .map((r, i) => ({ ...r, id: i + 1 }))
+}
+
+/** Asks nothing: what the person already chose. Always 'granted' in the browser, so the flow can be tried there. */
+export async function checkPermission(): Promise<Permission> {
+  if (!isNative()) return 'granted'
+  const { display } = await LocalNotifications.checkPermissions()
+  return display === 'granted' ? 'granted' : display === 'denied' ? 'denied' : 'prompt'
+}
+
+/** Shows the iOS permission alert (only the first time; after that iOS answers with the saved choice). */
+export async function askPermission(): Promise<Permission> {
+  if (!isNative()) return 'granted'
+  const { display } = await LocalNotifications.requestPermissions()
+  return display === 'granted' ? 'granted' : display === 'denied' ? 'denied' : 'prompt'
+}
+
+/** Replaces all pending reminders with the plan. Never asks for permission: without it, schedules nothing.
+ *  Returns how many reminders are set (in the browser: how many would be). */
+export async function syncReminders(tasks: Task[], pets: Pet[], daysBefore: number): Promise<number> {
+  const plan = planReminders(tasks, pets, daysBefore)
+  if (!isNative()) return plan.length
+  if ((await checkPermission()) !== 'granted') return 0
+  const { notifications } = await LocalNotifications.getPending()
+  if (notifications.length) await LocalNotifications.cancel({ notifications: notifications.map((n) => ({ id: n.id })) })
+  if (plan.length) {
+    await LocalNotifications.schedule({
+      notifications: plan.map((r) => ({ id: r.id, title: r.title, body: r.body, schedule: { at: r.at, allowWhileIdle: true }, extra: { day: r.day } })),
+    })
+  }
+  return plan.length
+}
+
+/** How many reminders iOS is holding right now. */
+export async function pendingCount(): Promise<number> {
+  if (!isNative()) return 0
+  return (await LocalNotifications.getPending()).notifications.length
+}

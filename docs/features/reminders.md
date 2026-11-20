@@ -24,7 +24,9 @@ Notification copy:
 |---|---|---|
 | Before (vaccine, lab, vet, insurance) | Rocky's rabies booster is in 2 weeks | Due Wed, Dec 9. Book the vet or snap the new certificate. |
 | On the day, no time | Today: Rocky's rabies booster | Due today. Tap to see Rocky's day. |
-| On the day, with a time (meds, visits) | Time for Rocky's ear drops | Otomax · 4 drops |
+| On the day, a med with a time | Time for Rocky's ear drops | Otomax · 4 drops |
+| On the day, a visit with a time | Today at 10:30 AM: Rocky's ear recheck | Bayside Animal Clinic |
+| Insurance, before | Submit the ear-visit claim · in 2 weeks | For Rocky · due Wed, Dec 9. |
 
 "2 weeks" follows the Settings value ("in 3 days", "in 1 week", "in 1 month"). The title uses the task title; the body adds the detail when there is one.
 
