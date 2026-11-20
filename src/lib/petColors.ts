@@ -11,7 +11,7 @@ const ORDER: PetColor[] = ['ocean', 'lavender', 'butter', 'mint', 'pink', 'slate
 export const petColorAt = (index: number): PetColor => ORDER[index % ORDER.length]
 
 /** Each species' own colour in Figma. */
-const SPECIES_COLOR: Record<Species, PetColor> = {
+export const SPECIES_COLOR: Record<Species, PetColor> = {
   dog: 'ocean', cat: 'pink', rabbit: 'lavender', hamster: 'butter', 'guinea-pig': 'butter', rat: 'lavender',
   chinchilla: 'ocean', ferret: 'pink', hedgehog: 'butter', bird: 'mint', parrot: 'mint', fish: 'ocean',
   turtle: 'mint', lizard: 'mint', snake: 'lavender', frog: 'mint', other: 'ocean',

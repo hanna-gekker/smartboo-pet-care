@@ -9,6 +9,8 @@ export type Species = (typeof SPECIES)[number]
 /** Frame colour of a pet (Figma pet/*): the petals around its photo, and its placeholder. */
 export type PetColor = 'ocean' | 'lavender' | 'butter' | 'mint' | 'pink' | 'slate'
 
+export type WeightUnit = 'kg' | 'lb' | 'g' | 'oz'
+
 export type Pet = {
   id: string
   name: string
@@ -18,7 +20,8 @@ export type Pet = {
   photo?: string
   /** Frame colour, picked when the pet is added. Older pets have none and get one by their place in the list. */
   color?: PetColor
-  weightUnit: 'kg' | 'g'
+  /** lb / kg for larger pets, g / oz for small ones. */
+  weightUnit: WeightUnit
   allergies: string[]
   microchip?: string
   insurance?: string

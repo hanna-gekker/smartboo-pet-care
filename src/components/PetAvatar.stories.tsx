@@ -71,3 +71,12 @@ export const Petals: Story = {
 export const DueSoon: Story = { args: { size: 'xl', petals: 'ocean', dueSoon: true } }
 /** The white ring on Next up. */
 export const Outlined: Story = { args: { size: 'lg', outlined: true } }
+/** Add your pet, step 2: the 128 flower with the add-photo badge; and the 112 flower on the "all set" card. */
+export const FlowerHero: Story = {
+  render: (args) => (
+    <div className="flex items-center gap-24">
+      <PetAvatar {...args} pet={bella} size="hero" petals="pink" onAddPhoto={() => {}} />
+      <PetAvatar {...args} pet={bella} size="card" petals="butter" />
+    </div>
+  ),
+}

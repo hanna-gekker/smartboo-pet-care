@@ -230,7 +230,7 @@ Everything follows the current Figma "★ Screens" and the Design system page; t
 | Icon chips | `ListRow.tsx`, Pet folder history (`.chip-category`, `.chip-status` in `base.css`) | 40 circles with a diagonal `icon/category-chip-*` (or `icon/status-chip-*`) gradient, a 1px border inside and a white icon. Only for meaning icons; actions stay neutral |
 | Boo card (Today) | `Today.tsx` | `ai/card-*` gradient with a white wash from the top left, `border/ai-card` hairline |
 | Filter chip | `ui.tsx` (`Chip`) | Selected = `accent/primary` with `text/on-accent`; default = white with a `border/control` outline |
-| BooFlower (new) | `BooFlower.tsx` | Boo's "jelly flower" drawing (Figma "Boo · Jelly flower", face G8): eight glossy petals, a soft core, round eyes with two glints, a smile and blush. Used by BooCharacter and the Logo mark. Its colours are `--boo-*` in `base.css` (light and dark), not Figma Variables yet |
+| BooFlower (new) | `BooFlower.tsx` | Boo's "jelly flower" drawing (Figma "Boo · Jelly flower", face G8): eight glossy petals, a soft core, round eyes with two glints, a smile and blush. Used by BooCharacter and the Logo mark. Its colours are the Figma Variables `boo/*` (light and dark) |
 | Boo / Character | `BooCharacter.tsx` | Idle: the petals sway ±8° and the eye glints look the same way (~6 s loop), a blink at a random moment every 3–5 s (sometimes twice). No breathing. Reduced motion: only the blink. Listening unchanged. Glow and halos from `ai/glow`, `ai/halo` |
 | Logo | `Logo.tsx` | The mark is the jelly flower (still) |
 | Welcome | `Welcome.tsx` | Talk-first: Boo on a calm glow with sparkles, a white card with the title, "Just hand it to Boo.", the Ask Boo field and "Add your pet" (Outline); the "isn't a vet" note at the bottom. The Reminder glass card, "Tap Boo to talk", "Snap a vet paper" and the "stays on this phone" note are gone |
@@ -243,19 +243,23 @@ Decisions (Nov 19, 2026):
 - `GlassCard` and `TapHint` are no longer used on screens; they stay in Storybook for now.
 - Pet folder keeps its current layout with the new look. The Figma layout (Attention card, Health list, "Share records" under the name) is a separate step.
 
-## 16. Pet photo placeholders and step-by-step Add your pet (proposed, Nov 19, 2026)
+## 16. Pet photo placeholders and step-by-step Add your pet (built, Nov 19, 2026)
 
-Figma: page "✏️ Drafts" → "Pet avatars · final" (557:135773, section "Pet placeholders") and page "★ Screens" → section "Add your pet · step by step" (A1–A6 dog, A3h/A5h/A6h hamster, A3f/A6f fish). Waiting for approval before code.
+Figma: page "✏️ Drafts" → "Pet avatars · final" (557:135773, section "Pet placeholders") and page "★ Screens" → section "Add your pet · step by step" (A1–A6 dog, A3h/A5h/A6h hamster, A3f/A6f fish). Screen: `AddPet.tsx` at `/pets/new`; `PetForm.tsx` now only edits a profile.
 
 | Component | Status | Variants and states | Props | Notes |
 |---|---|---|---|---|
 | **Pet avatar · placeholder** | **built** (`PetAvatar.tsx`, `PetPlaceholder.tsx`, drawings in `petAnimals.ts`); new size `tiny` (20) | 17 species (`other` = paw) · large (flower frame) and ≤24 (plain circle) · Pet hero with an "add photo" badge | `pet` (no photo → placeholder by `pet.species`), `size`, `petals`; hero: `onAddPhoto` | Large: the flower in the pet's frame colour; inner circle = the pet colour with a deeper shade and a soft white top light at 75%; the animal in `pet/animal` (white; off-white in dark) with eyes, nose and smile in `pet/animal-eye`, ≈117% of the circle, clipped. ≤24: plain circle with a 1.5px `surface/card` ring, white silhouette without a face. Hero badge: 32, `surface/card` + `border/card` + card shadow, camera 18, at 45° bottom right with its centre 0.45 × the avatar size from the avatar centre along the diagonal (Figma: 58 on a 128 flower), tap area ≥44. All frame colours of one species taken → a 22 initial badge (`surface/card`, `text/primary`, `border/card`). The drawing is decorative (`aria-hidden`); alone it reads "<Name>, no photo". The 17 drawings come from the Figma SVG export, as paths in `src/components/petAnimals.ts` |
-| **Species tile** | new, `SpeciesTile.tsx` | default · selected · pressed · focus | `species`, `label`, `selected`, `onSelect` | `surface/card`, 1px `border/card`, radius 16, ~84 high: the placeholder flower 48 and the label (SB/Caption, `text/secondary`). Selected: `accent/primary-subtle` fill + 1px `accent/primary` edge, label `text/primary`. A radio in a radio group ("Species"), tap area ≥44 |
-| **Step bar** | new, `StepBar.tsx` | — | `steps`, `current` | One segment per step, 4 high, radius 2, gap 6; done and current = `accent/primary`, the rest `border/card`. VoiceOver reads "Step 2 of 5" |
+| **Species tile** | **built**, `SpeciesTile.tsx` | default · selected · pressed · focus | `species`, `label`, `selected`, `onSelect` | `surface/card`, 1px `border/card`, radius 16, ~84 high: the placeholder flower 48 and the label (SB/Caption, `text/secondary`). Selected: `accent/primary-subtle` fill + 1px `accent/primary` edge, label `text/primary`. A radio in a radio group ("Species"), tap area ≥44 |
+| **Step bar** | **built**, `StepBar.tsx` | — | `steps`, `current` | One segment per step, 4 high, round ends, gap 8 (Figma 6, no token); done and current = `accent/primary`, the rest `border/card`. VoiceOver reads "Step 2 of 5" |
+| **Colour swatch** | **built**, `ColorSwatches.tsx` | default · selected · pressed · focus | `label`, `value`, `onChange` | The six `pet/*` colours as 32 circles in a radio group (44 tap area each); the chosen one has a 2px `accent/primary` ring with a gap. Figma's "no colour" swatch is left out: every pet has a frame colour |
+| **Boo hint** | **built**, `BooHint.tsx` | with or without actions | `children` (the text), `actions` | A Card with the mini Boo (44), the question (SB/Body) and up to two buttons under it (Primary + Ghost) |
 
-Also used, already built: Nav bar (`StackScreen`), Form field (`TextField`), Filter chip (`Chip`), Checkbox, Button, Colour swatch, Boo hint.
+Also used: Nav bar (`StackScreen`, new props `onBack` for a step back inside a flow, `back={false}`, and `footer` for buttons pinned to the bottom), Form field (`TextField`), Filter chip (`Chip`, new `role="radio"` for one answer: breed, unit), Checkbox, Button, Pet avatar (the flower now takes any size: 48 in the Species tile, 128 on step 2 with the add-photo badge, 112 on the "all set" card).
 
-Data (built): `Species` is the 17 species above (stored `reptile` → `lizard`, `small mammal` → `hamster`). Each pet stores its frame colour (`color`); older pets get the colour they already showed. A new pet gets its species' Figma colour if no pet of that species has it, else a free one (`pickPetColor`). Weight units: lb / kg for larger pets, g / oz for small mammals, birds and reptiles; fish have none.
+Gaps in Figma: popular breed lists exist only for dogs, hamsters and fish. Other species get the breed field and "I'm not sure" until Figma has their lists. Links on the grey canvas ("Add a photo", "Skip", "Or just tell Boo") use `accent/on-subtle`: `accent/primary` on `surface/canvas` is 4.4:1.
+
+Data (built): weight units are `lb` / `kg` / `g` / `oz` (`src/lib/weight.ts`). `Species` is the 17 species above (stored `reptile` → `lizard`, `small mammal` → `hamster`). Each pet stores its frame colour (`color`); older pets get the colour they already showed. A new pet gets its species' Figma colour if no pet of that species has it, else a free one (`pickPetColor`). Weight units: lb / kg for larger pets, g / oz for small mammals, birds and reptiles; fish have none.
 
 Colours: the placeholder's deeper inner circle uses the role tokens `pet/<colour>-deep` (ocean, lavender, pink, mint, slate) and `pet/butter-deep → pet/butter-deep-end` (a gradient for butter); in dark all `pet/*` colours are muted (photo frame petals too, on purpose).
 
@@ -270,3 +274,13 @@ Figma: ★ Screens → section "Schedule · unified" (S1 Week, S2 Month, S3 Past
 The day under the calendar is built from existing parts: Section header, Card, Task row (To do), List row with a pet photo (Happened), Boo (empty day).
 
 Deviations to confirm: Figma uses Semibold for today's and the selected number and a 10px "+N"; there is no Semibold weight or 10px size token, so code uses Medium and the 11 tab-label size until Figma has them.
+
+## 18. Design system audit (Nov 19, 2026)
+
+| Component | File | What changes |
+|---|---|---|
+| Button · Secondary | `Button.tsx` | Adds a 1px `accent/primary` edge inside, in every size and state (still the soft `accent/primary-subtle` fill with an `accent/on-subtle` label) |
+| Ask Boo input | `AskBooInput.tsx` | One layout, two surfaces (`surface` prop): `card` = a white `surface/card` field (on the Boo card, Today); `canvas` = a grey `surface/canvas` field (on a white card, Welcome). Both: a 1px `border/card` edge, 8 inside on the top, right and bottom; the placeholder takes the free width; the camera is a Soft 40 inside (`accent/primary-subtle`, accent icon, no edge); the mic is a Primary 56 outside on the right, gap 8, centred. Replaces `variant="row" \| "field"`. Figma's 20 on the left becomes 24 (no 20 token) |
+| Welcome card | `Welcome.tsx` | Radius 24, padding 24 on every side |
+| Boo colours | `BooFlower.tsx` | The jelly flower uses the Figma Variables `boo/*` (light and dark); the raw `--boo-*` values in `base.css` are gone. In dark the white glow around the face is hidden, as in the Figma dark variant |
+| Day tile (§17) | `DayTile.tsx` | Radius 16 (not 12); Month rows 12 apart. No Semibold anywhere: today and the selected day are marked by their fill, not by weight. Labels use Caption Strong (Medium 13), "+N" uses the Tab label (Medium 11). Empty day: Body Strong / Body S. This settles the deviations listed in §17 |

@@ -10,7 +10,7 @@ import { petColorAt, type PetColor } from '../lib/petColors'
 import { Icon } from './Icon'
 import { PetPlaceholder } from './PetPlaceholder'
 
-export type AvatarSize = 'tiny' | 'sm' | 'md' | 'lg' | 'xl' | 'hero'
+export type AvatarSize = 'tiny' | 'sm' | 'md' | 'lg' | 'xl' | 'hero' | 'card'
 
 const sizes: Record<AvatarSize, { box: string; letter: string }> = {
   tiny: { box: 'size-icon-20', letter: 'text-tab-label' }, // Calendar day tiles
@@ -18,7 +18,8 @@ const sizes: Record<AvatarSize, { box: string; letter: string }> = {
   md: { box: 'size-avatar-48', letter: 'text-title' }, // List row (Pets list)
   lg: { box: 'size-avatar-72', letter: 'text-display' }, // Next up
   xl: { box: 'size-avatar-80', letter: 'text-display' }, // Your pack
-  hero: { box: 'size-avatar-128', letter: 'text-display' }, // Pet folder, Edit profile
+  hero: { box: 'size-avatar-128', letter: 'text-display' }, // Pet folder, Edit profile, Add your pet
+  card: { box: 'size-[112px]', letter: 'text-display' }, // Add your pet: the "all set" card (Figma 112, no token)
 }
 
 const petals: Record<PetColor, string> = {
@@ -38,7 +39,7 @@ type PetAvatarProps = {
   dueSoon?: boolean
   /** A white ring around the photo (Next up). */
   outlined?: boolean
-  /** The Figma flower around the photo, in this color (80 only). */
+  /** The Figma flower around the photo, in this color. 80 unless a size is given (Species tile 48, Add your pet 128 / 112). */
   petals?: PetColor
   /** The pet's frame colour, for the placeholder (defaults to the petals colour, then the pet's own). */
   color?: PetColor
@@ -72,14 +73,33 @@ function Initial({ pet }: { pet?: Pet }) {
   )
 }
 
-export function PetAvatar({ pet, size = 'sm', dueSoon, outlined, petals: flower, color, onAddPhoto, initial, label }: PetAvatarProps) {
+/** Hero "add photo" badge. */
+function AddPhoto({ pet, onClick }: { pet?: Pet; onClick: () => void }) {
+  return (
+    // Figma: a 32 badge at 45° bottom right, its centre 0.45 × size from the avatar centre along the diagonal (58 on a 128);
+    // the tap area around it is 44
+    <button
+      type="button"
+      aria-label={`Add a photo of ${pet?.name ?? 'your pet'}`}
+      onClick={onClick}
+      className="press absolute top-[calc(82%-22px)] left-[calc(82%-22px)] flex size-control-44 items-center justify-center rounded-full"
+    >
+      <span className="shadow-card flex size-control-32 items-center justify-center rounded-full bg-surface-card text-text-primary ring-1 ring-border-card ring-inset">
+        <Icon name="camera" size={18} />
+      </span>
+    </button>
+  )
+}
+
+export function PetAvatar({ pet, size, dueSoon, outlined, petals: flower, color, onAddPhoto, initial, label }: PetAvatarProps) {
   const c = color ?? flower ?? pet?.color ?? petColorAt(0)
-  const a11y = label && pet ? { role: 'img', 'aria-label': pet.photo ? pet.name : `${pet.name}, no photo` } : { 'aria-hidden': true as const }
+  // Decorative unless it stands alone; never hide the add-photo button from VoiceOver.
+  const a11y = label && pet ? { role: 'img', 'aria-label': pet.photo ? pet.name : `${pet.name}, no photo` } : onAddPhoto ? {} : { 'aria-hidden': true as const }
   if (flower) {
     // Figma: petals at (1,1), photo 58 at (11,11) with a 2px white ring, due dot 14 at (60,6) — all in one 80 box.
     const clip = `petals-${pet?.id ?? 'none'}`
     return (
-      <span className="relative inline-block size-avatar-80 shrink-0" {...a11y}>
+      <span className={`relative inline-block shrink-0 ${size ? sizes[size].box : 'size-avatar-80'}`} {...a11y}>
         <svg viewBox="0 0 80 80" className="size-full">
           <defs>
             <clipPath id={clip}>
@@ -98,10 +118,11 @@ export function PetAvatar({ pet, size = 'sm', dueSoon, outlined, petals: flower,
           {dueSoon && <circle cx="67" cy="13" r="7" strokeWidth="2.5" style={{ fill: 'var(--status-waiting-dot)', stroke: 'var(--surface-card)' }} />}
         </svg>
         {initial && <Initial pet={pet} />}
+        {onAddPhoto && <AddPhoto pet={pet} onClick={onAddPhoto} />}
       </span>
     )
   }
-  const s = sizes[size]
+  const s = sizes[size ?? 'sm']
   const small = size === 'tiny'
   return (
     <span
@@ -111,20 +132,7 @@ export function PetAvatar({ pet, size = 'sm', dueSoon, outlined, petals: flower,
       <Photo pet={pet} color={c} small={small} />
       {dueSoon && <span className="absolute top-0 right-0 size-12 rounded-full border-2 border-surface-card bg-status-waiting-dot" />}
       {initial && <Initial pet={pet} />}
-      {onAddPhoto && (
-        // Figma: a 32 badge at 45° bottom right, its centre 0.45 × size from the avatar centre along the diagonal (58 on a 128);
-        // the tap area around it is 44
-        <button
-          type="button"
-          aria-label={`Add a photo of ${pet?.name ?? 'your pet'}`}
-          onClick={onAddPhoto}
-          className="press absolute top-[calc(82%-22px)] left-[calc(82%-22px)] flex size-control-44 items-center justify-center rounded-full"
-        >
-          <span className="shadow-card flex size-control-32 items-center justify-center rounded-full bg-surface-card text-text-primary ring-1 ring-border-card ring-inset">
-            <Icon name="camera" size={18} />
-          </span>
-        </button>
-      )}
+      {onAddPhoto && <AddPhoto pet={pet} onClick={onAddPhoto} />}
     </span>
   )
 }
