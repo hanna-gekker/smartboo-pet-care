@@ -7,6 +7,7 @@ import { useApp } from './data/useApp'
 import { useUi } from './data/useUi'
 import { taskState } from './lib/tasks'
 import { PetFolder } from './screens/PetFolder'
+import { AddPet } from './screens/AddPet'
 import { PetForm } from './screens/PetForm'
 import { PetList } from './screens/PetList'
 import { Schedule } from './screens/Schedule'
@@ -76,7 +77,7 @@ const router = createBrowserRouter([
       { path: '/', element: <Today /> },
       { path: '/schedule', element: <Schedule /> },
       { path: '/pets', element: <PetList /> },
-      { path: '/pets/new', element: <PetForm /> },
+      { path: '/pets/new', element: <AddPet /> },
       { path: '/pets/:id', element: <PetFolder /> },
       { path: '/pets/:id/edit', element: <PetForm /> },
       { path: '/share', element: <Share /> },

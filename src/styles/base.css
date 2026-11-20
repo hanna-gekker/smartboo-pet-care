@@ -383,50 +383,13 @@ body:has(.bg-welcome)::before {
 @keyframes boo-listen-core { from { transform: scale(0.976); } to { transform: scale(0.905); } }
 @keyframes boo-listen-glow { from { transform: scale(1.15); } to { transform: scale(1.3); } }
 
-/* Boo's palette (Figma "Boo · Jelly flower"). These colours are not Figma Variables yet;
-   they live here, in one place, until they are. Light, then dark. */
-:root {
-  --boo-petal-1: #C9DAFF;
-  --boo-petal-2: #8FAAF5;
-  --boo-petal-3: #5470E3;
-  --boo-petal-4: #4F62CC;
-  --boo-rim: #BFD0FF;
-  --boo-gloss: #FFFFFF;
-  --boo-core-1: #F6F9FF;
-  --boo-core-2: #C4D8FD;
-  --boo-core-3: #7DA0F3;
-  --boo-core-4: #7E92F1;
-  --boo-face-glow-1: #FFFFFFF2;
-  --boo-face-glow-2: #EDF5FFB3;
-  --boo-face-glow-3: #D3E2FF;
-  --boo-ink: #241B33;
-  --boo-blush: #FF8FB0;
-  --boo-shadow: #26306A;
-}
-:root[data-theme="dark"] {
-  --boo-petal-1: #8FA6F2;
-  --boo-petal-2: #5E78E0;
-  --boo-petal-3: #3F52B8;
-  --boo-petal-4: #34449E;
-  --boo-core-1: #D3DDFC;
-  --boo-core-2: #B3C3F6;
-  --boo-core-3: #8098EA;
-  --boo-core-4: #7086E0;
-  --boo-face-glow-1: #FFFFFF00;
-  --boo-face-glow-2: #FFFFFF00;
+/* Boo's colours are the Figma Variables boo/* (tokens.css). In dark the white glow around the face is off, as in Figma. */
+:root[data-theme="dark"] .boo-face-glow {
+  display: none;
 }
 @media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --boo-petal-1: #8FA6F2;
-    --boo-petal-2: #5E78E0;
-    --boo-petal-3: #3F52B8;
-    --boo-petal-4: #34449E;
-    --boo-core-1: #D3DDFC;
-    --boo-core-2: #B3C3F6;
-    --boo-core-3: #8098EA;
-    --boo-core-4: #7086E0;
-    --boo-face-glow-1: #FFFFFF00;
-    --boo-face-glow-2: #FFFFFF00;
+  :root:not([data-theme="light"]) .boo-face-glow {
+    display: none;
   }
 }
 

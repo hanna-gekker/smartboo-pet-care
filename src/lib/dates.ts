@@ -71,6 +71,15 @@ export function age(birthDate?: string): string {
   return `${years} yr${years > 1 ? 's' : ''}`
 }
 
+/** Long age, as on the "all set" card: "7 years", "1 year", "5 months". */
+export function ageLong(birthDate?: string): string {
+  if (!birthDate) return ''
+  const months = Math.floor(daysBetween(birthDate, today()) / 30.44)
+  if (months < 12) return `${months} month${months === 1 ? '' : 's'}`
+  const years = Math.floor(months / 12)
+  return `${years} year${years === 1 ? '' : 's'}`
+}
+
 /** Short age, as in the Pets list: "7 y", "5 mo". */
 export function ageShort(birthDate?: string): string {
   if (!birthDate) return ''

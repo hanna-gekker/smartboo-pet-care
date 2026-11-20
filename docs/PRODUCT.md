@@ -50,7 +50,7 @@ One question per screen. A nav bar ("Add your pet", back), a step bar under it, 
 3. **"Do you know the breed?"** / "Optional. You can change it later." — a breed search ("Search breeds") and popular choices for the species (for fish: "What kind of fish?"), each list ending with "I'm not sure". Skip + "Next".
 4. **"When was {Name} born?"** — "Date of birth", or "I don't know the exact date" ("If unsure, Boo asks for an approximate age instead."). "Next".
 5. **"How much does {Name} weigh?"** / "Optional. Helps Boo track changes." — lb or kg for dogs, cats and other larger pets; g or oz for small mammals, birds and reptiles ("Optional. Small pets are weighed in grams."). Fish have no weight step: their flow has 4 steps and step 4 saves the pet. Skip + "Save pet".
-6. **"{Name} is all set"** — the pet's card (photo or placeholder, name, "Dog · Beagle · 7 years · 24.6 lb"). For species that get vaccines, a Boo hint: "I don't know {Name}'s shots yet. Snap the last vet paper?" [Snap a vet paper] [Not now]. No back button. "Done".
+6. **"{Name} is all set"** — the pet's card: photo or placeholder, name, species, then a row of what was filled in: "Breed", "Age", "Weight" (for fish "Type", "Age"); skipped answers are left out. For species that get vaccines, a Boo hint: "I don't know {Name}'s shots yet. Snap the last vet paper?" [Snap a vet paper] [Not now]. No back button. "Done".
 
 A pet without a photo shows a drawing of its species in its frame colour, the same on every screen. A new pet gets a frame colour that no other pet of the same species uses; when all are taken, a small initial badge tells them apart.
 

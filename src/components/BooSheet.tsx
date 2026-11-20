@@ -8,6 +8,7 @@ import { useUi } from '../data/useUi'
 import type { Pet, PetRecord, Task, Vaccine } from '../data/types'
 import { readPaper, understand, type BooResult, type ParsedPaper } from '../lib/boo'
 import { addDays, formatDay, today } from '../lib/dates'
+import { convertWeight } from '../lib/weight'
 import { BottomSheet } from './BottomSheet'
 import { BooCharacter } from './BooCharacter'
 import { Button } from './Button'
@@ -83,7 +84,7 @@ function StepView({ step, setStep, text, setText }: { step: Step; setStep: (s: S
     const id = newId('rec')
     if (result.kind === 'weight') {
       const last = app.records.filter((r) => r.petId === pet.id && r.type === 'weight').sort((a, b) => b.date.localeCompare(a.date))[0]
-      const value = result.unit === pet.weightUnit ? result.value : result.unit === 'g' ? result.value / 1000 : result.value * 1000
+      const value = convertWeight(result.value, result.unit, pet.weightUnit)
       app.addRecord({ id, petId: pet.id, type: 'weight', date: today(), title: 'Weight', value })
       const diff = last?.value !== undefined ? Math.round((value - last.value) * 10) / 10 : undefined
       const change = diff === undefined ? '' : diff === 0 ? ' · same as last time' : ` · ${diff > 0 ? '+' : '−'}${Math.abs(diff)} ${pet.weightUnit} since ${formatDay(last.date)}`

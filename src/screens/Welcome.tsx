@@ -45,7 +45,7 @@ export function Welcome() {
             <BooCharacter size={275} className="absolute -top-[22px] -left-[14px]" />
           </button>
 
-          <section className="shadow-card flex w-full max-w-420 flex-col gap-24 rounded-24 bg-surface-card px-24 pt-32 pb-24 text-center ring-1 ring-inset ring-border-card">
+          <section className="shadow-card flex w-full max-w-420 flex-col gap-24 rounded-24 bg-surface-card p-24 text-center ring-1 ring-inset ring-border-card">
             <div className="flex flex-col gap-8">
               <h1 className="font-display text-display font-medium">
                 {/* Line breaks as in Figma */}
@@ -58,7 +58,7 @@ export function Welcome() {
               <p className="text-body-l text-text-secondary">Just hand it to Boo.</p>
             </div>
             <div className="flex flex-col gap-12">
-              <AskBooInput variant="field" placeholder="Tell me about your pet…" onType={() => openBoo('type')} onSnap={() => openBoo('snap')} onTalk={talk} />
+              <AskBooInput surface="canvas" placeholder="Tell me about your pet…" onType={() => openBoo('type')} onSnap={() => openBoo('snap')} onTalk={talk} />
               <Button full size="large" variant="outline" icon="plus" onClick={() => navigate('/pets/new')}>
                 Add your pet
               </Button>

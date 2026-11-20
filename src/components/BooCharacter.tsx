@@ -1,5 +1,5 @@
 // Boo — Figma "Boo / Character" (Patterns): the AI assistant, a jelly flower with a face (BooFlower).
-// Colours come from the Boo palette (--boo-*) and the ai/* tokens, so dark mode works by itself.
+// Colours come from the boo/* and ai/* tokens, so dark mode works by itself.
 //
 // state  idle      — the petals sway left and right while the eye glints look the same way (Figma Rest → Sway left →
 //                    Sway right → Rest, about 6 s), and Boo blinks at a random moment every 3–5 s, sometimes twice.
