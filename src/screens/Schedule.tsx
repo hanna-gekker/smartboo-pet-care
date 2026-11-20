@@ -1,5 +1,5 @@
 import { useState, type ReactNode } from 'react'
-import { useNavigate } from 'react-router'
+import { useNavigate, useSearchParams } from 'react-router'
 import { BooHint } from '../components/BooHint'
 import { Calendar } from '../components/Calendar'
 import { IconButton } from '../components/IconButton'
@@ -22,9 +22,22 @@ export function Schedule() {
   const navigate = useNavigate()
   const { pets, tasks, records, toggleTask } = useApp()
   const t = today()
-  const [selected, setSelected] = useState(t)
+  // ?day=2026-12-09 (a tapped reminder) opens on that day
+  const [params] = useSearchParams()
+  const asked = params.get('day')
+  const start = asked && /^\d{4}-\d{2}-\d{2}$/.test(asked) ? asked : t
+  const [selected, setSelected] = useState(start)
   const [view, setView] = useState<'week' | 'month'>('week')
-  const [month, setMonth] = useState(t)
+  const [month, setMonth] = useState(start)
+  // Another reminder tapped while Schedule is already open: follow the new day (adjusting state during render)
+  const [seen, setSeen] = useState(asked)
+  if (asked !== seen) {
+    setSeen(asked)
+    if (asked && asked === start) {
+      setSelected(asked)
+      setMonth(asked)
+    }
+  }
 
   // Each day: its pets (in the order of the pack) and how many tasks it has
   const petsByDay: Record<string, Pet[]> = {}

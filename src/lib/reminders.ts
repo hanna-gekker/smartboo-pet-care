@@ -124,3 +124,13 @@ export async function pendingCount(): Promise<number> {
 export function openAppSettings() {
   if (isNative()) window.location.href = 'app-settings:'
 }
+
+/** Calls back with the task's day when a reminder is tapped (also when the tap opened the app). Returns a remover. */
+export function onReminderTap(open: (day: string) => void): () => void {
+  if (!isNative()) return () => {}
+  const handle = LocalNotifications.addListener('localNotificationActionPerformed', (a) => {
+    const day = (a.notification.extra as { day?: string } | undefined)?.day
+    if (day) open(day)
+  })
+  return () => void handle.then((h) => h.remove())
+}
