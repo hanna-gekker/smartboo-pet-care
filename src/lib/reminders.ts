@@ -26,6 +26,7 @@ const BEFORE: TaskKind[] = ['vaccine', 'lab', 'vet', 'insurance']
 const MORNING = '09:00'
 /** iOS keeps at most 64 pending local notifications per app; the soonest ones win. */
 const LIMIT = 60
+const TEST_ID = 9999
 
 export const isNative = () => Capacitor.isNativePlatform()
 
@@ -105,7 +106,9 @@ export async function syncReminders(tasks: Task[], pets: Pet[], daysBefore: numb
   if (!isNative()) return plan.length
   if ((await checkPermission()) !== 'granted') return 0
   const { notifications } = await LocalNotifications.getPending()
-  if (notifications.length) await LocalNotifications.cancel({ notifications: notifications.map((n) => ({ id: n.id })) })
+  // The test reminder (Settings → For testing) is left alone
+  const old = notifications.filter((n) => n.id !== TEST_ID)
+  if (old.length) await LocalNotifications.cancel({ notifications: old.map((n) => ({ id: n.id })) })
   if (plan.length) {
     await LocalNotifications.schedule({
       notifications: plan.map((r) => ({ id: r.id, title: r.title, body: r.body, schedule: { at: r.at, allowWhileIdle: true }, extra: { day: r.day } })),
@@ -133,4 +136,25 @@ export function onReminderTap(open: (day: string) => void): () => void {
     if (day) open(day)
   })
   return () => void handle.then((h) => h.remove())
+}
+
+/** Settings → For testing: one reminder in a minute, for the soonest open task (so tapping it opens a real day).
+ *  Asks for permission if it was never asked. */
+export async function sendTestReminder(tasks: Task[], pets: Pet[], daysBefore: number): Promise<Permission> {
+  let permission = await checkPermission()
+  if (permission === 'prompt') permission = await askPermission()
+  if (permission !== 'granted' || !isNative()) return permission
+  const next = planReminders(tasks, pets, daysBefore)[0]
+  await LocalNotifications.schedule({
+    notifications: [
+      {
+        id: TEST_ID,
+        title: next?.title ?? 'Reminders are on',
+        body: next?.body ?? 'This is how SmartBoo will remind you.',
+        schedule: { at: new Date(Date.now() + 60_000), allowWhileIdle: true },
+        extra: { day: next?.day },
+      },
+    ],
+  })
+  return permission
 }
