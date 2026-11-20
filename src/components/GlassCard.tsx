@@ -10,7 +10,7 @@ type GlassCardProps = {
 
 export function GlassCard({ image, title, caption }: GlassCardProps) {
   return (
-    <div className="glass flex max-w-full items-center gap-12 rounded-24 py-12 pr-[18px] pl-12">
+    <div className="glass flex max-w-full items-center gap-12 rounded-24 p-16">
       <img src={image} alt="" className="size-avatar-40 shrink-0 rounded-full object-cover" draggable={false} />
       <div className="flex min-w-0 flex-col gap-2 text-left">
         <p className="text-caption font-medium text-text-primary">{title}</p>

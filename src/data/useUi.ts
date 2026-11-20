@@ -2,7 +2,8 @@
 
 import { create } from 'zustand'
 
-export type BooStart = 'menu' | 'talk' | 'snap' | 'type'
+/** Where the Boo sheet opens. `reading`: straight to reading a paper (the one that waited for the connection). */
+export type BooStart = 'menu' | 'talk' | 'snap' | 'type' | 'reading'
 
 type Toast = { id: number; text: string; undo?: () => void }
 
@@ -16,6 +17,9 @@ type UiState = {
   toast?: Toast
   showToast: (text: string, undo?: () => void) => void
   hideToast: () => void
+  /** A paper picked while offline: Boo reads it as soon as the phone is back online. */
+  paperWaiting: boolean
+  setPaperWaiting: (waiting: boolean) => void
 }
 
 export const useUi = create<UiState>((set) => ({
@@ -27,4 +31,6 @@ export const useUi = create<UiState>((set) => ({
   closeBoo: () => set({ booOpen: false }),
   showToast: (text, undo) => set({ toast: { id: Date.now(), text, undo } }),
   hideToast: () => set({ toast: undefined }),
+  paperWaiting: false,
+  setPaperWaiting: (paperWaiting) => set({ paperWaiting }),
 }))

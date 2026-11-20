@@ -439,6 +439,15 @@ body:has(.bg-welcome)::before {
   }
 }
 
+/* Reading (Figma 6c): the scan line runs down the paper and back. Still with reduced motion. */
+.boo-scan {
+  animation: boo-scan 2.4s ease-in-out infinite alternate;
+}
+@keyframes boo-scan {
+  from { transform: translateY(0); }
+  to { transform: translateY(134px); }
+}
+
 .animate-sheet-in { animation: sheet-in 260ms cubic-bezier(0.2, 0.8, 0.2, 1); }
 .animate-fade-in { animation: fade-in 200ms ease; }
 .animate-pulse-dot { animation: pulse-dot 1.2s ease-in-out infinite; }
@@ -451,8 +460,12 @@ body:has(.bg-welcome)::before {
   .boo-flower,
   .boo-core,
   .boo-glow,
-  .boo-glints {
+  .boo-glints,
+  .boo-scan {
     animation: none !important;
+  }
+  .boo-scan {
+    transform: translateY(61px);
   }
 }
 

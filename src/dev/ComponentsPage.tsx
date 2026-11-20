@@ -13,7 +13,9 @@ import { Icon, type IconName } from '../components/Icon'
 import { IconButton, type IconButtonVariant } from '../components/IconButton'
 import { ListRow } from '../components/ListRow'
 import { Logo } from '../components/Logo'
+import { BooError } from '../components/BooError'
 import { Calendar } from '../components/Calendar'
+import { BOO_ERRORS, type BooErrorCase } from '../lib/booErrors'
 import { ColorSwatches } from '../components/ColorSwatches'
 import { DayTile } from '../components/DayTile'
 import { SpeciesTile } from '../components/SpeciesTile'
@@ -241,6 +243,17 @@ function Board({ theme }: { theme: 'light' | 'dark' }) {
         <div className="rounded-24 bg-surface-card p-16">
           <AskBooInput surface="canvas" placeholder="Tell me about your pet…" onType={() => {}} onSnap={() => {}} onTalk={() => {}} />
         </div>
+      </Section>
+
+      <Section title="Boo errors" note="Photo too blurry · Couldn't read · Camera access off · Offline · Didn't catch that">
+        {(Object.keys(BOO_ERRORS) as BooErrorCase[]).map((k) => {
+          const e = BOO_ERRORS[k]
+          return (
+            <div key={k} className="rounded-24 bg-surface-card p-24 ring-1 ring-inset ring-border-card">
+              <BooError input={e.input} message={e.message} primary={{ label: e.primary, onClick: () => {} }} secondary={{ label: e.secondary, onClick: () => {} }} />
+            </div>
+          )
+        })}
       </Section>
 
       <Section title="Filter chip" note="Default · pressed · focus · disabled · selected · selected pressed">

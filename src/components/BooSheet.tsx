@@ -7,10 +7,12 @@ import { newId, petById, useApp } from '../data/useApp'
 import { useUi } from '../data/useUi'
 import type { Pet, PetRecord, Task, Vaccine } from '../data/types'
 import { readPaper, understand, type BooResult, type ParsedPaper } from '../lib/boo'
+import { BOO_ERRORS, BooPaperError, type BooErrorCase } from '../lib/booErrors'
 import { addDays, formatDay, nowTime, today } from '../lib/dates'
 import { convertWeight } from '../lib/weight'
 import { BottomSheet } from './BottomSheet'
 import { BooCharacter } from './BooCharacter'
+import { BooError } from './BooError'
 import { Button } from './Button'
 import { Card } from './Card'
 import { Icon } from './Icon'
@@ -30,9 +32,20 @@ type Step =
   | { name: 'photo'; petId: string; petName: string }
   | { name: 'thinking' }
   | { name: 'result'; result: BooResult }
+  | { name: 'error'; kind: BooErrorCase }
 
 export function BooSheet() {
-  const { booOpen, booSession, closeBoo } = useUi()
+  const { booOpen, booSession, closeBoo, openBoo, paperWaiting, setPaperWaiting } = useUi()
+  // A paper picked while offline is read as soon as the phone is back online (PRODUCT.md "When something goes wrong")
+  useEffect(() => {
+    if (!paperWaiting) return
+    const read = () => {
+      setPaperWaiting(false)
+      openBoo('reading')
+    }
+    window.addEventListener('online', read)
+    return () => window.removeEventListener('online', read)
+  }, [paperWaiting, setPaperWaiting, openBoo])
   return (
     <BottomSheet open={booOpen} onClose={closeBoo} label="Boo">
       <div className="pb-16">
@@ -52,7 +65,7 @@ function BooFlow() {
 
 function StepView({ step, setStep, text, setText }: { step: Step; setStep: (s: Step) => void; text: string; setText: (t: string) => void }) {
   const app = useApp()
-  const { closeBoo, showToast } = useUi()
+  const { closeBoo, showToast, setPaperWaiting } = useUi()
   const navigate = useNavigate()
 
   /** Boo asks once before sending anything to the AI service. */
@@ -62,11 +75,36 @@ function StepView({ step, setStep, text, setText }: { step: Step; setStep: (s: S
   }
 
   const startReading = () =>
-    withConsent(async () => {
-      setStep({ name: 'reading' })
-      const paper = await readPaper()
-      setStep({ name: 'paper', paper })
+    withConsent(() => {
+      if (!navigator.onLine) {
+        setPaperWaiting(true)
+        setStep({ name: 'error', kind: 'offline' })
+      } else setStep({ name: 'reading' })
     })
+
+  // Reading runs while the step is on screen; a paper Boo can't use shows its error (blurry, not a vet paper, offline)
+  const reading = step.name === 'reading'
+  useEffect(() => {
+    if (!reading) return
+    let live = true
+    readPaper()
+      .then((paper) => live && setStep({ name: 'paper', paper }))
+      .catch((e: unknown) => {
+        if (!live) return
+        if (e instanceof BooPaperError) {
+          if (e.kind === 'offline') setPaperWaiting(true)
+          setStep({ name: 'error', kind: e.kind })
+        } else setStep({ name: 'error', kind: 'not-paper' })
+      })
+    return () => {
+      live = false
+    }
+  }, [reading, setStep, setPaperWaiting])
+
+  const addByHand = () => {
+    closeBoo()
+    navigate('/pets/new')
+  }
 
   const send = (phrase: string) => {
     if (!phrase.trim()) return
@@ -165,31 +203,52 @@ function StepView({ step, setStep, text, setText }: { step: Step; setStep: (s: S
       )
 
     case 'snap':
+      // Figma 6a "Pick a source": Boo and the title, then a card per source
       return (
-        <div className="pt-4">
-          <h2 className="font-display text-title font-medium">Snap a vet paper</h2>
-          <p className="mt-4 text-body text-text-secondary">Vaccine certificate, invoice, discharge notes — a photo or a PDF.</p>
-          <div className="mt-16 flex flex-col gap-8">
-            <FilePick icon="camera" label="Take a photo" accept="image/*" capture onPick={startReading} />
-            <FilePick icon="file-text" label="Choose from Photos" accept="image/*" onPick={startReading} />
+        <div className="flex flex-col gap-16">
+          <SheetHeader title="Snap a vet paper" />
+          <div className="flex flex-col gap-8">
+            <FilePick icon="camera" label="Camera" accept="image/*" capture onPick={startReading} />
+            <FilePick icon="image" label="Photo library" accept="image/*" onPick={startReading} />
             <FilePick icon="file-text" label="PDF from Files" accept="application/pdf" onPick={startReading} />
           </div>
-          <Button full variant="ghost" onClick={startReading} className="mt-12 !text-accent-primary">
+          <Button full variant="ghost" onClick={startReading} className="!text-accent-on-subtle">
             No paper at hand? Try a sample one
           </Button>
         </div>
       )
 
     case 'talk':
-      return <Talk onDone={(t) => (t ? send(t) : setStep({ name: 'menu' }))} />
+      return <Talk onDone={(t) => (t ? send(t) : setStep({ name: 'menu' }))} onNotHeard={() => setStep({ name: 'error', kind: 'not-heard' })} />
+
+    case 'error': {
+      const e = BOO_ERRORS[step.kind]
+      const snap = () => setStep({ name: 'snap' })
+      const actions: Record<BooErrorCase, [() => void, () => void]> = {
+        blurry: [snap, snap],
+        'not-paper': [snap, addByHand],
+        // On the iPhone this opens the app's own page in iOS Settings
+        'camera-off': [() => window.open('app-settings:'), snap],
+        offline: [closeBoo, addByHand],
+        'not-heard': [() => setStep({ name: 'talk' }), () => setStep({ name: 'type' })],
+      }
+      const [primary, secondary] = actions[step.kind]
+      return <BooError input={e.input} message={e.message} primary={{ label: e.primary, onClick: primary }} secondary={{ label: e.secondary, onClick: secondary }} />
+    }
 
     case 'reading':
+      // Figma 6c: a paper being scanned and the review card it turns into
+      return (
+        <div className="flex flex-col gap-16">
+          <SheetHeader title="Reading…" listening />
+          <ReadingPicture />
+        </div>
+      )
+
     case 'thinking':
       return (
-        <div className="flex flex-col items-center py-32 text-center">
-          <BooCharacter state="listening" />
-          <p className="mt-16 font-display text-title font-medium">{step.name === 'reading' ? 'Reading…' : 'Thinking…'}</p>
-          {step.name === 'reading' && <p className="mt-4 text-body-s text-text-secondary">Finding the pet, vaccines and dates</p>}
+        <div className="flex flex-col gap-16">
+          <SheetHeader title="Thinking…" listening />
         </div>
       )
 
@@ -205,13 +264,14 @@ function StepView({ step, setStep, text, setText }: { step: Step; setStep: (s: S
       )
 
     case 'remind':
+      // Figma 6e
       return (
-        <div className="pt-8">
-          <h2 className="font-display text-title font-medium">Remind you 2 weeks before each one?</h2>
-          <p className="mt-8 text-body text-text-secondary">I’ll nudge you before {step.petName}’s vaccines are due.</p>
-          <div className="mt-24 flex flex-col gap-8">
+        <div className="flex flex-col gap-16">
+          <SheetHeader title="Remind you 2 weeks before each one?" />
+          <div className="flex flex-col gap-8">
             <Button
               full
+              size="large"
               onClick={() => {
                 // On the phone this is where iOS asks for notification permission (step 05).
                 const n = app.remindVaccines(step.petId, step.documentId)
@@ -219,7 +279,7 @@ function StepView({ step, setStep, text, setText }: { step: Step; setStep: (s: S
                 setStep({ name: 'photo', petId: step.petId, petName: step.petName })
               }}
             >
-              Yes, remind me
+              Yes
             </Button>
             <Button full variant="ghost" onClick={() => setStep({ name: 'photo', petId: step.petId, petName: step.petName })}>
               Not now
@@ -229,31 +289,24 @@ function StepView({ step, setStep, text, setText }: { step: Step; setStep: (s: S
       )
 
     case 'photo': {
+      // Figma 6g
       const finish = () => {
         closeBoo()
         navigate('/')
       }
       const pet = petById(app.pets, step.petId)
       return (
-        <div className="pt-8">
-          <div className="flex justify-center py-8">
-            <PetAvatar pet={pet} size="xl" />
-          </div>
-          <h2 className="mt-12 text-center font-display text-title font-medium">Add a photo of {step.petName}?</h2>
-          <div className="mt-24 flex flex-col gap-8">
+        <div className="flex flex-col gap-16">
+          <SheetHeader title={`Add a photo of ${step.petName}?`} />
+          <div className="flex flex-col gap-8">
             {pet?.photo ? (
-              <Button full onClick={finish}>
+              <Button full size="large" onClick={finish}>
                 Done
               </Button>
             ) : (
-              <FilePick
-                icon="camera"
-                label="Take photo"
-                accept="image/*"
-                capture
-                primary
+              <PhotoPick
                 onPick={(file) => {
-                  if (file) app.updatePet(step.petId, { photo: URL.createObjectURL(file) })
+                  app.updatePet(step.petId, { photo: URL.createObjectURL(file) })
                   finish()
                 }}
               />
@@ -302,7 +355,8 @@ function BigAction({ icon, label, main, onClick }: { icon: 'mic' | 'camera' | 'k
   )
 }
 
-function FilePick({ icon, label, accept, capture, primary, onPick }: { icon: 'camera' | 'file-text'; label: string; accept: string; capture?: boolean; primary?: boolean; onPick: (file?: File) => void }) {
+/** Figma 6a "Sources": a tappable card with the source's icon in a soft accent circle, its name and a chevron. */
+function FilePick({ icon, label, accept, capture, onPick }: { icon: 'camera' | 'image' | 'file-text'; label: string; accept: string; capture?: boolean; onPick: (file?: File) => void }) {
   const ref = useRef<HTMLInputElement>(null)
   return (
     <>
@@ -318,10 +372,89 @@ function FilePick({ icon, label, accept, capture, primary, onPick }: { icon: 'ca
           e.target.value = ''
         }}
       />
-      <Button full variant={primary ? 'primary' : 'secondary'} icon={icon} onClick={() => ref.current?.click()}>
-        {label}
+      <Card onClick={() => ref.current?.click()} className="!rounded-16 !bg-surface-card !shadow-none">
+        <span className="flex items-center gap-16">
+          <span className="flex size-control-40 shrink-0 items-center justify-center rounded-full bg-accent-primary-subtle text-accent-primary">
+            <Icon name={icon} size={20} />
+          </span>
+          <span className="flex-1 text-body font-medium text-text-primary">{label}</span>
+          <Icon name="chevron-right" size={20} className="shrink-0 text-text-secondary" />
+        </span>
+      </Card>
+    </>
+  )
+}
+
+/** "Take photo" (Figma 6g): the main button opens the camera. */
+function PhotoPick({ onPick }: { onPick: (file: File) => void }) {
+  const ref = useRef<HTMLInputElement>(null)
+  return (
+    <>
+      <input
+        ref={ref}
+        type="file"
+        accept="image/*"
+        capture="environment"
+        className="hidden"
+        onChange={(e) => {
+          const file = e.target.files?.[0]
+          if (file) onPick(file)
+          e.target.value = ''
+        }}
+      />
+      <Button full size="large" icon="camera" onClick={() => ref.current?.click()}>
+        Take photo
       </Button>
     </>
+  )
+}
+
+/** Figma "Header" of the first-launch sheets: the mini Boo (56) and the title, 12 apart. Listening while Boo works. */
+function SheetHeader({ title, listening }: { title: string; listening?: boolean }) {
+  return (
+    <div className="flex items-center gap-12">
+      <BooCharacter look="mini" size={56} state={listening ? 'listening' : 'idle'} />
+      <h2 className="min-w-0 flex-1 font-display text-title font-medium">{title}</h2>
+    </div>
+  )
+}
+
+/** Figma 6c "Skeleton": a 112 × 140 paper with grey lines and an accent scan line, and the review card to come. */
+function ReadingPicture() {
+  return (
+    <div aria-hidden="true" className="flex flex-col items-center gap-16">
+      <svg viewBox="0 0 112 140" className="h-[140px] w-[112px] overflow-hidden rounded-8 shadow-card">
+        <rect x="0.5" y="0.5" width="111" height="139" rx="8" style={{ fill: 'var(--surface-card)', stroke: 'var(--border-card)' }} />
+        <rect x="16" y="18" width="52" height="8" rx="4" style={{ fill: 'var(--accent-primary)' }} />
+        {[
+          [36, 80],
+          [48, 64],
+          [66, 80],
+          [78, 72],
+          [90, 56],
+          [108, 40],
+        ].map(([y, w]) => (
+          <rect key={y} x="16" y={y} width={w} height="5" rx="2.5" style={{ fill: 'var(--border-card)' }} />
+        ))}
+        <circle cx="87" cy="115" r="10.25" strokeWidth="1.5" style={{ fill: 'none', stroke: 'var(--accent-primary)' }} />
+        <rect className="boo-scan" x="0" y="2" width="112" height="2" style={{ fill: 'var(--accent-primary)' }} />
+      </svg>
+      <div className="flex w-full flex-col gap-16 overflow-hidden rounded-24 bg-surface-panel p-16 ring-1 ring-inset ring-border-card">
+        <div className="flex items-center gap-12">
+          <span className="size-avatar-40 rounded-full bg-surface-subtle" />
+          <span className="flex flex-col gap-8">
+            <span className="h-[10px] w-[120px] rounded-full bg-surface-subtle" />
+            <span className="h-[10px] w-[180px] rounded-full bg-surface-subtle" />
+          </span>
+        </div>
+        {[150, 110].map((w) => (
+          <div key={w} className="flex items-center justify-between">
+            <span className="h-[10px] rounded-full bg-surface-subtle" style={{ width: w }} />
+            <span className="h-icon-20 w-[56px] rounded-full bg-surface-subtle" />
+          </div>
+        ))}
+      </div>
+    </div>
   )
 }
 
@@ -530,10 +663,15 @@ function ReviewShell({ pet, kind, title, children, onConfirm }: { pet: Pet; kind
 }
 
 /** Talk: on the iPhone this uses on-device speech (step 05). In the browser: Web Speech API where available. */
-function Talk({ onDone }: { onDone: (text: string) => void }) {
+function Talk({ onDone, onNotHeard }: { onDone: (text: string) => void; onNotHeard: () => void }) {
   const [heard, setHeard] = useState('')
   const [supported, setSupported] = useState(() => Boolean(speechRecognition()))
   const recRef = useRef<{ stop: () => void } | null>(null)
+  // The recogniser starts once; it reads the latest callback through a ref
+  const notHeard = useRef(onNotHeard)
+  useEffect(() => {
+    notHeard.current = onNotHeard
+  }, [onNotHeard])
 
   useEffect(() => {
     const Rec = speechRecognition()
@@ -543,7 +681,8 @@ function Talk({ onDone }: { onDone: (text: string) => void }) {
     rec.interimResults = true
     rec.continuous = false
     rec.onresult = (e) => setHeard(Array.from(e.results).map((r) => r[0].transcript).join(' '))
-    rec.onerror = () => setSupported(false)
+    // Nothing heard → Boo says so (Figma 8i); any other error means the browser can't listen
+    rec.onerror = (e) => (e?.error === 'no-speech' ? notHeard.current() : setSupported(false))
     rec.start()
     recRef.current = rec
     return () => rec.stop()
@@ -563,7 +702,8 @@ function Talk({ onDone }: { onDone: (text: string) => void }) {
             <Button
               onClick={() => {
                 recRef.current?.stop()
-                onDone(heard)
+                if (heard.trim()) onDone(heard)
+                else onNotHeard()
               }}
             >
               Done
@@ -593,7 +733,7 @@ type SpeechRec = {
   interimResults: boolean
   continuous: boolean
   onresult: (e: { results: ArrayLike<ArrayLike<{ transcript: string }>> }) => void
-  onerror: () => void
+  onerror: (e?: { error?: string }) => void
   start: () => void
   stop: () => void
 }
