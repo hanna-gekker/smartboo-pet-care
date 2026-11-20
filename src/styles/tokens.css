@@ -193,6 +193,29 @@
   --navy-500: #6E7395;
   --navy-600: #5D6185;
   --navy-900: #1D2150;
+  --jelly-ffffff: #FFFFFF;
+  --jelly-bfd0ff: #BFD0FF;
+  --jelly-c9daff: #C9DAFF;
+  --jelly-8fa6f2: #8FA6F2;
+  --jelly-8faaf5: #8FAAF5;
+  --jelly-5e78e0: #5E78E0;
+  --jelly-5470e3: #5470E3;
+  --jelly-3f52b8: #3F52B8;
+  --jelly-4f62cc: #4F62CC;
+  --jelly-34449e: #34449E;
+  --jelly-26306a: #26306A;
+  --jelly-edf5ff: #EDF5FF;
+  --jelly-d3e2ff: #D3E2FF;
+  --jelly-f6f9ff: #F6F9FF;
+  --jelly-d3ddfc: #D3DDFC;
+  --jelly-c4d8fd: #C4D8FD;
+  --jelly-b3c3f6: #B3C3F6;
+  --jelly-7da0f3: #7DA0F3;
+  --jelly-8098ea: #8098EA;
+  --jelly-7e92f1: #7E92F1;
+  --jelly-7086e0: #7086E0;
+  --jelly-ff8fb0: #FF8FB0;
+  --jelly-241b33: #241B33;
 
   /* Layout */
   --space-0: 0px; /* Spacing 0px — padding & gaps (8pt grid, 4/12 as half-steps, 2 for hairline groups) */
@@ -363,6 +386,21 @@
   --welcome-stop-5: var(--honey-75);
   --glass-highlight: var(--alpha-white-55); /* 1px inner top highlight on glass panels and tab bar */
   --glass-shadow: var(--alpha-indigo-shadow-10); /* Soft drop shadow under glass panels and tab bar */
+  --boo-highlight: var(--jelly-ffffff); /* Boo jelly flower */
+  --boo-petal-glow: var(--jelly-bfd0ff); /* Boo jelly flower */
+  --boo-petal-1: var(--jelly-c9daff); /* Boo jelly flower */
+  --boo-petal-2: var(--jelly-8faaf5); /* Boo jelly flower */
+  --boo-petal-3: var(--jelly-5470e3); /* Boo jelly flower */
+  --boo-petal-4: var(--jelly-4f62cc); /* Boo jelly flower */
+  --boo-shadow: var(--jelly-26306a); /* Boo jelly flower */
+  --boo-core-1: var(--jelly-edf5ff); /* Boo jelly flower */
+  --boo-core-2: var(--jelly-d3e2ff); /* Boo jelly flower */
+  --boo-core-light: var(--jelly-f6f9ff); /* Boo jelly flower */
+  --boo-core-mid: var(--jelly-c4d8fd); /* Boo jelly flower */
+  --boo-core-deep: var(--jelly-7da0f3); /* Boo jelly flower */
+  --boo-core-edge: var(--jelly-7e92f1); /* Boo jelly flower */
+  --boo-blush: var(--jelly-ff8fb0); /* Boo jelly flower */
+  --boo-ink: var(--jelly-241b33); /* Boo jelly flower */
 }
 
 /* Colors — dark, following the phone */
@@ -485,6 +523,21 @@
     --welcome-stop-5: var(--honey-960);
     --glass-highlight: var(--alpha-white-10); /* 1px inner top highlight on glass panels and tab bar */
     --glass-shadow: var(--alpha-black-35); /* Soft drop shadow under glass panels and tab bar */
+    --boo-highlight: var(--jelly-ffffff); /* Boo jelly flower */
+    --boo-petal-glow: var(--jelly-bfd0ff); /* Boo jelly flower */
+    --boo-petal-1: var(--jelly-8fa6f2); /* Boo jelly flower */
+    --boo-petal-2: var(--jelly-5e78e0); /* Boo jelly flower */
+    --boo-petal-3: var(--jelly-3f52b8); /* Boo jelly flower */
+    --boo-petal-4: var(--jelly-34449e); /* Boo jelly flower */
+    --boo-shadow: var(--jelly-26306a); /* Boo jelly flower */
+    --boo-core-1: var(--jelly-edf5ff); /* Boo jelly flower */
+    --boo-core-2: var(--jelly-d3e2ff); /* Boo jelly flower */
+    --boo-core-light: var(--jelly-d3ddfc); /* Boo jelly flower */
+    --boo-core-mid: var(--jelly-b3c3f6); /* Boo jelly flower */
+    --boo-core-deep: var(--jelly-8098ea); /* Boo jelly flower */
+    --boo-core-edge: var(--jelly-7086e0); /* Boo jelly flower */
+    --boo-blush: var(--jelly-ff8fb0); /* Boo jelly flower */
+    --boo-ink: var(--jelly-241b33); /* Boo jelly flower */
   }
 }
 
@@ -607,4 +660,19 @@
   --welcome-stop-5: var(--honey-960);
   --glass-highlight: var(--alpha-white-10); /* 1px inner top highlight on glass panels and tab bar */
   --glass-shadow: var(--alpha-black-35); /* Soft drop shadow under glass panels and tab bar */
+  --boo-highlight: var(--jelly-ffffff); /* Boo jelly flower */
+  --boo-petal-glow: var(--jelly-bfd0ff); /* Boo jelly flower */
+  --boo-petal-1: var(--jelly-8fa6f2); /* Boo jelly flower */
+  --boo-petal-2: var(--jelly-5e78e0); /* Boo jelly flower */
+  --boo-petal-3: var(--jelly-3f52b8); /* Boo jelly flower */
+  --boo-petal-4: var(--jelly-34449e); /* Boo jelly flower */
+  --boo-shadow: var(--jelly-26306a); /* Boo jelly flower */
+  --boo-core-1: var(--jelly-edf5ff); /* Boo jelly flower */
+  --boo-core-2: var(--jelly-d3e2ff); /* Boo jelly flower */
+  --boo-core-light: var(--jelly-d3ddfc); /* Boo jelly flower */
+  --boo-core-mid: var(--jelly-b3c3f6); /* Boo jelly flower */
+  --boo-core-deep: var(--jelly-8098ea); /* Boo jelly flower */
+  --boo-core-edge: var(--jelly-7086e0); /* Boo jelly flower */
+  --boo-blush: var(--jelly-ff8fb0); /* Boo jelly flower */
+  --boo-ink: var(--jelly-241b33); /* Boo jelly flower */
 }

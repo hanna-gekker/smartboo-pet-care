@@ -1,6 +1,7 @@
 // Boo's "jelly flower" — Figma "Boo · Jelly flower" (144 × 144 box, centre 71.91), face G8.
 // Eight glossy petals around a soft core, with a face: round eyes with two glints each, a small smile and blush.
-// The colours are the Boo palette in base.css (--boo-*), light and dark; they follow the phone's theme.
+// The colours are the Figma Variables boo/* (tokens.css), light and dark; they follow the phone's theme.
+// In dark the white glow around the face is off, as in Figma.
 // Parts are separate groups so they can move on their own: .boo-flower (the petals), .boo-core (the face),
 // .boo-eyes (squash for a blink) and .boo-glints (they slide to look left or right).
 // Drawing only: BooCharacter adds the glow, the halos and the motion; Logo uses it still.
@@ -29,23 +30,23 @@ export function BooFlower({ id, shadow = true }: { id: string; shadow?: boolean 
           <stop offset="1" style={{ stopColor: 'var(--boo-petal-4)' }} />
         </radialGradient>
         <radialGradient id={`${id}-rim`} cx="0.5" cy="0.5" r="0.5">
-          <stop offset="0.7" style={{ stopColor: 'var(--boo-rim)', stopOpacity: 0 }} />
-          <stop offset="1" style={{ stopColor: 'var(--boo-rim)', stopOpacity: 0.55 }} />
+          <stop offset="0.7" style={{ stopColor: 'var(--boo-petal-glow)', stopOpacity: 0 }} />
+          <stop offset="1" style={{ stopColor: 'var(--boo-petal-glow)', stopOpacity: 0.55 }} />
         </radialGradient>
         <radialGradient id={`${id}-gloss`} cx="0.5" cy="0.5" r="0.5">
-          <stop style={{ stopColor: 'var(--boo-gloss)', stopOpacity: 0.95 }} />
-          <stop offset="1" style={{ stopColor: 'var(--boo-gloss)', stopOpacity: 0 }} />
+          <stop style={{ stopColor: 'var(--boo-highlight)', stopOpacity: 0.95 }} />
+          <stop offset="1" style={{ stopColor: 'var(--boo-highlight)', stopOpacity: 0 }} />
         </radialGradient>
         <radialGradient id={`${id}-face-glow`} cx="0.5" cy="0.5" r="0.5">
-          <stop offset="0.707" style={{ stopColor: 'var(--boo-face-glow-1)' }} />
-          <stop offset="0.736" style={{ stopColor: 'var(--boo-face-glow-2)' }} />
-          <stop offset="0.793" style={{ stopColor: 'var(--boo-face-glow-3)', stopOpacity: 0 }} />
+          <stop offset="0.707" style={{ stopColor: 'var(--boo-highlight)', stopOpacity: 0.95 }} />
+          <stop offset="0.736" style={{ stopColor: 'var(--boo-core-1)', stopOpacity: 0.7 }} />
+          <stop offset="0.793" style={{ stopColor: 'var(--boo-core-2)', stopOpacity: 0 }} />
         </radialGradient>
         <radialGradient id={`${id}-core`} cx="66.35" cy="60.79" r="55.61" gradientUnits="userSpaceOnUse">
-          <stop style={{ stopColor: 'var(--boo-core-1)' }} />
-          <stop offset="0.45" style={{ stopColor: 'var(--boo-core-2)' }} />
-          <stop offset="0.85" style={{ stopColor: 'var(--boo-core-3)' }} />
-          <stop offset="1" style={{ stopColor: 'var(--boo-core-4)' }} />
+          <stop style={{ stopColor: 'var(--boo-core-light)' }} />
+          <stop offset="0.45" style={{ stopColor: 'var(--boo-core-mid)' }} />
+          <stop offset="0.85" style={{ stopColor: 'var(--boo-core-deep)' }} />
+          <stop offset="1" style={{ stopColor: 'var(--boo-core-edge)' }} />
         </radialGradient>
       </defs>
 
@@ -62,7 +63,7 @@ export function BooFlower({ id, shadow = true }: { id: string; shadow?: boolean 
       </g>
 
       <g className="boo-core">
-        <circle cx={C} cy={C} r="48.66" fill={`url(#${id}-face-glow)`} />
+        <circle className="boo-face-glow" cx={C} cy={C} r="48.66" fill={`url(#${id}-face-glow)`} />
         <circle cx={C} cy={C} r="34.757" fill={`url(#${id}-core)`} />
         <circle cx={C} cy={C} r="34.757" fill={`url(#${id}-rim)`} />
         <ellipse cx="60.44" cy="58.01" rx="14.6" ry="9.04" transform="rotate(-28 60.44 58.01)" fill={`url(#${id}-gloss)`} />
@@ -74,7 +75,7 @@ export function BooFlower({ id, shadow = true }: { id: string; shadow?: boolean 
           <circle cx="62.8" cy="68.5" r="6.3" style={{ fill: 'var(--boo-ink)' }} />
           <circle cx="81.2" cy="68.5" r="6.3" style={{ fill: 'var(--boo-ink)' }} />
         </g>
-        <g className="boo-glints" style={{ fill: 'var(--boo-gloss)' }}>
+        <g className="boo-glints" style={{ fill: 'var(--boo-highlight)' }}>
           <circle cx="65.07" cy="66.11" r="2.02" />
           <circle cx="83.47" cy="66.11" r="2.02" />
           <circle cx="60.91" cy="71.34" r="0.94" />
