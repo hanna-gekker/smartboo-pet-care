@@ -75,17 +75,22 @@
   --violet-350: #A387E0;
   --violet-400: #A88AF2;
   --violet-600: #8B63E6;
+  --violet-700: #6B52C2;
   --violet-850: #4E3F86;
   --violet-925: #2B2449;
   --violet-950: #231F38;
   --pink-50: #F8E6F0;
   --pink-200: #F7C3D8;
   --pink-400: #E07BB5;
+  --pink-700: #A3477C;
+  --pink-800: #7A3A60;
   --pink-950: #301D2A;
   --green-50: #DFF2EE;
   --green-200: #B4E3CC;
   --green-400: #3FC487;
   --green-600: #2FA36B;
+  --green-700: #24805A;
+  --green-800: #1F5B44;
   --green-950: #15302A;
   --coral-50: #FDECE7;
   --coral-300: #FFA48C;
@@ -318,6 +323,15 @@
   --pet-butter: var(--yellow-200); /* Pet colour — owner picks one per pet */
   --pet-ocean: var(--blue-300); /* Pet colour — owner picks one per pet */
   --pet-slate: var(--gray-200); /* Pet colour — owner picks one per pet */
+  --pet-ocean-deep: var(--blue-500); /* Placeholder inner circle (deeper shade of pet/ocean). Same in Light and Dark, like pet/*. */
+  --pet-lavender-deep: var(--violet-400); /* Placeholder inner circle (deeper shade of pet/lavender). Same in Light and Dark, like pet/*. */
+  --pet-pink-deep: var(--pink-400); /* Placeholder inner circle (deeper shade of pet/pink). Same in Light and Dark, like pet/*. */
+  --pet-mint-deep: var(--green-400); /* Placeholder inner circle (deeper shade of pet/mint). Same in Light and Dark, like pet/*. */
+  --pet-slate-deep: var(--gray-400); /* Placeholder inner circle (deeper shade of pet/slate). Same in Light and Dark, like pet/*. */
+  --pet-butter-deep: var(--yellow-350); /* Placeholder inner circle (deeper shade of pet/butter). Same in Light and Dark, like pet/*. */
+  --pet-butter-deep-end: var(--yellow-450); /* Placeholder inner circle (deeper shade of pet/butter). Same in Light and Dark, like pet/*. */
+  --pet-animal: var(--base-white); /* Placeholder animal silhouette. Off-white in Dark so it does not glare. */
+  --pet-animal-eye: var(--navy-900); /* Placeholder animal eyes, nose, smile. */
   --overlay-photo-clear: var(--alpha-ink-0); /* Top of the photo gradient */
   --overlay-photo-dark: var(--alpha-ink-55); /* Bottom of the photo gradient — keeps white text readable on photos */
   --brand-logo-core: var(--blue-700); /* Core of the SmartBoo logo mark */
@@ -425,12 +439,21 @@
     --ai-float-shadow: var(--alpha-indigo-400-15); /* Soft shadow under the floating Boo */
     --ai-boo-backdrop: var(--alpha-gray-950-0); /* Soft blue patch behind Boo on light backgrounds (transparent in dark) */
     --ai-petal-edge: var(--alpha-blue-350-45);
-    --pet-lavender: var(--violet-200); /* Pet colour — owner picks one per pet */
-    --pet-mint: var(--green-200); /* Pet colour — owner picks one per pet */
-    --pet-pink: var(--pink-200); /* Pet colour — owner picks one per pet */
-    --pet-butter: var(--yellow-200); /* Pet colour — owner picks one per pet */
-    --pet-ocean: var(--blue-300); /* Pet colour — owner picks one per pet */
-    --pet-slate: var(--gray-200); /* Pet colour — owner picks one per pet */
+    --pet-lavender: var(--violet-850); /* Pet colour — owner picks one per pet */
+    --pet-mint: var(--green-800); /* Pet colour — owner picks one per pet */
+    --pet-pink: var(--pink-800); /* Pet colour — owner picks one per pet */
+    --pet-butter: var(--honey-800); /* Pet colour — owner picks one per pet */
+    --pet-ocean: var(--blue-850); /* Pet colour — owner picks one per pet */
+    --pet-slate: var(--gray-700); /* Pet colour — owner picks one per pet */
+    --pet-ocean-deep: var(--blue-550); /* Placeholder inner circle (deeper shade of pet/ocean). Same in Light and Dark, like pet/*. */
+    --pet-lavender-deep: var(--violet-700); /* Placeholder inner circle (deeper shade of pet/lavender). Same in Light and Dark, like pet/*. */
+    --pet-pink-deep: var(--pink-700); /* Placeholder inner circle (deeper shade of pet/pink). Same in Light and Dark, like pet/*. */
+    --pet-mint-deep: var(--green-700); /* Placeholder inner circle (deeper shade of pet/mint). Same in Light and Dark, like pet/*. */
+    --pet-slate-deep: var(--gray-500); /* Placeholder inner circle (deeper shade of pet/slate). Same in Light and Dark, like pet/*. */
+    --pet-butter-deep: var(--yellow-600); /* Placeholder inner circle (deeper shade of pet/butter). Same in Light and Dark, like pet/*. */
+    --pet-butter-deep-end: var(--yellow-800); /* Placeholder inner circle (deeper shade of pet/butter). Same in Light and Dark, like pet/*. */
+    --pet-animal: var(--gray-150); /* Placeholder animal silhouette. Off-white in Dark so it does not glare. */
+    --pet-animal-eye: var(--navy-900); /* Placeholder animal eyes, nose, smile. */
     --overlay-photo-clear: var(--alpha-ink-0); /* Top of the photo gradient */
     --overlay-photo-dark: var(--alpha-ink-55); /* Bottom of the photo gradient — keeps white text readable on photos */
     --brand-logo-core: var(--blue-700); /* Core of the SmartBoo logo mark */
@@ -538,12 +561,21 @@
   --ai-float-shadow: var(--alpha-indigo-400-15); /* Soft shadow under the floating Boo */
   --ai-boo-backdrop: var(--alpha-gray-950-0); /* Soft blue patch behind Boo on light backgrounds (transparent in dark) */
   --ai-petal-edge: var(--alpha-blue-350-45);
-  --pet-lavender: var(--violet-200); /* Pet colour — owner picks one per pet */
-  --pet-mint: var(--green-200); /* Pet colour — owner picks one per pet */
-  --pet-pink: var(--pink-200); /* Pet colour — owner picks one per pet */
-  --pet-butter: var(--yellow-200); /* Pet colour — owner picks one per pet */
-  --pet-ocean: var(--blue-300); /* Pet colour — owner picks one per pet */
-  --pet-slate: var(--gray-200); /* Pet colour — owner picks one per pet */
+  --pet-lavender: var(--violet-850); /* Pet colour — owner picks one per pet */
+  --pet-mint: var(--green-800); /* Pet colour — owner picks one per pet */
+  --pet-pink: var(--pink-800); /* Pet colour — owner picks one per pet */
+  --pet-butter: var(--honey-800); /* Pet colour — owner picks one per pet */
+  --pet-ocean: var(--blue-850); /* Pet colour — owner picks one per pet */
+  --pet-slate: var(--gray-700); /* Pet colour — owner picks one per pet */
+  --pet-ocean-deep: var(--blue-550); /* Placeholder inner circle (deeper shade of pet/ocean). Same in Light and Dark, like pet/*. */
+  --pet-lavender-deep: var(--violet-700); /* Placeholder inner circle (deeper shade of pet/lavender). Same in Light and Dark, like pet/*. */
+  --pet-pink-deep: var(--pink-700); /* Placeholder inner circle (deeper shade of pet/pink). Same in Light and Dark, like pet/*. */
+  --pet-mint-deep: var(--green-700); /* Placeholder inner circle (deeper shade of pet/mint). Same in Light and Dark, like pet/*. */
+  --pet-slate-deep: var(--gray-500); /* Placeholder inner circle (deeper shade of pet/slate). Same in Light and Dark, like pet/*. */
+  --pet-butter-deep: var(--yellow-600); /* Placeholder inner circle (deeper shade of pet/butter). Same in Light and Dark, like pet/*. */
+  --pet-butter-deep-end: var(--yellow-800); /* Placeholder inner circle (deeper shade of pet/butter). Same in Light and Dark, like pet/*. */
+  --pet-animal: var(--gray-150); /* Placeholder animal silhouette. Off-white in Dark so it does not glare. */
+  --pet-animal-eye: var(--navy-900); /* Placeholder animal eyes, nose, smile. */
   --overlay-photo-clear: var(--alpha-ink-0); /* Top of the photo gradient */
   --overlay-photo-dark: var(--alpha-ink-55); /* Bottom of the photo gradient — keeps white text readable on photos */
   --brand-logo-core: var(--blue-700); /* Core of the SmartBoo logo mark */

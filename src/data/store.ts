@@ -7,7 +7,8 @@
 // After the demo: rewrite only this module for Supabase.
 
 import { Directory, Encoding, Filesystem } from '@capacitor/filesystem'
-import type { AppData } from './types'
+import { petColorAt } from '../lib/petColors'
+import type { AppData, Pet } from './types'
 
 const FILE = { path: 'smartboo/data.json', directory: Directory.Data }
 
@@ -17,7 +18,7 @@ const OLD_KEY = 'smartboo:data:v1'
 export async function loadData(): Promise<AppData | null> {
   try {
     const { data } = await Filesystem.readFile({ ...FILE, encoding: Encoding.UTF8 })
-    return JSON.parse(data as string) as AppData
+    return migrate(JSON.parse(data as string) as AppData)
   } catch {
     // No file yet (first launch) or it could not be read: try the old storage once.
     return moveFromLocalStorage()
@@ -65,11 +66,22 @@ async function moveFromLocalStorage(): Promise<AppData | null> {
   }
   if (!raw) return null
   try {
-    const data = JSON.parse(raw) as AppData
+    const data = migrate(JSON.parse(raw) as AppData)
     // Keep the old copy until the file is really written.
     if (await writeFile(raw)) localStorage.removeItem(OLD_KEY)
     return data
   } catch {
     return null
+  }
+}
+
+// Older data used fewer species: "reptile" is now "lizard" and "small mammal" is now "hamster".
+// Pets saved before frame colours were stored get the colour they already showed (by their place in the list).
+const OLD_SPECIES: Record<string, Pet['species']> = { reptile: 'lizard', 'small mammal': 'hamster' }
+
+function migrate(data: AppData): AppData {
+  return {
+    ...data,
+    pets: data.pets.map((p, i) => ({ ...p, species: OLD_SPECIES[p.species] ?? p.species, color: p.color ?? petColorAt(i) })),
   }
 }

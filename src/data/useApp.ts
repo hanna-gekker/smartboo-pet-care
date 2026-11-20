@@ -2,6 +2,7 @@
 
 import { create } from 'zustand'
 import { today } from '../lib/dates'
+import { pickPetColor } from '../lib/petColors'
 import { emptyData, sampleData } from './sample'
 import { clearData, loadData, saveData } from './store'
 import type { AppData, Med, Pet, PetDocument, PetRecord, Settings, Task, Vaccine } from './types'
@@ -57,7 +58,8 @@ export const useApp = create<AppState>((set, get) => ({
       tasks: s.tasks.map((t) => (t.id === id ? { ...t, doneAt: t.doneAt ? undefined : new Date().toISOString() } : t)),
     })),
 
-  addPet: (pet) => set((s) => ({ pets: [...s.pets, pet] })),
+  // A new pet gets a frame colour no other pet of its species uses
+  addPet: (pet) => set((s) => ({ pets: [...s.pets, { ...pet, color: pet.color ?? pickPetColor(pet.species, s.pets) }] })),
 
   updatePet: (id, patch) => set((s) => ({ pets: s.pets.map((p) => (p.id === id ? { ...p, ...patch } : p)) })),
 
@@ -67,7 +69,7 @@ export const useApp = create<AppState>((set, get) => ({
 
   addPaper: ({ pet, isNewPet, document, vaccines, records }) =>
     set((s) => ({
-      pets: isNewPet ? [...s.pets, pet] : s.pets,
+      pets: isNewPet ? [...s.pets, { ...pet, color: pet.color ?? pickPetColor(pet.species, s.pets) }] : s.pets,
       documents: [...s.documents, document],
       vaccines: [...s.vaccines, ...vaccines],
       records: [...s.records, ...records],

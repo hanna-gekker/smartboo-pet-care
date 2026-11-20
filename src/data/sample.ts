@@ -27,6 +27,7 @@ export function sampleData(): AppData {
     pets: [
       {
         id: 'rocky',
+        color: 'ocean',
         name: 'Rocky',
         species: 'dog',
         breed: 'Labrador Retriever',
@@ -40,6 +41,7 @@ export function sampleData(): AppData {
       },
       {
         id: 'milo',
+        color: 'lavender',
         name: 'Milo',
         species: 'cat',
         breed: 'Domestic Shorthair',
@@ -51,6 +53,7 @@ export function sampleData(): AppData {
       },
       {
         id: 'cleo',
+        color: 'butter',
         name: 'Cleo',
         species: 'cat',
         breed: 'Tabby',
@@ -62,6 +65,7 @@ export function sampleData(): AppData {
       },
       {
         id: 'tank',
+        color: 'mint',
         name: 'Tank',
         species: 'fish',
         breed: 'Clownfish',

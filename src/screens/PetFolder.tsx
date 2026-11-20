@@ -10,6 +10,7 @@ import { Chip, SectionTitle, StackScreen } from '../components/ui'
 import { petById, useApp } from '../data/useApp'
 import type { PetRecord, RecordType } from '../data/types'
 import { age, formatDay, relative, today } from '../lib/dates'
+import { getsVaccines, speciesLabel } from '../lib/species'
 
 const filters: { key: 'all' | RecordType; label: string }[] = [
   { key: 'all', label: 'All' },
@@ -29,7 +30,6 @@ const recordIcon: Record<RecordType, IconName> = {
   note: 'sparkle-ai',
 }
 
-const NO_VACCINES = ['fish', 'reptile', 'bird']
 
 export function PetFolder() {
   const { id = '' } = useParams()
@@ -71,15 +71,15 @@ export function PetFolder() {
     >
       {/* Header */}
       <div className="mt-8 flex flex-col items-center text-center">
-        <PetAvatar pet={pet} size="hero" />
+        <PetAvatar pet={pet} size="hero" onAddPhoto={pet.photo ? undefined : () => navigate(`/pets/${pet.id}/edit`)} />
         <h1 className="mt-12 font-display text-display font-medium">{pet.name}</h1>
-        <p className="text-body text-text-secondary">{[pet.species[0].toUpperCase() + pet.species.slice(1), pet.breed, age(pet.birthDate)].filter(Boolean).join(' · ')}</p>
+        <p className="text-body text-text-secondary">{[speciesLabel(pet.species), pet.breed, age(pet.birthDate)].filter(Boolean).join(' · ')}</p>
       </div>
 
       {/* Key facts */}
       <SectionTitle>Key facts</SectionTitle>
       <div className="grid grid-cols-2 gap-8">
-        {!NO_VACCINES.includes(pet.species) && (
+        {getsVaccines(pet.species) && (
           <Tile icon="syringe" label="Vaccines" value={nextVax ? `${nextVax.name.split(' (')[0]} ${relative(nextVax.due!)}` : petVax.length ? 'All up to date' : 'Not known yet'} warn={!petVax.length} />
         )}
         <Tile icon="pill" label="Meds now" value={medsNow.length ? medsNow.map((m) => m.name).join(', ') : 'None'} />
@@ -122,7 +122,7 @@ export function PetFolder() {
       <SectionTitle>Profile</SectionTitle>
       <Card variant="list" className="overflow-hidden">
         {[
-          ['Species', pet.species],
+          ['Species', speciesLabel(pet.species)],
           ['Breed', pet.breed],
           ['Born', pet.birthDate && formatDay(pet.birthDate, { month: 'long', day: 'numeric', year: 'numeric' })],
           ['Microchip', pet.microchip],
