@@ -1,12 +1,12 @@
 // Button — Figma "Button" (Core components).
-// Variants: Primary, Secondary, Ghost. Sizes: Medium (44), Large (56).
+// Variants: Primary, Secondary, Outline (Welcome "Add your pet"), Ghost. Sizes: Medium (44), Large (56).
 // States: pressed (under the finger), focus (keyboard, VoiceOver), disabled, loading.
 
 import { useRef, useState, type ButtonHTMLAttributes, type MouseEvent, type ReactNode } from 'react'
 import { Icon, type IconName } from './Icon'
 import { Spinner } from './Spinner'
 
-export type ButtonVariant = 'primary' | 'secondary' | 'ghost'
+export type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'ghost'
 export type ButtonSize = 'medium' | 'large'
 
 type ButtonProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'children' | 'onClick'> & {
@@ -25,8 +25,10 @@ type ButtonProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'children' | 'o
 
 const variants: Record<ButtonVariant, string> = {
   primary: 'bg-accent-primary text-text-on-accent',
-  // Figma: blue outline and blue icon, black label; the disabled one has a grey outline.
-  secondary: 'bg-surface-card text-text-primary ring-1 ring-inset ring-accent-primary disabled:ring-border-control active:bg-surface-subtle data-[state=pressed]:bg-surface-subtle',
+  // Figma: a soft accent pill (accent/primary-subtle) with an accent/on-subtle label.
+  secondary: 'bg-accent-primary-subtle text-accent-on-subtle',
+  // Figma Welcome "Add your pet": a white pill with a 1px accent outline, a black label and an accent icon.
+  outline: 'bg-surface-card text-text-primary ring-1 ring-inset ring-accent-primary active:bg-surface-subtle data-[state=pressed]:bg-surface-subtle',
   ghost: 'bg-transparent text-text-primary active:bg-surface-subtle data-[state=pressed]:bg-surface-subtle',
 }
 
@@ -66,7 +68,7 @@ export function Button({ children, variant = 'primary', size = 'medium', icon, f
       className={`press inline-flex shrink-0 items-center justify-center gap-8 rounded-full text-body font-medium disabled:opacity-40 ${variants[variant]} ${sizes[size]} ${full ? 'w-full' : ''} ${className}`}
       {...rest}
     >
-      {isLoading ? <Spinner /> : icon && <Icon name={icon} size={20} className={variant === 'secondary' && !disabled ? 'text-accent-primary' : undefined} />}
+      {isLoading ? <Spinner /> : icon && <Icon name={icon} size={20} className={variant === 'outline' ? 'text-accent-primary' : undefined} />}
       {children}
     </button>
   )

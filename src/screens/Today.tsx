@@ -17,7 +17,7 @@ import { nextUpMeta, taskMeta, taskPill, taskState } from '../lib/tasks'
 
 const byUrgency = (a: Task, b: Task) => (a.date + (a.time ?? '99')).localeCompare(b.date + (b.time ?? '99'))
 
-/** Figma "1 · Today": header, Next up, Boo card, Coming up, Your pack, Done today. */
+/** Figma "1 · Today": header, Next up, Boo card, Coming up (a checklist: done tasks stay, crossed out), Your pack. */
 export function Today() {
   const navigate = useNavigate()
   const openBoo = useUi((s) => s.openBoo)
@@ -29,8 +29,11 @@ export function Today() {
   // Important items (not daily chores), overdue first
   const important = open.filter((x) => x.kind !== 'chore' && x.date <= addDays(t, 60))
   const nextUp = overdue[0] ?? open.find((x) => x.date === t) ?? important[0]
-  const comingUp = [...overdue, ...open.filter((x) => !overdue.includes(x))].filter((x) => x !== nextUp && (x.date <= addDays(t, 1) || (x.kind !== 'chore' && x.date <= addDays(t, 60)))).slice(0, 5)
-  const doneToday = tasks.filter((x) => x.doneAt?.startsWith(t))
+  const upcoming = [...overdue, ...open.filter((x) => !overdue.includes(x))].filter((x) => x !== nextUp && (x.date <= addDays(t, 1) || (x.kind !== 'chore' && x.date <= addDays(t, 60)))).slice(0, 5)
+  // A checklist: what was done today stays in the list, checked and crossed out, in its place by time
+  const doneToday = tasks.filter((x) => x.doneAt?.startsWith(t) && x.date === t)
+  const late = upcoming.filter((x) => x.date < t)
+  const comingUp = [...late, ...[...doneToday, ...upcoming.filter((x) => x.date >= t)].sort(byUrgency)]
   const dueSoon = new Set(open.filter((x) => x.date <= addDays(t, 7)).map((x) => x.petId))
   const nextBig = important.find((x) => x.date > t)
   const nextUpPet = nextUp && petById(pets, nextUp.petId)
@@ -46,7 +49,7 @@ export function Today() {
       <header>
         <div className="flex h-control-44 items-center justify-between">
           <Logo />
-          <IconButton variant="plain" icon="settings" label="Settings" onClick={() => navigate('/settings')} className="-mr-2" />
+          <IconButton variant="secondary" icon="settings" label="Settings" onClick={() => navigate('/settings')} className="-mr-2" />
         </div>
         <div className="flex flex-col gap-8 pt-24 pb-16">
           <p className="text-body-s text-text-secondary">{formatDay(t, { weekday: 'long', month: 'short', day: 'numeric' })}</p>
@@ -78,10 +81,10 @@ export function Today() {
         )}
 
         {/* Boo card */}
-        <section aria-label="Boo" className="flex flex-col gap-16 rounded-24 bg-ai-card p-24 ring-1 ring-inset ring-border-card">
+        <section aria-label="Boo" className="flex flex-col gap-16 rounded-24 bg-ai-card p-24 ring-1 ring-inset ring-border-ai-card shadow-card">
           <div className="flex items-center gap-16">
             <button type="button" aria-label="Talk to Boo" onClick={() => openBoo('talk')} className="press shrink-0 rounded-full">
-              <BooCharacter size={72} />
+              <BooCharacter size={94} />
             </button>
             <div className="flex min-w-0 flex-col gap-4">
               <p className="flex items-center gap-4 text-caption text-text-primary">
@@ -95,7 +98,7 @@ export function Today() {
         </section>
 
         {comingUp.length > 0 && (
-          <section aria-label="Coming up" className="overflow-hidden rounded-24 bg-surface-panel ring-1 ring-inset ring-border-card">
+          <section aria-label="Coming up" className="overflow-hidden rounded-24 bg-surface-panel ring-1 ring-inset ring-border-card shadow-card">
             <div className="flex items-center justify-between gap-16 px-24 pt-24 pb-16">
               <h2 className="font-display text-title font-medium">Coming up</h2>
               <button type="button" onClick={() => navigate('/schedule')} className="press -my-12 -mr-8 min-h-control-44 px-8 text-caption text-accent-primary">
@@ -106,7 +109,7 @@ export function Today() {
           </section>
         )}
 
-        <section aria-label="Your pack" className="flex flex-col gap-16 rounded-24 bg-surface-panel ring-1 ring-inset ring-border-card py-24">
+        <section aria-label="Your pack" className="flex flex-col gap-16 rounded-24 bg-surface-panel ring-1 ring-inset ring-border-card shadow-card py-24">
           <div className="flex items-center justify-between gap-16 px-24">
             <h2 className="font-display text-title font-medium">Your pack</h2>
             {dueSoon.size > 0 && (
@@ -125,18 +128,6 @@ export function Today() {
           </div>
         </section>
 
-        {doneToday.length > 0 && (
-          <details className="group">
-            <summary className="press flex min-h-control-56 cursor-pointer list-none items-center gap-12 rounded-24 bg-surface-panel ring-1 ring-inset ring-border-card px-24 py-16">
-              <span className="flex size-icon-24 shrink-0 items-center justify-center rounded-full bg-accent-primary text-text-on-accent">
-                <Icon name="check" size={16} />
-              </span>
-              <span className="flex-1 text-body font-medium">Done today · {doneToday.length}</span>
-              <Icon name="chevron-right" size={20} className="shrink-0 text-text-secondary transition-transform group-open:rotate-90" />
-            </summary>
-            <div className="mt-8 overflow-hidden rounded-24 bg-surface-panel ring-1 ring-inset ring-border-card">{doneToday.map((x) => row(x, false))}</div>
-          </details>
-        )}
       </div>
     </div>
   )

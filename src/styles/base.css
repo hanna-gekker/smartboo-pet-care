@@ -56,6 +56,18 @@
   --color-ai-aura-1: var(--ai-aura-1);
   --color-ai-aura-2: var(--ai-aura-2);
   --color-ai-boo-backdrop: var(--ai-boo-backdrop);
+  --color-ai-card-mint: var(--ai-card-mint);
+  --color-ai-card-blue: var(--ai-card-blue);
+  --color-ai-card-lilac: var(--ai-card-lilac);
+  --color-ai-petal: var(--ai-petal);
+  --color-accent-on-subtle: var(--accent-on-subtle);
+  --color-border-ai-card: var(--border-ai-card);
+  --color-status-attention-bg: var(--status-attention-bg);
+  --color-status-attention-border: var(--status-attention-border);
+  --color-status-waiting-border: var(--status-waiting-border);
+  --color-icon-category-on-chip: var(--icon-category-on-chip);
+  --color-icon-status-on-chip: var(--icon-status-on-chip);
+  --color-text-field-label: var(--text-field-label);
 
   --spacing-*: initial;
   --spacing: initial;
@@ -204,51 +216,77 @@ button {
   outline-offset: 2px;
 }
 
-/* Scroll edge effect (as in iOS 26): content doesn't stop at a hard line, it blurs and melts into
-   the screen background at the top (under the clock) and at the bottom (behind the tab bar).
-   A solid band under the clock, then a 24px fade; the blur fades out with it (a mask).
-   Below the tab bar (z-30) and bottom sheets (z-40), so a sheet's scrim dims it too. */
+/* Screen background (Figma "S1 v2"), pinned to the screen, not to the page, so a long screen
+   doesn't stretch it. Light: plain surface/canvas. Dark: a soft gradient with a haze and three glows
+   in the top-right corner (surface/canvas-*, surface/haze, surface/glow-*). */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: var(--surface-canvas);
+  pointer-events: none;
+}
+:root[data-theme="dark"] body::after {
+  background:
+    radial-gradient(40% 11% at 100% 0%, var(--surface-glow-1), color-mix(in srgb, var(--surface-glow-1) 45%, transparent) 50%, transparent),
+    radial-gradient(30% 10% at 103% 10%, color-mix(in srgb, var(--surface-glow-2) 95%, transparent), color-mix(in srgb, var(--surface-glow-2) 42%, transparent) 50%, transparent),
+    radial-gradient(22% 8% at 104% 19%, color-mix(in srgb, var(--surface-glow-3) 90%, transparent), color-mix(in srgb, var(--surface-glow-3) 35%, transparent) 50%, transparent),
+    radial-gradient(80% 35% at 90% 95%, color-mix(in srgb, var(--surface-haze) 60%, transparent), transparent),
+    linear-gradient(to bottom, var(--surface-canvas-top) 0%, var(--surface-canvas-mid) 45%, var(--surface-canvas-bottom) 100%);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) body::after {
+    background:
+      radial-gradient(40% 11% at 100% 0%, var(--surface-glow-1), color-mix(in srgb, var(--surface-glow-1) 45%, transparent) 50%, transparent),
+      radial-gradient(30% 10% at 103% 10%, color-mix(in srgb, var(--surface-glow-2) 95%, transparent), color-mix(in srgb, var(--surface-glow-2) 42%, transparent) 50%, transparent),
+      radial-gradient(22% 8% at 104% 19%, color-mix(in srgb, var(--surface-glow-3) 90%, transparent), color-mix(in srgb, var(--surface-glow-3) 35%, transparent) 50%, transparent),
+      radial-gradient(80% 35% at 90% 95%, color-mix(in srgb, var(--surface-haze) 60%, transparent), transparent),
+      linear-gradient(to bottom, var(--surface-canvas-top) 0%, var(--surface-canvas-mid) 45%, var(--surface-canvas-bottom) 100%);
+  }
+}
+
+/* Top scroll edge (as in iOS 26): no colour band, the background runs under the clock;
+   content that scrolls up there gets a light blur that fades out downwards. */
 body::before {
   content: "";
   position: fixed;
   inset: 0 0 auto;
-  height: calc(env(safe-area-inset-top) + var(--space-24));
-  background: linear-gradient(to bottom, var(--surface-canvas) 0, var(--surface-canvas) env(safe-area-inset-top), color-mix(in srgb, var(--surface-canvas) 0%, transparent) 100%);
-  -webkit-backdrop-filter: blur(8px);
-  backdrop-filter: blur(8px);
+  height: calc(env(safe-area-inset-top) + var(--space-16));
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
   -webkit-mask-image: linear-gradient(to bottom, #000 0, #000 env(safe-area-inset-top), transparent 100%);
   mask-image: linear-gradient(to bottom, #000 0, #000 env(safe-area-inset-top), transparent 100%);
   z-index: 20;
   pointer-events: none;
 }
-/* Behind the tab bar: from clear above the bar to almost solid canvas at the screen edge. */
-.edge-bottom {
-  position: absolute;
-  inset: auto 0 0;
-  height: calc(max(env(safe-area-inset-bottom), var(--space-16)) + 62px + var(--space-48));
-  background: linear-gradient(to bottom, color-mix(in srgb, var(--surface-canvas) 0%, transparent) 0%, color-mix(in srgb, var(--surface-canvas) 70%, transparent) 55%, var(--surface-canvas) 100%);
-  -webkit-backdrop-filter: blur(8px);
-  backdrop-filter: blur(8px);
-  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 50%);
-  mask-image: linear-gradient(to bottom, transparent 0%, #000 50%);
-  pointer-events: none;
-}
-/* Welcome's gradient runs under the clock, as in Figma. */
 body:has(.bg-welcome)::before {
   display: none;
 }
 
-/* Figma "Assistant card": the Boo card's soft gradient (ai/card-*), top left to bottom right. */
-.bg-ai-card {
-  background: linear-gradient(135deg, var(--ai-card-mint) 0%, var(--ai-card-blue) 45%, var(--ai-card-lilac) 80%, var(--ai-card-pink) 100%);
+/* Figma "Card" shadow on panels and section cards: a soft drop shadow (glass/shadow) and a 1px top highlight
+   inside (glass/highlight). No background blur on cards (it is costly in the iOS web view). */
+.shadow-card {
+  box-shadow: 0 8px 28px var(--glass-shadow), inset 0 1px 1px var(--glass-highlight);
+}
+/* Figma "Icon button · Secondary" (header back, settings): the same glass with a 30 blur behind it. */
+.glass-button {
+  -webkit-backdrop-filter: blur(30px);
+  backdrop-filter: blur(30px);
+  box-shadow: 0 8px 28px var(--glass-shadow), inset 0 1px 1px var(--glass-highlight);
 }
 
-/* Figma "Welcome" background: the ai/backdrop-* gradient (pastel in light, plain canvas in dark)
-   under a 45% ai/sheen wash (white in light, nothing in dark). */
-.bg-welcome {
+/* Figma "Assistant card": the Boo card's soft gradient (ai/card-*), top left to bottom right,
+   with a white wash from the top left (ai/sheen: white in light, nothing in dark). */
+.bg-ai-card {
   background:
-    linear-gradient(color-mix(in srgb, var(--ai-sheen) 45%, transparent), color-mix(in srgb, var(--ai-sheen) 45%, transparent)),
-    linear-gradient(135deg, var(--ai-backdrop-1) 0%, var(--ai-backdrop-2) 45%, var(--ai-backdrop-3) 80%, var(--ai-backdrop-4) 100%);
+    radial-gradient(90% 90% at 0% 0%, color-mix(in srgb, var(--ai-sheen) 80%, transparent), color-mix(in srgb, var(--ai-sheen) 30%, transparent) 60%, transparent),
+    linear-gradient(135deg, var(--ai-card-mint) 0%, var(--ai-card-blue) 35%, var(--ai-card-lilac) 70%, var(--ai-card-pink) 100%);
+}
+
+/* Figma "6 · Welcome": plain surface/canvas; the glow and sparkles are drawn in Welcome.tsx. */
+.bg-welcome {
+  background: var(--surface-canvas);
 }
 
 /* Figma "Glass card": a see-through fill with a highlight at the top, blur behind it,
@@ -276,32 +314,12 @@ body:has(.bg-welcome)::before {
   pointer-events: none;
 }
 
-/* Figma "Tab bar" capsule: surface/glass at 85% with a soft top sheen (ai/highlight → surface/card, 17.5%),
-   a 24 background blur and a 1px rim inside (border/glass-rim-* gradient). No shadow. */
+/* Figma "Tab bar" capsule: surface/card with a 1px border/card inside, a 24 background blur and a soft shadow. */
 .glass-bar {
-  position: relative;
-  background:
-    linear-gradient(180deg, color-mix(in srgb, var(--ai-highlight) 17.5%, transparent) 0%, color-mix(in srgb, var(--surface-card) 17.5%, transparent) 50%, color-mix(in srgb, var(--surface-card) 17.5%, transparent) 100%),
-    color-mix(in srgb, var(--surface-glass) 85%, transparent);
+  background: var(--surface-card);
   -webkit-backdrop-filter: blur(24px);
   backdrop-filter: blur(24px);
-}
-.glass-bar::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  padding: 1px;
-  background: linear-gradient(135deg, var(--border-glass-rim-start) 0%, var(--border-glass-rim-mid) 50%, var(--border-glass-rim-end) 100%);
-  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite: xor;
-  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
-  pointer-events: none;
-}
-
-/* The selected tab pill's soft shadow (Figma 0 1 6, nav/active-shadow: ink 8% in light, none in dark). */
-.tab-pill {
-  box-shadow: 0 1px 6px var(--nav-active-shadow);
+  box-shadow: 0 1px 3px var(--glass-shadow), 0 10px 28px var(--glass-shadow);
 }
 
 /* Pressed state instead of hover: a small shrink. No fading, so text keeps its 4.5:1 contrast while pressed. */
@@ -325,26 +343,92 @@ body:has(.bg-welcome)::before {
   0%, 100% { transform: scale(1); opacity: 1; }
   50% { transform: scale(1.25); opacity: 0.6; }
 }
-/* Boo (BooCharacter): Figma Idle 1 ⇄ 2 and Listening 1 ⇄ 2 as looping animations. */
+/* Boo (BooCharacter): idle = the petals sway ±8° and the eye glints look the same way (Figma Rest → Sway left →
+   Sway right → Rest, ~6 s), no breathing; a blink (eyes squash to a line, glints hidden) is added by BooCharacter
+   at random moments. Listening = Figma Listening 1 ⇄ 2. */
 .boo-flower,
 .boo-core,
 .boo-glow,
-.boo-shadow {
+.boo-eyes {
   transform-box: fill-box;
   transform-origin: center;
 }
-.boo-idle .boo-flower { animation: boo-idle-flower 3.2s ease-in-out infinite alternate; }
-.boo-idle .boo-glow { animation: boo-idle-glow 3.2s ease-in-out infinite alternate; }
-.boo-idle .boo-shadow { animation: boo-idle-shadow 3.2s ease-in-out infinite alternate; }
+.boo-idle .boo-flower { animation: boo-sway 6s ease-in-out infinite; }
+.boo-idle .boo-glints { animation: boo-gaze 6s ease-in-out infinite; }
+.boo-blink .boo-eyes { animation: boo-blink 0.41s ease-in-out; }
+.boo-blink .boo-glints { visibility: hidden; }
 .boo-listening .boo-flower { animation: boo-listen-flower 0.7s ease-in-out infinite alternate; }
 .boo-listening .boo-core { animation: boo-listen-core 0.7s ease-in-out infinite alternate; }
 .boo-listening .boo-glow { animation: boo-listen-glow 0.7s ease-in-out infinite alternate; }
-@keyframes boo-idle-flower { from { transform: rotate(0) scale(1); } to { transform: rotate(-14deg) scale(1.047); } }
-@keyframes boo-idle-glow { from { transform: scale(1); } to { transform: scale(1.08); } }
-@keyframes boo-idle-shadow { from { transform: scaleX(1); } to { transform: scaleX(0.875); } }
+@keyframes boo-sway {
+  0%, 10% { transform: rotate(0); }
+  32% { transform: rotate(-8deg); }
+  58% { transform: rotate(8deg); }
+  80%, 100% { transform: rotate(0); }
+}
+@keyframes boo-gaze {
+  0%, 10% { transform: translateX(0); }
+  32% { transform: translateX(-3.5px); }
+  58% { transform: translateX(2px); }
+  80%, 100% { transform: translateX(0); }
+}
+/* Close in 0.15 s, stay closed 0.06 s, open in 0.2 s: 12.6 → 2.5 high */
+@keyframes boo-blink {
+  0% { transform: scaleY(1); }
+  37% { transform: scaleY(0.2); }
+  51% { transform: scaleY(0.2); }
+  100% { transform: scaleY(1); }
+}
 @keyframes boo-listen-flower { from { transform: rotate(-6deg) scale(0.94); } to { transform: rotate(-16deg) scale(0.86); } }
 @keyframes boo-listen-core { from { transform: scale(0.976); } to { transform: scale(0.905); } }
 @keyframes boo-listen-glow { from { transform: scale(1.15); } to { transform: scale(1.3); } }
+
+/* Boo's palette (Figma "Boo · Jelly flower"). These colours are not Figma Variables yet;
+   they live here, in one place, until they are. Light, then dark. */
+:root {
+  --boo-petal-1: #C9DAFF;
+  --boo-petal-2: #8FAAF5;
+  --boo-petal-3: #5470E3;
+  --boo-petal-4: #4F62CC;
+  --boo-rim: #BFD0FF;
+  --boo-gloss: #FFFFFF;
+  --boo-core-1: #F6F9FF;
+  --boo-core-2: #C4D8FD;
+  --boo-core-3: #7DA0F3;
+  --boo-core-4: #7E92F1;
+  --boo-face-glow-1: #FFFFFFF2;
+  --boo-face-glow-2: #EDF5FFB3;
+  --boo-face-glow-3: #D3E2FF;
+  --boo-ink: #241B33;
+  --boo-blush: #FF8FB0;
+  --boo-shadow: #26306A;
+}
+:root[data-theme="dark"] {
+  --boo-petal-1: #8FA6F2;
+  --boo-petal-2: #5E78E0;
+  --boo-petal-3: #3F52B8;
+  --boo-petal-4: #34449E;
+  --boo-core-1: #D3DDFC;
+  --boo-core-2: #B3C3F6;
+  --boo-core-3: #8098EA;
+  --boo-core-4: #7086E0;
+  --boo-face-glow-1: #FFFFFF00;
+  --boo-face-glow-2: #FFFFFF00;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --boo-petal-1: #8FA6F2;
+    --boo-petal-2: #5E78E0;
+    --boo-petal-3: #3F52B8;
+    --boo-petal-4: #34449E;
+    --boo-core-1: #D3DDFC;
+    --boo-core-2: #B3C3F6;
+    --boo-core-3: #8098EA;
+    --boo-core-4: #7086E0;
+    --boo-face-glow-1: #FFFFFF00;
+    --boo-face-glow-2: #FFFFFF00;
+  }
+}
 
 .animate-sheet-in { animation: sheet-in 260ms cubic-bezier(0.2, 0.8, 0.2, 1); }
 .animate-fade-in { animation: fade-in 200ms ease; }
@@ -358,7 +442,22 @@ body:has(.bg-welcome)::before {
   .boo-flower,
   .boo-core,
   .boo-glow,
-  .boo-shadow {
+  .boo-glints {
     animation: none !important;
   }
+}
+
+/* Figma icon chips (40 circles): coloured chips are for MEANING icons only (health, vaccines, a status).
+   A diagonal gradient with a 1px border inside. Action icons stay neutral. */
+.chip-category,
+.chip-status {
+  position: relative;
+}
+.chip-category {
+  background: linear-gradient(135deg, var(--icon-category-chip-start), var(--icon-category-chip-end));
+  box-shadow: inset 0 0 0 1px var(--icon-category-chip-border);
+}
+.chip-status {
+  background: linear-gradient(135deg, var(--icon-status-chip-start), var(--icon-status-chip-end));
+  box-shadow: inset 0 0 0 1px var(--icon-status-chip-border);
 }

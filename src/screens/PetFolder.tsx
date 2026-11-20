@@ -106,12 +106,17 @@ export function PetFolder() {
         ))}
       </div>
       <TextField label="Search history" type="search" value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search history" trailingIcon="search" className="mt-12" />
-      <ol className="mt-12">
-        {history.map((r) => (
-          <HistoryItem key={r.id} record={r} unit={pet.weightUnit} docTitle={documents.find((d) => d.id === r.documentId && r.type !== 'document')?.title} />
-        ))}
-        {history.length === 0 && <p className="py-32 text-center text-body text-text-secondary">Nothing here yet.</p>}
-      </ol>
+      {history.length > 0 ? (
+        <Card variant="list" className="mt-12 overflow-hidden">
+          <ol>
+            {history.map((r) => (
+              <HistoryItem key={r.id} record={r} unit={pet.weightUnit} docTitle={documents.find((d) => d.id === r.documentId && r.type !== 'document')?.title} />
+            ))}
+          </ol>
+        </Card>
+      ) : (
+        <p className="py-32 text-center text-body text-text-secondary">Nothing here yet.</p>
+      )}
 
       {/* Profile */}
       <SectionTitle>Profile</SectionTitle>
@@ -134,14 +139,19 @@ export function PetFolder() {
   )
 }
 
+// Figma "Key fact tile": Default on a panel; Attention on the honey tint (status/waiting-bg) with status/attention-border.
 function Tile({ icon, label, value, warn, children }: { icon: IconName; label: string; value: string; warn?: boolean; children?: ReactNode }) {
   return (
-    <div className="flex min-h-avatar-80 flex-col gap-4 rounded-24 bg-surface-panel ring-1 ring-inset ring-border-card p-12">
-      <div className="flex items-center gap-4 text-text-secondary">
-        <Icon name={icon} size={16} />
+    <div
+      className={`flex min-h-avatar-80 flex-col gap-8 rounded-24 p-16 ring-1 ring-inset shadow-card ${warn ? 'bg-status-waiting-bg ring-status-attention-border' : 'bg-surface-panel ring-border-card'}`}
+    >
+      <div className="flex items-center gap-8 text-text-secondary">
+        <span className={`flex size-control-32 shrink-0 items-center justify-center rounded-full ${warn ? 'bg-surface-card text-status-waiting-text' : 'bg-accent-primary-subtle text-accent-primary'}`}>
+          <Icon name={icon} size={16} />
+        </span>
         <span className="text-caption font-medium">{label}</span>
       </div>
-      <p className={`mt-4 line-clamp-2 text-body font-medium ${warn ? 'text-status-waiting-text' : ''}`}>{value}</p>
+      <p className={`line-clamp-2 text-body font-medium ${warn ? 'text-status-waiting-text' : ''}`}>{value}</p>
       {children}
     </div>
   )
@@ -161,14 +171,15 @@ function Sparkline({ values }: { values: number[] }) {
 
 function HistoryItem({ record, unit, docTitle }: { record: PetRecord; unit: string; docTitle?: string }) {
   return (
-    <li className="flex gap-12 py-8">
-      <span className="flex size-control-40 shrink-0 items-center justify-center rounded-full bg-accent-primary-subtle text-accent-primary ring-1 ring-inset ring-icon-circle-ring">
+    // Figma "Timeline item": a category chip (a meaning icon), the text, the date on the right; no fill, no divider
+    <li className="flex gap-16 px-24 py-16">
+      <span className="chip-category flex size-control-40 shrink-0 items-center justify-center rounded-full text-icon-category-on-chip">
         <Icon name={recordIcon[record.type]} size={20} />
       </span>
-      <div className="min-w-0 flex-1 border-b border-surface-subtle pb-8">
+      <div className="min-w-0 flex-1">
         <div className="flex items-baseline justify-between gap-8">
           <p className="text-body font-medium">{record.type === 'weight' ? `${record.value} ${unit}` : record.title}</p>
-          <span className="shrink-0 text-caption text-text-tertiary">{formatDay(record.date, { month: 'short', day: 'numeric', year: '2-digit' })}</span>
+          <span className="shrink-0 text-caption text-text-secondary">{formatDay(record.date, { month: 'short', day: 'numeric', year: '2-digit' })}</span>
         </div>
         {record.detail && <p className="text-body-s text-text-secondary">{record.detail}</p>}
         {docTitle && (

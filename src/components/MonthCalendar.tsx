@@ -45,7 +45,7 @@ function monthWeeks(month: string): (string | null)[][] {
 export function MonthCalendar({ month, selected, today, dots, onSelect, onPrev, onNext }: MonthCalendarProps) {
   const weeks = monthWeeks(month)
   return (
-    <div className="flex flex-col gap-12 rounded-24 bg-surface-panel ring-1 ring-inset ring-border-card p-16">
+    <div className="flex flex-col gap-12 rounded-24 bg-surface-panel ring-1 ring-inset ring-border-card shadow-card p-16">
       <div className="flex items-center gap-8">
         <p className="flex-1 text-body font-medium">{fromDay(month).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</p>
         <div className="-my-12 -mr-12 flex">
@@ -82,7 +82,9 @@ export function MonthCalendar({ month, selected, today, dots, onSelect, onPrev, 
                   >
                     <span
                       className={
-                        active || day === today
+                        active
+                          ? 'text-body font-medium text-accent-on-subtle'
+                          : day === today
                           ? 'text-body font-medium text-accent-primary'
                           : `text-body-s ${day < today ? 'text-text-secondary' : 'text-text-primary'}`
                       }

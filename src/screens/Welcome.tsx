@@ -1,14 +1,23 @@
 import { useNavigate } from 'react-router'
+import { AskBooInput } from '../components/AskBooInput'
 import { BooCharacter } from '../components/BooCharacter'
 import { Button } from '../components/Button'
-import { GlassCard } from '../components/GlassCard'
 import { Note } from '../components/Note'
-import { TapHint } from '../components/TapHint'
 import { useUi } from '../data/useUi'
 
+// Figma sparkles around Boo (x, y, size on the 390 frame), in ai/petal.
+const sparkles = [
+  { x: 66, y: 127, s: 22 },
+  { x: 295, y: 155, s: 16 },
+  { x: 311, y: 244, s: 12 },
+  { x: 54, y: 269, s: 10 },
+  { x: 291, y: 76, s: 8 },
+]
+
 /**
- * Figma "Welcome": first launch only, until the first pet exists.
- * Boo on top (tap to talk), an example Reminder on glass, the title in the middle, two equal ways in.
+ * Figma "6 · Welcome": first launch only, until the first pet exists. Talk first.
+ * Boo on a calm glow (tap to talk), then a white card: the title, "Just hand it to Boo.", one field to tell Boo
+ * about your pet (type, camera or mic) and "Add your pet". At the bottom: Boo isn't a vet.
  */
 export function Welcome() {
   const navigate = useNavigate()
@@ -17,56 +26,48 @@ export function Welcome() {
 
   return (
     <div className="bg-welcome relative isolate min-h-dvh overflow-hidden">
-      {/* Soft light behind everything. Figma positions on the 390 frame, kept around the centre line.
-          The aura glows show in dark only, the Boo backdrop in light only (the tokens are clear otherwise). */}
-      <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-full">
-        <div className="absolute top-[150px] left-[calc(50%-15px)] size-[260px] rounded-full bg-ai-aura-2 opacity-28 blur-[55px]" />
-        <div className="absolute top-[40px] left-[calc(50%-285px)] size-[300px] rounded-full bg-ai-aura-1 opacity-60 blur-[45px]" />
-        <div className="absolute top-[313px] left-[calc(50%-100px)] h-[120px] w-[260px] rounded-full bg-ai-aura-2 opacity-22 blur-[30px]" />
-        <div className="absolute top-[43px] left-[calc(50%-125px)] size-[250px] rounded-full bg-ai-boo-backdrop blur-[15px]" />
+      {/* Soft glow behind Boo (Figma "Hero glow"), kept around the centre line */}
+      <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[520px]">
+        <div className="absolute top-[55px] left-[calc(50%-165px)] size-[330px] rounded-full bg-ai-card-mint opacity-47 blur-[88px]" />
+        <div className="absolute top-[60px] left-[calc(50%-180px)] size-[220px] rounded-full bg-ai-card-lilac opacity-55 blur-[88px]" />
+        <div className="absolute top-[60px] left-[calc(50%-40px)] size-[220px] rounded-full bg-ai-card-blue opacity-55 blur-[88px]" />
+        {sparkles.map((p) => (
+          <svg key={p.x} viewBox="0 0 24 24" className="absolute fill-ai-petal" style={{ top: p.y, left: `calc(50% + ${p.x - 195}px)`, width: p.s, height: p.s }}>
+            <path d="M12 0c.6 6.6 5.4 11.4 12 12-6.6.6-11.4 5.4-12 12-.6-6.6-5.4-11.4-12-12C6.6 11.4 11.4 6.6 12 0Z" />
+          </svg>
+        ))}
       </div>
 
       <div className="pt-safe flex min-h-dvh flex-col">
-        <div className="flex flex-1 flex-col items-center px-24 pt-24">
-          {/* Boo: the Figma instance is 200 wide, set 10px out of its 180 frame */}
-          <button type="button" aria-label="Talk to Boo" onClick={talk} className="press relative size-[180px] shrink-0 rounded-full">
-            <BooCharacter size={200} className="absolute -top-[10px] -left-[10px]" />
+        <div className="flex flex-1 flex-col items-center justify-end gap-16 px-16 pt-4 pb-16">
+          {/* Boo: the Figma instance is 275 × 300, set 14 / 22 out of its 248 frame */}
+          <button type="button" aria-label="Talk to Boo" onClick={talk} className="press relative mx-auto mb-8 size-[248px] shrink-0 rounded-full">
+            <BooCharacter size={275} className="absolute -top-[22px] -left-[14px]" />
           </button>
-          <div className="pt-[36px]">
-            <TapHint label="Tap Boo to talk" onClick={talk} />
-          </div>
-          <div className="pt-32">
-            <GlassCard image="/pets/rocky.jpg" title="Rocky’s rabies is due in 2 weeks" caption="Reminder" />
-          </div>
 
-          <div className="flex flex-1 flex-col items-center justify-center py-24 text-center">
-            <h1 className="font-display text-display font-medium">
-              {/* Line breaks as in Figma */}
-              Everything about
-              <br />
-              your pets,
-              <br />
-              in one place.
-            </h1>
-            <p className="mt-8 text-body-l text-text-secondary">Just hand it to Boo.</p>
-          </div>
-        </div>
-
-        <div className="pb-safe px-16">
-          <div className="flex flex-col gap-[20px] pb-8">
+          <section className="shadow-card flex w-full max-w-420 flex-col gap-24 rounded-24 bg-surface-card px-24 pt-32 pb-24 text-center ring-1 ring-inset ring-border-card">
+            <div className="flex flex-col gap-8">
+              <h1 className="font-display text-display font-medium">
+                {/* Line breaks as in Figma */}
+                Everything about
+                <br />
+                your pets,
+                <br />
+                in one place.
+              </h1>
+              <p className="text-body-l text-text-secondary">Just hand it to Boo.</p>
+            </div>
             <div className="flex flex-col gap-12">
-              <Button full size="large" icon="camera" onClick={() => openBoo('snap')}>
-                Snap a vet paper
-              </Button>
-              <Button full size="large" variant="secondary" icon="plus" onClick={() => navigate('/pets/new')}>
+              <AskBooInput variant="field" placeholder="Tell me about your pet…" onType={() => openBoo('type')} onSnap={() => openBoo('snap')} onTalk={talk} />
+              <Button full size="large" variant="outline" icon="plus" onClick={() => navigate('/pets/new')}>
                 Add your pet
               </Button>
             </div>
-            <div className="flex flex-col gap-8">
-              <Note icon="home">Your pets’ records stay on this phone.</Note>
-              <Note icon="stethoscope">Boo keeps your pet’s records. It isn’t a vet.</Note>
-            </div>
-          </div>
+          </section>
+        </div>
+
+        <div className="pb-safe flex justify-center px-16 pt-4">
+          <Note icon="stethoscope">Boo keeps your pet’s records. It isn’t a vet.</Note>
         </div>
       </div>
     </div>

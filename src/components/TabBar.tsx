@@ -1,9 +1,8 @@
 // Tab bar — Figma "Tab bar" + "Tab item" (Patterns).
-// A frosted glass capsule with Today · Schedule · Pets, and Boo to its right.
+// A capsule (surface/card, border/card hairline, 24 background blur, soft shadow) with Today · Schedule · Pets, and Boo to its right.
 // Capsule 62 high with 4 inside, tabs 54 high; the bar is 348 wide on a 390 phone (21 on each side).
-// The selected tab is a pill (nav/active-*) with the filled icon, marked for VoiceOver with aria-current="page".
-// A coral dot on Schedule when something is overdue. Content scrolls under the glass and melts into the
-// screen background behind it (scroll edge effect, .edge-bottom).
+// The selected tab is a nav/active-fill pill with the filled icon, marked for VoiceOver with aria-current="page".
+// A coral dot on Schedule when something is overdue. Content scrolls under the bar; no fade behind it.
 
 import { Link } from 'react-router'
 import { BooCharacter } from './BooCharacter'
@@ -31,7 +30,7 @@ type TabBarProps = {
 export function TabBar({ active, overdue = false, onBoo, docked = true }: TabBarProps) {
   const bar = (
     <div className="pointer-events-auto flex w-full max-w-420 items-center gap-8">
-      <nav aria-label="Main" className="glass-bar flex h-[62px] flex-1 items-center rounded-full p-4">
+      <nav aria-label="Main" className="glass-bar flex h-[62px] flex-1 items-center rounded-full p-4 ring-1 ring-inset ring-border-card">
         {tabs.map((t) => {
           const on = t.key === active
           const dot = overdue && t.key === 'schedule'
@@ -42,7 +41,7 @@ export function TabBar({ active, overdue = false, onBoo, docked = true }: TabBar
               aria-current={on ? 'page' : undefined}
               aria-label={dot ? `${t.label}, overdue` : undefined}
               className={`press relative flex h-[54px] flex-1 flex-col items-center justify-center gap-2 rounded-full text-tab-label font-medium ${
-                on ? 'tab-pill bg-nav-active-fill text-nav-active-content' : 'text-text-secondary'
+                on ? 'bg-nav-active-fill text-nav-active-content' : 'text-text-secondary'
               }`}
             >
               <Icon name={on ? t.iconOn : t.icon} size={20} className={on ? 'text-nav-active-icon' : ''} />
@@ -68,8 +67,7 @@ export function TabBar({ active, overdue = false, onBoo, docked = true }: TabBar
   if (!docked) return bar
   return (
     <div className="pointer-events-none fixed inset-x-0 bottom-0 z-30 flex justify-center px-[21px] pb-safe-16">
-      <div aria-hidden="true" className="edge-bottom" />
-      <div className="relative flex w-full justify-center">{bar}</div>
+      {bar}
     </div>
   )
 }

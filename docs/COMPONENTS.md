@@ -210,3 +210,35 @@ Surfaces, back to front:
 - `surface/glass` — the tab bar.
 
 Also from the export: overdue and form errors are rose (`status/waiting-*`, `status/error-*`).
+
+## 15. New visual design (Nov 19, 2026)
+
+Everything follows the current Figma "★ Screens" and the Design system page; tokens came in with a full Variables export (`npm run tokens`).
+
+| Component | File | What changed |
+|---|---|---|
+| Screen background | `base.css` (`body::after`) | Light: plain `surface/canvas`. Dark: `surface/canvas-top → mid → bottom` with a `surface/haze` and three `surface/glow-*` radials in the top-right corner. Pinned to the screen, not to the page. The solid band under the clock is gone (a light blur instead); the fade behind the tab bar is gone |
+| Card, section cards | `Card.tsx`, all screens | `surface/panel` + 1px `border/card` + `.shadow-card` (0 8 28 `glass/shadow`, a 1px `glass/highlight` inside). No background blur on cards. Rows inside have no fill and no dividers; the header has no strip of its own |
+| Tab bar | `TabBar.tsx` | Capsule on `surface/card` with a `border/card` hairline, a 24 blur and a soft shadow. Selected tab: a `nav/active-fill` pill (indigo in light) with `nav/active-icon` / `nav/active-content`, no shadow |
+| Icon button | `IconButton.tsx` | Secondary = glass (`surface/panel`, `border/card`, 30 blur, card shadow): back and settings. Soft = `accent/primary-subtle` with an accent icon |
+| Button | `Button.tsx` | Secondary = soft accent pill (`accent/primary-subtle`, `accent/on-subtle` label). New **Outline**: white with a 1px accent outline (Welcome "Add your pet") |
+| Checkbox | `Checkbox.tsx` | 24 circle (was 32), check icon 14; the tap area stays 44 |
+| Task row | `TaskRow.tsx` | Checkbox on the left, before the pet photo, gap 12. Done = checked + crossed out in `text/secondary`; the photo isn't faded |
+| Ask Boo input | `AskBooInput.tsx` | `variant="row"` (Today): a white pill with the placeholder and the Soft camera, then a separate 56 Primary mic. `variant="field"` (Welcome): one pill on `surface/canvas` with a `border/card` hairline, camera (white, `border/card`) and mic (`accent/primary`) both 40 inside |
+| Segmented control | `SegmentedControl.tsx` | White capsule (`surface/card`, `border/card`, card shadow); the chosen segment is a `nav/active-fill` pill with a medium `nav/active-content` label |
+| Next up, Attention, Key fact tile | `NextUpCard.tsx`, Pet folder | Honey attention: `status/waiting-bg`; the Attention tile adds `status/attention-border` |
+| Icon chips | `ListRow.tsx`, Pet folder history (`.chip-category`, `.chip-status` in `base.css`) | 40 circles with a diagonal `icon/category-chip-*` (or `icon/status-chip-*`) gradient, a 1px border inside and a white icon. Only for meaning icons; actions stay neutral |
+| Boo card (Today) | `Today.tsx` | `ai/card-*` gradient with a white wash from the top left, `border/ai-card` hairline |
+| Filter chip | `ui.tsx` (`Chip`) | Selected = `accent/primary` with `text/on-accent`; default = white with a `border/control` outline |
+| BooFlower (new) | `BooFlower.tsx` | Boo's "jelly flower" drawing (Figma "Boo · Jelly flower", face G8): eight glossy petals, a soft core, round eyes with two glints, a smile and blush. Used by BooCharacter and the Logo mark. Its colours are `--boo-*` in `base.css` (light and dark), not Figma Variables yet |
+| Boo / Character | `BooCharacter.tsx` | Idle: the petals sway ±8° and the eye glints look the same way (~6 s loop), a blink at a random moment every 3–5 s (sometimes twice). No breathing. Reduced motion: only the blink. Listening unchanged. Glow and halos from `ai/glow`, `ai/halo` |
+| Logo | `Logo.tsx` | The mark is the jelly flower (still) |
+| Welcome | `Welcome.tsx` | Talk-first: Boo on a calm glow with sparkles, a white card with the title, "Just hand it to Boo.", the Ask Boo field and "Add your pet" (Outline); the "isn't a vet" note at the bottom. The Reminder glass card, "Tap Boo to talk", "Snap a vet paper" and the "stays on this phone" note are gone |
+| Today | `Today.tsx` | Coming up is a checklist: tasks done today stay in place, checked and crossed out. No "Done today" section |
+
+Decisions (Nov 19, 2026):
+- **Text on soft accent fills uses `accent/on-subtle`** (the Call pill, the selected day in Week and Month): `accent/primary` on `accent/primary-subtle` is 4.1:1, below 4.5.
+- **Section titles stay SB/Title (24 Medium).** Figma frames show 21 Semibold, but there is no text style or Variable for it yet.
+- **No 20px padding token**, so cards keep 24 where Figma has 20.
+- `GlassCard` and `TapHint` are no longer used on screens; they stay in Storybook for now.
+- Pet folder keeps its current layout with the new look. The Figma layout (Attention card, Health list, "Share records" under the name) is a separate step.
