@@ -302,3 +302,16 @@ Task row: the whole row is one checkbox now (a tap anywhere checks it; VoiceOver
 
 Shown everywhere: every component in the list above has a story per state in Storybook (Pressed, Focus, Disabled, Loading, Error, Selected / Checked / Waiting / Today where they apply; `Button` and `IconButton` also have an **AllStates** table like the Figma board) and a row on `/components`, light and dark. For `/components`, components take an optional `data-state` ("pressed" / "focus") that only forces the look; screens never pass it. New `disabled` on `Chip`, `ColorSwatches`, `SpeciesTile` and `AskBooInput` (the whole input at 40%, inert).
 
+
+## 20. Boo errors and first-launch sheets (Nov 19, 2026)
+
+Figma: ★ Screens → "Boo" (8e Photo too blurry, 8f Couldn't read, 8g Camera access off, 8h Offline, 8i Didn't catch that) and the first-launch sheets 6a–6g. Copy: PRODUCT.md "When something goes wrong".
+
+| Component | Status | Variants and states | Props | Notes |
+|---|---|---|---|---|
+| **Boo error** | new, `BooError.tsx` | paper (a small paper thumbnail) · voice ("…") · text (what was typed) | `input`, `message`, `primary`, `secondary` | On the right, what you gave Boo in a `surface/subtle` bubble (radius 16, padding 8; the paper thumb 44 × 56, radius 8, `surface/card` with `border/card` and grey lines). Under it the mini Boo (40) and Boo's words (SB/Body L). Two Large buttons side by side, Primary then Secondary. The second button is always a way without the AI |
+| **Sheet header** | new, `SheetHeader` in `BooSheet.tsx` | idle · listening (Reading) | `title`, `listening` | Figma "Header": the mini Boo (56) and the title (SB/Title), 12 apart; content 16 below it |
+| **Source row** | Card (tappable) | default · pressed · focus | — | Figma 6a "Sources": three cards (radius 16, `surface/card`, `border/card`, padding 16): a 40 `accent/primary-subtle` circle with the accent icon, the label (Body Strong), a chevron. Camera · Photo library · PDF from Files |
+| **Reading** | in `BooSheet.tsx` | moving · still (reduced motion) | — | Figma 6c: a 112 × 140 paper (radius 8, grey lines, an accent title bar and circle) with an accent scan line moving down and up; under it a review-card skeleton (`surface/panel`, radius 24, grey bars) with a soft shimmer |
+
+When each error shows up today (Boo is still faked): **Offline** when you pick a paper with no connection (the paper waits and is read as soon as you're back online); **Didn't catch that** when Talk hears nothing. **Photo too blurry**, **Couldn't read** and **Camera access off** come from the real Boo and the iPhone camera later; their place is ready (`readPaper` can fail with them) and they are in Storybook and on `/components`.
