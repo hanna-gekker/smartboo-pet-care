@@ -112,12 +112,13 @@ export function PetAvatar({ pet, size = 'sm', dueSoon, outlined, petals: flower,
       {dueSoon && <span className="absolute top-0 right-0 size-12 rounded-full border-2 border-surface-card bg-status-waiting-dot" />}
       {initial && <Initial pet={pet} />}
       {onAddPhoto && (
-        // Figma: a 32 badge at the bottom right, outside the photo circle; the tap area is 44
+        // Figma: a 32 badge at 45° bottom right, its centre 0.45 × size from the avatar centre along the diagonal (58 on a 128);
+        // the tap area around it is 44
         <button
           type="button"
           aria-label={`Add a photo of ${pet?.name ?? 'your pet'}`}
           onClick={onAddPhoto}
-          className="press absolute -right-8 -bottom-8 flex size-control-44 items-center justify-center rounded-full"
+          className="press absolute top-[calc(82%-22px)] left-[calc(82%-22px)] flex size-control-44 items-center justify-center rounded-full"
         >
           <span className="shadow-card flex size-control-32 items-center justify-center rounded-full bg-surface-card text-text-primary ring-1 ring-border-card ring-inset">
             <Icon name="camera" size={18} />

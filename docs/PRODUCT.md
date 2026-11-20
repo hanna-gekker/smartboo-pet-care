@@ -46,7 +46,7 @@ If a pet with the same name already exists, the paper goes into that pet's folde
 One question per screen. A nav bar ("Add your pet", back), a step bar under it, the question, and at the bottom an optional "Skip", the main button and "Or just tell Boo" (opens the Boo sheet). The steps adapt to the species.
 
 1. **"Who's joining the family?"** / "Pick one. You can add more pets later." — 17 species in a 4-column grid: dog, cat, rabbit, hamster, guinea pig, rat, chinchilla, ferret, hedgehog, bird, parrot, fish, turtle, lizard, snake, frog, other. Button "Next".
-2. **"What's their name?"** — the species placeholder with an add-photo badge, "Add a photo", the frame colour swatches, the field "Name". "Next".
+2. **"What's their name?"** — the species placeholder with an add-photo badge, "Add a photo" under it, the field "Name", then the frame colour swatches; the placeholder follows the chosen colour right away. "Next".
 3. **"Do you know the breed?"** / "Optional. You can change it later." — a breed search ("Search breeds") and popular choices for the species (for fish: "What kind of fish?"), each list ending with "I'm not sure". Skip + "Next".
 4. **"When was {Name} born?"** — "Date of birth", or "I don't know the exact date" ("If unsure, Boo asks for an approximate age instead."). "Next".
 5. **"How much does {Name} weigh?"** / "Optional. Helps Boo track changes." — lb or kg for dogs, cats and other larger pets; g or oz for small mammals, birds and reptiles ("Optional. Small pets are weighed in grams."). Fish have no weight step: their flow has 4 steps and step 4 saves the pet. Skip + "Save pet".
