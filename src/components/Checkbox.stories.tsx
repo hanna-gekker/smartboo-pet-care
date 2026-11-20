@@ -17,7 +17,7 @@ export const Empty: Story = {}
 export const Checked: Story = { args: { checked: true } }
 export const Waiting: Story = { args: { tone: 'waiting', label: 'Bloodwork recheck' } }
 export const Pressed: Story = { parameters: { pseudo: { active: true } } }
-export const Focus: Story = { parameters: { pseudo: { focusVisible: true } } }
+export const Focus: Story = { parameters: { pseudo: { focusVisible: ['button'] } } }
 export const Disabled: Story = { args: { disabled: true } }
 /** Tap it: done ⇄ not done. */
 export const Interactive: Story = {

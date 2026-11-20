@@ -432,7 +432,7 @@ function ResultView({ result, onBack, onPick }: { result: BooResult; onBack: () 
               closeBoo()
               navigate(`/pets/${result.source!.petId}`)
             }}
-            className="press mt-12 flex min-h-control-44 items-center gap-4 text-body font-medium text-accent-primary"
+            className="press mt-12 flex min-h-control-44 items-center gap-4 rounded-full text-body font-medium text-accent-primary"
           >
             {result.source.label}
             <Icon name="chevron-right" size={20} />

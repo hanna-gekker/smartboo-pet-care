@@ -49,7 +49,7 @@ export function PetForm() {
         }}
         className="mt-16 flex flex-col gap-8"
       >
-        <button type="button" onClick={() => photoInput.current?.click()} className="press mx-auto mb-8 flex flex-col items-center gap-8">
+        <button type="button" onClick={() => photoInput.current?.click()} className="press mx-auto mb-8 flex flex-col rounded-24 items-center gap-8">
           <PetAvatar pet={pet.name ? pet : undefined} size="hero" />
           <span className="text-body-s font-medium text-accent-primary">{pet.photo ? 'Change photo' : 'Add a photo'}</span>
         </button>

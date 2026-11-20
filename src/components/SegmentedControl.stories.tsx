@@ -20,7 +20,7 @@ type Story = StoryObj<typeof meta>
 
 export const Week: Story = {}
 export const Month: Story = { args: { value: 'month' } }
-export const Focus: Story = { parameters: { pseudo: { focusVisible: true } } }
+export const Focus: Story = { parameters: { pseudo: { focusVisible: ['[aria-checked="true"]'] } } }
 /** Tap to switch. */
 export const Interactive: Story = {
   render: function Interactive(args) {

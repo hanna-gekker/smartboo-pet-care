@@ -14,7 +14,8 @@ type Story = StoryObj<typeof meta>
 
 export const Default: Story = {}
 export const Pressed: Story = { parameters: { pseudo: { active: true } } }
-export const Focus: Story = { parameters: { pseudo: { focusVisible: true } } }
+/** Keyboard focus on the field (only that element: `true` would outline every box in the story) */
+export const Focus: Story = { parameters: { pseudo: { focusVisible: ['button.text-left'] } } }
 /** Welcome: a grey field on a white card */
 export const WelcomeField: Story = {
   args: { surface: 'canvas', placeholder: 'Tell me about your pet…' },

@@ -101,7 +101,7 @@ export function Today() {
           <section aria-label="Coming up" className="overflow-hidden rounded-24 bg-surface-panel ring-1 ring-inset ring-border-card shadow-card">
             <div className="flex items-center justify-between gap-16 px-24 pt-24 pb-16">
               <h2 className="font-display text-title font-medium">Coming up</h2>
-              <button type="button" onClick={() => navigate('/schedule')} className="press -my-12 -mr-8 min-h-control-44 px-8 text-caption text-accent-primary">
+              <button type="button" onClick={() => navigate('/schedule')} className="press -my-12 -mr-8 min-h-control-44 rounded-full px-8 text-caption text-accent-primary">
                 See schedule
               </button>
             </div>
@@ -118,9 +118,9 @@ export function Today() {
               </p>
             )}
           </div>
-          <div className="swipe-row flex gap-16 px-24">
+          <div className="swipe-row -my-4 flex gap-16 px-24 py-4">
             {pets.map((p) => (
-              <button key={p.id} type="button" onClick={() => navigate(`/pets/${p.id}`)} className="press flex w-avatar-80 shrink-0 flex-col items-center gap-8">
+              <button key={p.id} type="button" onClick={() => navigate(`/pets/${p.id}`)} className="press flex w-avatar-80 shrink-0 flex-col items-center gap-8 rounded-16">
                 <PetAvatar pet={p} petals={petColor(p, pets)} dueSoon={dueSoon.has(p.id)} />
                 <span className="w-full truncate text-center text-body">{p.name}</span>
               </button>

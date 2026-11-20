@@ -69,6 +69,7 @@ Testing data: the first launch loads sample pets (Rocky, Milo, Cleo, Tank). Sett
 - A new component goes into `docs/COMPONENTS.md` first, and I approve it before it is built.
 - Variants and states come from Figma and are set by props (`variant`, `size`, `disabled`, `loading`, `error`…). Texts and data come in through props too: a component never knows which screen it is on.
 - Every state a phone has: pressed (no hover), visible focus, disabled, loading (a second tap does nothing), field error (outline and a message under the field, not only color).
+- Focus outline (for keyboard and Switch Control): only on tappable things, following their shape (`rounded-*`), drawn inside a row that sits in a card (`focus-inset`). In stories, set focus on one element (`focusVisible: ['button']`), never `true`. `npm run lint` checks this (`scripts/check-focus.mjs`).
 - Touch targets at least 44×44, even when the shape is smaller. A real `button` for anything tappable, a label for every field, `aria-label` on icon-only buttons.
 - In classes only tokens: no hex and no values in square brackets for colors, spacing, radii or fonts.
 - Check page: `/components` (only in `npm run dev`) shows every component in every state, light and dark side by side.

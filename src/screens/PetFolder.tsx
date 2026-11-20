@@ -98,7 +98,7 @@ export function PetFolder() {
 
       {/* History */}
       <SectionTitle>History</SectionTitle>
-      <div role="tablist" className="swipe-row -mx-16 flex gap-8 px-16">
+      <div role="tablist" className="swipe-row -mx-16 -my-4 flex gap-8 px-16 py-4">
         {filters.map((f) => (
           <Chip key={f.key} active={filter === f.key} onClick={() => setFilter(f.key)}>
             {f.label}

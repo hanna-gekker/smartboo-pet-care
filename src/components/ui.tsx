@@ -18,7 +18,7 @@ export function SectionTitle({ children, action }: { children: ReactNode; action
 /** The action link in a section header, e.g. "See schedule". */
 export function TextLink({ children, onClick }: { children: ReactNode; onClick: () => void }) {
   return (
-    <button type="button" onClick={onClick} className="press -mr-8 min-h-control-44 px-8 text-body font-medium text-accent-primary">
+    <button type="button" onClick={onClick} className="press -mr-8 min-h-control-44 rounded-full px-8 text-body font-medium text-accent-primary">
       {children}
     </button>
   )

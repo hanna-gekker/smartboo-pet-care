@@ -17,7 +17,7 @@ type Story = StoryObj<typeof meta>
 export const Default: Story = {}
 export const Selected: Story = { args: { selected: true } }
 export const Pressed: Story = { parameters: { pseudo: { active: true } } }
-export const Focus: Story = { parameters: { pseudo: { focusVisible: true } } }
+export const Focus: Story = { parameters: { pseudo: { focusVisible: ['button'] } } }
 /** Step 1 of Add your pet: all 17 species */
 export const Grid: Story = {
   decorators: [() => (

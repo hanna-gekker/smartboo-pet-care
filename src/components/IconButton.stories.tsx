@@ -21,5 +21,5 @@ export const Soft: Story = { args: { variant: 'soft', icon: 'camera', label: 'Sn
 export const Plain: Story = { args: { variant: 'plain', icon: 'settings', label: 'Settings' } }
 export const Size56: Story = { args: { size: 56, icon: 'mic', label: 'Talk to Boo' } }
 export const Pressed: Story = { args: { variant: 'secondary', icon: 'chevron-left', label: 'Back' }, parameters: { pseudo: { active: true } } }
-export const Focus: Story = { parameters: { pseudo: { focusVisible: true } } }
+export const Focus: Story = { parameters: { pseudo: { focusVisible: ['button'] } } }
 export const Disabled: Story = { args: { icon: 'arrow-up', label: 'Send', disabled: true } }
