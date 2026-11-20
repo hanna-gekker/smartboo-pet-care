@@ -71,6 +71,8 @@ export function TabBar({ active, overdue = false, onBoo, docked = true, 'data-st
   if (!docked) return bar
   return (
     <div className="pointer-events-none fixed inset-x-0 bottom-0 z-30 flex justify-center px-[21px] pb-safe-16">
+      {/* Bottom scroll edge: content that scrolls below the capsule blurs and fades into the background */}
+      <span aria-hidden="true" className="tab-bar-edge" />
       {bar}
     </div>
   )
