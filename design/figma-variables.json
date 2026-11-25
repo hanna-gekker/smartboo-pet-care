@@ -194,7 +194,7 @@
       "surface": {
         "canvas": {
           "$type": "color",
-          "$value": "{neutral.90}",
+          "$value": "{neutral.80}",
           "$description": "Screen background. Light: neutral/100 #F2F2F7 (iOS grouped background); Dark: gray/950."
         },
         "card": {
@@ -270,6 +270,11 @@
           "$type": "color",
           "$value": "{cyan.150}",
           "$description": "Right-edge glow, cyan (lowest)"
+        },
+        "panel-end": {
+          "$type": "color",
+          "$value": "{lavender.40}",
+          "$description": "Bottom of the soft panel gradient (surface/panel → surface/panel-end, top to bottom)."
         }
       },
       "text": {
@@ -336,6 +341,11 @@
         "ai-card": {
           "$type": "color",
           "$value": "{lavender.100}"
+        },
+        "panel-edge": {
+          "$type": "color",
+          "$value": "{base.white}",
+          "$description": "Crisp edge of soft panels (1.5px inside)."
         }
       },
       "accent": {
@@ -864,7 +874,7 @@
       "surface": {
         "canvas": {
           "$type": "color",
-          "$value": "{gray.940}",
+          "$value": "{lavender.940}",
           "$description": "Screen background. Light: neutral/100 #F2F2F7 (iOS grouped background); Dark: gray/950."
         },
         "card": {
@@ -940,6 +950,11 @@
           "$type": "color",
           "$value": "{cyan.800}",
           "$description": "Right-edge glow, cyan (lowest)"
+        },
+        "panel-end": {
+          "$type": "color",
+          "$value": "{alpha.white-6}",
+          "$description": "Bottom of the soft panel gradient (surface/panel → surface/panel-end, top to bottom)."
         }
       },
       "text": {
@@ -1006,6 +1021,11 @@
         "ai-card": {
           "$type": "color",
           "$value": "{alpha.white-10}"
+        },
+        "panel-edge": {
+          "$type": "color",
+          "$value": "{alpha.white-10}",
+          "$description": "Crisp edge of soft panels (1.5px inside)."
         }
       },
       "accent": {

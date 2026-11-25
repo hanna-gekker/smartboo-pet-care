@@ -143,7 +143,7 @@ export function PetFolder() {
 function Tile({ icon, label, value, warn, children }: { icon: IconName; label: string; value: string; warn?: boolean; children?: ReactNode }) {
   return (
     <div
-      className={`flex min-h-avatar-80 flex-col gap-8 rounded-24 p-16 ring-1 ring-inset shadow-card ${warn ? 'bg-status-waiting-bg ring-status-attention-border' : 'bg-surface-panel ring-border-card'}`}
+      className={`flex min-h-avatar-80 flex-col gap-8 rounded-24 p-16 ${warn ? 'bg-status-waiting-bg shadow-card ring-1 ring-inset ring-status-attention-border' : 'panel-card'}`}
     >
       <div className="flex items-center gap-8 text-text-secondary">
         <span className={`flex size-control-32 shrink-0 items-center justify-center rounded-full ${warn ? 'bg-surface-card text-status-waiting-text' : 'bg-accent-primary-subtle text-accent-primary'}`}>

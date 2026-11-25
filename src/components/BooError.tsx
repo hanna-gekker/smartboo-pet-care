@@ -33,7 +33,7 @@ export function BooError({ input, message, primary, secondary }: BooErrorProps) 
         </div>
       </div>
       <div className="flex items-center gap-12">
-        <BooCharacter look="mini" size={40} />
+        <BooCharacter look="mini" size={40} pose="oops" />
         <p role="status" className="min-w-0 flex-1 text-body-l text-text-primary">
           {message}
         </p>

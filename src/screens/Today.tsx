@@ -84,7 +84,7 @@ export function Today() {
         <section aria-label="Boo" className="flex flex-col gap-16 rounded-24 bg-ai-card p-24 ring-1 ring-inset ring-border-ai-card shadow-card">
           <div className="flex items-center gap-16">
             <button type="button" aria-label="Talk to Boo" onClick={() => openBoo('talk')} className="press shrink-0 rounded-full">
-              <BooCharacter size={94} />
+              <BooCharacter size={94} pose="wave" />
             </button>
             <div className="flex min-w-0 flex-col gap-4">
               <p className="flex items-center gap-4 text-caption text-text-primary">
@@ -98,7 +98,7 @@ export function Today() {
         </section>
 
         {comingUp.length > 0 && (
-          <section aria-label="Coming up" className="overflow-hidden rounded-24 bg-surface-panel ring-1 ring-inset ring-border-card shadow-card">
+          <section aria-label="Coming up" className="panel-card overflow-hidden rounded-24">
             <div className="flex items-center justify-between gap-16 px-24 pt-24 pb-16">
               <h2 className="font-display text-title font-medium">Coming up</h2>
               <button type="button" onClick={() => navigate('/schedule')} className="press -my-12 -mr-8 min-h-control-44 rounded-full px-8 text-caption text-accent-primary">
@@ -109,7 +109,7 @@ export function Today() {
           </section>
         )}
 
-        <section aria-label="Your pack" className="flex flex-col gap-16 rounded-24 bg-surface-panel ring-1 ring-inset ring-border-card shadow-card py-24">
+        <section aria-label="Your pack" className="panel-card flex flex-col gap-16 rounded-24 py-24">
           <div className="flex items-center justify-between gap-16 px-24">
             <h2 className="font-display text-title font-medium">Your pack</h2>
             {dueSoon.size > 0 && (

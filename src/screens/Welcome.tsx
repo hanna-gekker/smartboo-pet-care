@@ -42,7 +42,7 @@ export function Welcome() {
         <div className="flex flex-1 flex-col items-center justify-end gap-16 px-16 pt-4 pb-16">
           {/* Boo: the Figma instance is 275 × 300, set 14 / 22 out of its 248 frame */}
           <button type="button" aria-label="Talk to Boo" onClick={talk} className="press relative mx-auto mb-8 size-[248px] shrink-0 rounded-full">
-            <BooCharacter size={275} className="absolute -top-[22px] -left-[14px]" />
+            <BooCharacter size={275} pose="wave" className="absolute -top-[22px] -left-[14px]" />
           </button>
 
           <section className="shadow-card flex w-full max-w-420 flex-col gap-24 rounded-24 bg-surface-card p-24 text-center ring-1 ring-inset ring-border-card">

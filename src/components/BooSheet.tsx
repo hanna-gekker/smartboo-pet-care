@@ -11,7 +11,7 @@ import { BOO_ERRORS, BooPaperError, type BooErrorCase } from '../lib/booErrors'
 import { addDays, formatDay, nowTime, today } from '../lib/dates'
 import { convertWeight } from '../lib/weight'
 import { BottomSheet } from './BottomSheet'
-import { BooCharacter } from './BooCharacter'
+import { BooCharacter, type BooPose } from './BooCharacter'
 import { BooError } from './BooError'
 import { Button } from './Button'
 import { Card } from './Card'
@@ -240,7 +240,7 @@ function StepView({ step, setStep, text, setText }: { step: Step; setStep: (s: S
       // Figma 6c: a paper being scanned and the review card it turns into
       return (
         <div className="flex flex-col gap-16">
-          <SheetHeader title="Reading…" listening />
+          <SheetHeader title="Reading…" pose="reading" />
           <ReadingPicture />
         </div>
       )
@@ -248,7 +248,7 @@ function StepView({ step, setStep, text, setText }: { step: Step; setStep: (s: S
     case 'thinking':
       return (
         <div className="flex flex-col gap-16">
-          <SheetHeader title="Thinking…" listening />
+          <SheetHeader title="Thinking…" pose="writing" />
         </div>
       )
 
@@ -267,7 +267,7 @@ function StepView({ step, setStep, text, setText }: { step: Step; setStep: (s: S
       // Figma 6e
       return (
         <div className="flex flex-col gap-16">
-          <SheetHeader title="Remind you 2 weeks before each one?" />
+          <SheetHeader title="Remind you 2 weeks before each one?" pose="bell" />
           <div className="flex flex-col gap-8">
             <Button
               full
@@ -372,15 +372,17 @@ function FilePick({ icon, label, accept, capture, onPick }: { icon: 'camera' | '
           e.target.value = ''
         }}
       />
-      <Card onClick={() => ref.current?.click()} className="!rounded-16 !bg-surface-card !shadow-none">
-        <span className="flex items-center gap-16">
+      <button
+        type="button"
+        onClick={() => ref.current?.click()}
+        className="press flex w-full items-center gap-16 rounded-16 bg-surface-card p-16 text-left ring-1 ring-inset ring-border-card active:bg-surface-subtle data-[state=pressed]:bg-surface-subtle"
+      >
           <span className="flex size-control-40 shrink-0 items-center justify-center rounded-full bg-accent-primary-subtle text-accent-primary">
             <Icon name={icon} size={20} />
           </span>
           <span className="flex-1 text-body font-medium text-text-primary">{label}</span>
           <Icon name="chevron-right" size={20} className="shrink-0 text-text-secondary" />
-        </span>
-      </Card>
+      </button>
     </>
   )
 }
@@ -409,11 +411,11 @@ function PhotoPick({ onPick }: { onPick: (file: File) => void }) {
   )
 }
 
-/** Figma "Header" of the first-launch sheets: the mini Boo (56) and the title, 12 apart. Listening while Boo works. */
-function SheetHeader({ title, listening }: { title: string; listening?: boolean }) {
+/** Figma "Header" of the first-launch sheets: the mini Boo (56) in the step's pose and the title, 12 apart. */
+function SheetHeader({ title, pose = 'idle' }: { title: string; pose?: BooPose }) {
   return (
     <div className="flex items-center gap-12">
-      <BooCharacter look="mini" size={56} state={listening ? 'listening' : 'idle'} />
+      <BooCharacter look="mini" size={56} pose={pose} />
       <h2 className="min-w-0 flex-1 font-display text-title font-medium">{title}</h2>
     </div>
   )
@@ -439,7 +441,7 @@ function ReadingPicture() {
         <circle cx="87" cy="115" r="10.25" strokeWidth="1.5" style={{ fill: 'none', stroke: 'var(--accent-primary)' }} />
         <rect className="boo-scan" x="0" y="2" width="112" height="2" style={{ fill: 'var(--accent-primary)' }} />
       </svg>
-      <div className="flex w-full flex-col gap-16 overflow-hidden rounded-24 bg-surface-panel p-16 ring-1 ring-inset ring-border-card">
+      <div className="panel-card flex w-full flex-col gap-16 overflow-hidden rounded-24 p-16">
         <div className="flex items-center gap-12">
           <span className="size-avatar-40 rounded-full bg-surface-subtle" />
           <span className="flex flex-col gap-8">
