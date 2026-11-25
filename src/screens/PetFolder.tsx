@@ -1,6 +1,8 @@
 import { useRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router'
 import { AttentionCard } from '../components/AttentionCard'
+import { BooBubble } from '../components/BooBubble'
+import { BooHint } from '../components/BooHint'
 import { Icon, type IconName } from '../components/Icon'
 import { Button } from '../components/Button'
 import { Card } from '../components/Card'
@@ -9,6 +11,7 @@ import { PetAvatar } from '../components/PetAvatar'
 import { TextField } from '../components/TextField'
 import { Chip, SectionTitle, StackScreen, TextLink } from '../components/ui'
 import { petById, useApp } from '../data/useApp'
+import { useUi } from '../data/useUi'
 import type { PetRecord, RecordType } from '../data/types'
 import { ageLong, daysBetween, formatDay, today } from '../lib/dates'
 import { petColor } from '../lib/petColors'
@@ -41,6 +44,7 @@ export function PetFolder() {
   const [filter, setFilter] = useState<'all' | RecordType>('all')
   const [query, setQuery] = useState('')
   const [searching, setSearching] = useState(false)
+  const openBoo = useUi((s) => s.openBoo)
   const historyRef = useRef<HTMLDivElement>(null)
   const pet = petById(pets, id)
 
@@ -67,6 +71,9 @@ export function PetFolder() {
         window.location.href = `tel:${pet.vet!.phone}`
       }
     : undefined
+  // A new pet (Figma "Empty · Pet folder · new pet"): no records, vaccines or meds yet
+  const allRecords = records.filter((r) => r.petId === pet.id)
+  const isNew = allRecords.length === 0 && petVax.length === 0 && medsNow.length === 0
   const showHistory = (f: RecordType) => {
     setFilter(f)
     historyRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
@@ -114,88 +121,120 @@ export function PetFolder() {
 
       {/* Health: one list of key facts (Figma 12) */}
       <SectionTitle>Health</SectionTitle>
-      <Card variant="list" className="overflow-hidden">
-        {getsVaccines(pet.species) && (
+      {isNew && getsVaccines(pet.species) ? (
+        <BooHint
+          actions={
+            <Button icon="camera" onClick={() => openBoo('snap')}>
+              Snap a vet paper
+            </Button>
+          }
+        >
+          I don’t know {pet.name}’s shots yet. Snap the last vet paper?
+        </BooHint>
+      ) : (
+        <Card variant="list" className="overflow-hidden">
+          {getsVaccines(pet.species) && (
+            <ListRow
+              icon="syringe"
+              label="Vaccines"
+              title={petVax.length ? vax.line : 'Not known yet'}
+              subtitle={vax.overdueLine && <span className="text-status-waiting-text">{vax.overdueLine}</span>}
+              trailing="chevron"
+              onClick={() => navigate(`/pets/${pet.id}/vaccines`)}
+            />
+          )}
           <ListRow
-            icon="syringe"
-            label="Vaccines"
-            title={petVax.length ? vax.line : 'Not known yet'}
-            subtitle={vax.overdueLine && <span className="text-status-waiting-text">{vax.overdueLine}</span>}
+            icon="pill"
+            label="Meds now"
+            title={medsNow.length ? medsNow.map((m) => `${m.name} ${m.dose}`).join(', ') : 'None'}
+            subtitle={medsNow.length === 1 ? courseLine(medsNow[0].start, medsNow[0].until, t) : undefined}
             trailing="chevron"
-            onClick={() => navigate(`/pets/${pet.id}/vaccines`)}
+            onClick={() => showHistory('meds')}
           />
-        )}
-        <ListRow
-          icon="pill"
-          label="Meds now"
-          title={medsNow.length ? medsNow.map((m) => `${m.name} ${m.dose}`).join(', ') : 'None'}
-          subtitle={medsNow.length === 1 ? courseLine(medsNow[0].start, medsNow[0].until, t) : undefined}
-          trailing="chevron"
-          onClick={() => showHistory('meds')}
-        />
-        {lastWeight && (
+          {lastWeight && (
+            <ListRow
+              icon="weight"
+              label="Weight"
+              title={weightText(lastWeight.value!)}
+              subtitle={weightChange(weights, pet.weightUnit)}
+              value={<Sparkline values={weights.map((w) => w.value!)} />}
+              trailing="chevron"
+              onClick={() => showHistory('weight')}
+            />
+          )}
           <ListRow
-            icon="weight"
-            label="Weight"
-            title={weightText(lastWeight.value!)}
-            subtitle={weightChange(weights, pet.weightUnit)}
-            value={<Sparkline values={weights.map((w) => w.value!)} />}
-            trailing="chevron"
-            onClick={() => showHistory('weight')}
-          />
-        )}
-        <ListRow
-          icon="shield-alert"
-          label="Allergies"
-          title={pet.allergies.length ? pet.allergies.join(', ') : 'None known'}
-          trailing="chevron"
-          onClick={() => navigate(`/pets/${pet.id}/edit`)}
-        />
-        {pet.vet && (
-          <ListRow icon="stethoscope" label="Vet" title={pet.vet.name} subtitle={pet.vet.clinic} trailing={{ label: 'Call', icon: 'phone' }} href={`tel:${pet.vet.phone}`} />
-        )}
-        {pet.insurance && (
-          <ListRow
-            icon="file-text"
-            label="Insurance"
-            title={pet.insurance.split(' · ')[0]}
-            subtitle={claim ? `${claim.title} · file by ${formatDay(claim.date)}` : undefined}
+            icon="shield-alert"
+            label="Allergies"
+            title={pet.allergies.length ? pet.allergies.join(', ') : 'None known'}
             trailing="chevron"
             onClick={() => navigate(`/pets/${pet.id}/edit`)}
           />
-        )}
-      </Card>
+          {pet.vet && (
+            <ListRow icon="stethoscope" label="Vet" title={pet.vet.name} subtitle={pet.vet.clinic} trailing={{ label: 'Call', icon: 'phone' }} href={`tel:${pet.vet.phone}`} />
+          )}
+          {pet.insurance && (
+            <ListRow
+              icon="file-text"
+              label="Insurance"
+              title={pet.insurance.split(' · ')[0]}
+              subtitle={claim ? `${claim.title} · file by ${formatDay(claim.date)}` : undefined}
+              trailing="chevron"
+              onClick={() => navigate(`/pets/${pet.id}/edit`)}
+            />
+          )}
+        </Card>
+      )}
 
       {/* History */}
       <div ref={historyRef} className="scroll-mt-16">
-        <SectionTitle action={<TextLink onClick={() => setSearching((v) => !v)}>Search</TextLink>}>History</SectionTitle>
+        <SectionTitle action={allRecords.length > 0 && <TextLink onClick={() => setSearching((v) => !v)}>Search</TextLink>}>History</SectionTitle>
       </div>
-      {searching && (
-        <TextField label="Search history" type="search" value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search history" trailingIcon="search" className="mb-12" autoFocus />
-      )}
-      <div role="tablist" className="swipe-row -mx-16 -my-4 flex gap-8 px-16 py-4">
-        {filters.map((f) => (
-          <Chip key={f.key} active={filter === f.key} onClick={() => setFilter(f.key)}>
-            {f.label}
-          </Chip>
-        ))}
-      </div>
-      {history.length > 0 ? (
-        <Card variant="list" className="mt-12 overflow-hidden">
-          <ol>
-            {history.map((r) => (
-              <HistoryItem
-                key={r.id}
-                record={r}
-                unit={pet.weightUnit}
-                clinic={documents.find((d) => d.id === r.documentId)?.clinic}
-                before={r.type === 'weight' ? weights.filter((w) => w.date < r.date).at(-1) : undefined}
-              />
-            ))}
-          </ol>
-        </Card>
+      {allRecords.length === 0 ? (
+        <Card className="py-24 text-center text-body-s text-text-secondary">Papers, weights and notes will show up here by date.</Card>
       ) : (
-        <p className="py-32 text-center text-body text-text-secondary">Nothing here yet.</p>
+        <>
+          {searching && (
+            <TextField label="Search history" type="search" value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search history" trailingIcon="search" className="mb-12" autoFocus />
+          )}
+          <div role="tablist" className="swipe-row -mx-16 -my-4 flex gap-8 px-16 py-4">
+            {filters.map((f) => (
+              <Chip key={f.key} active={filter === f.key} onClick={() => setFilter(f.key)}>
+                {f.label}
+              </Chip>
+            ))}
+          </div>
+          {history.length > 0 ? (
+            <Card variant="list" className="mt-12 overflow-hidden">
+              <ol>
+                {history.map((r) => (
+                  <HistoryItem
+                    key={r.id}
+                    record={r}
+                    unit={pet.weightUnit}
+                    clinic={documents.find((d) => d.id === r.documentId)?.clinic}
+                    before={r.type === 'weight' ? weights.filter((w) => w.date < r.date).at(-1) : undefined}
+                  />
+                ))}
+              </ol>
+            </Card>
+          ) : query ? (
+            /* Search with no results (Figma "Empty · Search"): Boo says so, one way back */
+            <div className="mt-12">
+              <BooBubble
+                pose="reading"
+                action={
+                  <Button full size="large" variant="secondary" onClick={() => setQuery('')}>
+                    Clear search
+                  </Button>
+                }
+              >
+                I couldn’t find “{query}” in {pet.name}’s records.
+              </BooBubble>
+            </div>
+          ) : (
+            <p className="py-32 text-center text-body text-text-secondary">Nothing here yet.</p>
+          )}
+        </>
       )}
 
       {/* Profile */}
@@ -209,7 +248,13 @@ export function PetFolder() {
           ['Insurance', pet.insurance],
           ['Vet', pet.vet && [pet.vet.name, pet.vet.clinic].filter(Boolean).join(' · ')],
         ].map(([label, value]) => (
-          <ListRow key={label} title={label} value={value || '—'} />
+          /* An empty fact is an Add link to Edit (Figma "new pet") */
+          <ListRow
+            key={label}
+            title={label}
+            value={value || <span className="font-medium text-accent-primary">Add</span>}
+            onClick={value ? undefined : () => navigate(`/pets/${pet.id}/edit`)}
+          />
         ))}
       </Card>
     </StackScreen>
