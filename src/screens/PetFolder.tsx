@@ -278,14 +278,18 @@ function weightChange(weights: PetRecord[], unit: string): string | undefined {
   return diff === 0 ? `No change since ${since}` : `${diff < 0 ? '↓' : '↑'} ${Math.abs(diff)} ${unit} since ${since}`
 }
 
+/** Figma Summary row Trailing=Sparkline: a 56 × 24 line in accent/primary, 2px, with a dot on the latest weight. */
 function Sparkline({ values }: { values: number[] }) {
   if (values.length < 2) return null
   const min = Math.min(...values)
   const max = Math.max(...values)
-  const pts = values.map((v, i) => `${(i / (values.length - 1)) * 100},${max === min ? 10 : 18 - ((v - min) / (max - min)) * 16}`).join(' ')
+  // Drawn in its own 56 × 24 space (not stretched), 3 in from the edges so the line and the dot aren't cut
+  const xy = values.map((v, i) => [3 + (i / (values.length - 1)) * 50, max === min ? 12 : 21 - ((v - min) / (max - min)) * 18] as const)
+  const [lx, ly] = xy[xy.length - 1]
   return (
-    <svg viewBox="0 0 100 20" preserveAspectRatio="none" className="block h-icon-20 w-[56px] text-accent-primary" aria-hidden="true">
-      <polyline points={pts} fill="none" stroke="currentColor" strokeWidth="2" vectorEffect="non-scaling-stroke" strokeLinecap="round" strokeLinejoin="round" />
+    <svg viewBox="0 0 56 24" className="block h-icon-24 w-[56px] text-accent-primary" aria-hidden="true">
+      <polyline points={xy.map(([x, y]) => `${x},${y}`).join(' ')} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+      <circle cx={lx} cy={ly} r="3" fill="currentColor" />
     </svg>
   )
 }

@@ -77,14 +77,15 @@ export function Schedule() {
 
   return (
     <div className="pt-safe min-h-dvh px-16 pb-tab-bar-room">
-      {/* Header: the same as Today, with the month over the title */}
+      {/* Header: the same as Today (the month over the title only when Schedule is empty) */}
       <header>
         <div className="flex h-control-44 items-center justify-between">
           <Logo />
           <IconButton variant="secondary" icon="settings" label="Settings" onClick={() => navigate('/settings')} className="-mr-2" />
         </div>
         <div className="flex flex-col gap-8 pt-24 pb-16">
-          <p className="text-body-s text-text-secondary">{fromDay(selected).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</p>
+          {/* The month already shows above the calendar; the eyebrow stays only on an empty Schedule (Figma) */}
+          {tasks.length === 0 && <p className="text-body-s text-text-secondary">{fromDay(selected).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</p>}
           <h1 className="font-display text-display font-medium">Schedule</h1>
         </div>
       </header>
