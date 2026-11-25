@@ -9,6 +9,8 @@ import { StackScreen } from '../components/ui'
 import { useApp } from '../data/useApp'
 import { useUi } from '../data/useUi'
 import { addDays, age, formatDay, today } from '../lib/dates'
+import { formatPhone } from '../lib/phone'
+import { speciesLabel } from '../lib/species'
 
 type SetKey = 'boarding' | 'vet' | 'emergency'
 
@@ -94,7 +96,7 @@ export function Share() {
               return (
                 <div key={id} className="mt-16 border-t border-surface-subtle pt-12">
                   <p className="font-display text-body font-medium">{p.name}</p>
-                  <p className="text-text-secondary">{[p.species, p.breed, age(p.birthDate), p.microchip && `Chip ${p.microchip}`].filter(Boolean).join(' · ')}</p>
+                  <p className="text-text-secondary">{[speciesLabel(p.species), p.breed, age(p.birthDate), p.microchip && `Chip ${p.microchip}`].filter(Boolean).join(' · ')}</p>
                   {set !== 'emergency' && (
                     <PdfBlock title="Vaccines">{vax.length ? vax.map((v) => `${v.name} — given ${formatDay(v.given)}${v.due ? `, due ${formatDay(v.due, { month: 'short', day: 'numeric', year: 'numeric' })}` : ''}`) : ['No vaccine records']}</PdfBlock>
                   )}
@@ -102,7 +104,7 @@ export function Share() {
                   {set !== 'boarding' && <PdfBlock title="Allergies">{[p.allergies.join(', ') || 'None known']}</PdfBlock>}
                   {set === 'emergency' && <PdfBlock title="Symptoms, last 2 weeks">{symptoms.length ? symptoms.map((s) => `${formatDay(s.date)} — ${s.title}`) : ['None logged']}</PdfBlock>}
                   {set !== 'boarding' && weight && <PdfBlock title="Weight">{[`${weight.value} ${p.weightUnit} (${formatDay(weight.date)})`]}</PdfBlock>}
-                  {p.vet && <PdfBlock title="Vet">{[`${p.vet.name} · ${p.vet.phone}`]}</PdfBlock>}
+                  {p.vet && <PdfBlock title="Vet">{[`${[p.vet.name, p.vet.clinic].filter(Boolean).join(' · ')} · ${formatPhone(p.vet.phone)}`]}</PdfBlock>}
                 </div>
               )
             })}

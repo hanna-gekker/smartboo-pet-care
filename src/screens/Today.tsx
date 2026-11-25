@@ -41,9 +41,10 @@ export function Today() {
   const dueSoon = new Set(open.filter((x) => x.date <= addDays(t, 7)).map((x) => x.petId))
   const nextBig = important.find((x) => x.date > t)
   const nextUpPet = nextUp && petById(pets, nextUp.petId)
-  // Figma 6m: a pet whose shots Boo doesn't know yet → Boo asks for the last vet paper (Not now: a week of quiet)
+  // Figma 6m: on an empty Today (nothing up next), a pet whose shots Boo doesn't know yet → Boo asks for the last
+  // vet paper in place of the Boo card (Not now: a week of quiet). A busy Today keeps the Boo card (Figma 1).
   const hintHidden = !!settings.gapHintHiddenUntil && settings.gapHintHiddenUntil > t
-  const noShots = hintHidden ? undefined : pets.find((p) => getsVaccines(p.species) && !vaccines.some((v) => v.petId === p.id))
+  const noShots = hintHidden || nextUp ? undefined : pets.find((p) => getsVaccines(p.species) && !vaccines.some((v) => v.petId === p.id))
 
   const row = (x: Task, showDate = x.date !== t) => {
     const pet = petById(pets, x.petId)

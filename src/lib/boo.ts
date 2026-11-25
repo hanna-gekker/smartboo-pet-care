@@ -106,6 +106,21 @@ function findPets(text: string, pets: Pet[]): Pet[] {
   return []
 }
 
+/** "Rabies (3-year)" → "rabies"; a name in capitals (DHPP) stays as it is. */
+const vaccineWord = (name: string) => {
+  const short = name.split(' (')[0]
+  return /[A-Z]/.test(short.slice(1)) ? short : short[0].toLowerCase() + short.slice(1)
+}
+
+/** Past: "Rocky's rabies was due on Nov 1 — that's 24 days ago. Want to book the vet?"
+ *  Today or later: "Rocky's rabies is due on Dec 3 — in 1 week." */
+export function vaccineAnswer(petName: string, vaccine: string, due: string): string {
+  const when = formatDay(due)
+  if (due < today()) return `${petName}'s ${vaccineWord(vaccine)} was due on ${when} — that's ${relative(due)}. Want to book the vet?`
+  if (due === today()) return `${petName}'s ${vaccineWord(vaccine)} is due today.`
+  return `${petName}'s ${vaccineWord(vaccine)} is due on ${when} — ${relative(due)}.`
+}
+
 /** Pretends to understand a phrase. Simple patterns only. */
 export async function understand(
   text: string,
@@ -138,7 +153,8 @@ export async function understand(
     if (vax.length && vax[0].due) {
       return {
         kind: 'answer',
-        text: `${pet.name}'s ${vax[0].name} is due ${formatDay(vax[0].due, { month: 'long', day: 'numeric', year: 'numeric' })} — ${relative(vax[0].due)}.`,
+        // Figma 10: "Rocky's rabies booster was due on Nov 1 — that's 3 days ago. Want to book the vet?"
+        text: vaccineAnswer(pet.name, vax[0].name, vax[0].due),
         source: { petId: pet.id, label: 'From the vaccine certificate' },
       }
     }
