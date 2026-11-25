@@ -1,7 +1,8 @@
 // Tab bar — Figma "Tab bar" + "Tab item" (Patterns).
-// A capsule (surface/card, border/card hairline, 24 background blur, soft shadow) with Today · Schedule · Pets, and Boo to its right.
+// A solid capsule (surface/card, border/card hairline, soft shadow) with Today · Schedule · Pets, and Boo to its right.
 // Capsule 62 high with 4 inside, tabs 54 high; the bar is 348 wide on a 390 phone (21 on each side).
-// The selected tab is a nav/active-fill pill with the filled icon, marked for VoiceOver with aria-current="page".
+// The selected tab is a soft pill with the filled icon (light: accent/primary-subtle + accent/on-subtle; dark:
+// accent/primary-soft + text/primary; CSS .tab-on), marked for VoiceOver with aria-current="page".
 // A coral dot on Schedule when something is overdue. Content scrolls under the bar; no fade behind it.
 
 import { Link } from 'react-router'
@@ -33,7 +34,7 @@ export function TabBar({ active, overdue = false, onBoo, docked = true, 'data-st
   const target = tabs.find((t) => t.key !== active)?.key
   const bar = (
     <div className="pointer-events-auto flex w-full max-w-420 items-center gap-8">
-      <nav aria-label="Main" className="glass-bar flex h-[62px] flex-1 items-center rounded-full p-4 ring-1 ring-inset ring-border-card">
+      <nav aria-label="Main" className="tab-capsule flex h-[62px] flex-1 items-center rounded-full p-4">
         {tabs.map((t) => {
           const on = t.key === active
           const dot = overdue && t.key === 'schedule'
@@ -45,16 +46,17 @@ export function TabBar({ active, overdue = false, onBoo, docked = true, 'data-st
               data-state={t.key === target ? state : undefined}
               aria-label={dot ? `${t.label}, overdue` : undefined}
               className={`press focus-inside relative flex h-[54px] flex-1 flex-col items-center justify-center gap-2 rounded-full text-tab-label font-medium ${
-                on ? 'bg-nav-active-fill text-nav-active-content' : 'text-text-secondary active:bg-surface-subtle data-[state=pressed]:bg-surface-subtle'
+                on ? 'tab-on' : 'text-text-secondary active:bg-surface-subtle data-[state=pressed]:bg-surface-subtle'
               }`}
             >
-              <Icon name={on ? t.iconOn : t.icon} size={20} className={on ? 'text-nav-active-icon' : ''} />
+              <Icon name={on ? t.iconOn : t.icon} size={20} />
               {t.label}
-              {/* Due dot: 8px, on the icon's top-right corner, with a 2px ring outside (nav/dot-ring*) */}
+              {/* Due dot: 8px, on the icon's top-right corner, with a 2px ring outside: the pill's colour on the selected tab
+                  (.tab-dot), else nav/dot-ring */}
               {dot && (
                 <span
                   aria-hidden="true"
-                  className={`absolute top-8 left-[calc(50%+3px)] size-8 rounded-full bg-status-waiting-dot ring-2 ${on ? 'ring-nav-dot-ring-active' : 'ring-nav-dot-ring'}`}
+                  className={`tab-dot absolute top-8 left-[calc(50%+3px)] size-8 rounded-full bg-status-waiting-dot ring-2 ${on ? '' : 'ring-nav-dot-ring'}`}
                 />
               )}
             </Link>
