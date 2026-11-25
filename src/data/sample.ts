@@ -20,7 +20,7 @@ export function emptyData(): AppData {
 export function sampleData(): AppData {
   const t = today()
   const d = (n: number) => addDays(t, n)
-  const vet = { name: 'Bayside Animal Clinic', phone: '+14155550142' }
+  const vet = { name: 'Dr. Lee', clinic: 'Bayside Animal Clinic', phone: '+14155550142' }
 
   return {
     version: 1,
@@ -76,9 +76,9 @@ export function sampleData(): AppData {
       },
     ],
     documents: [
-      { id: 'doc-rocky-1', petId: 'rocky', title: 'Vaccine certificate', clinic: vet.name, date: addMonths(t, -7) },
-      { id: 'doc-rocky-2', petId: 'rocky', title: 'Visit invoice · ear infection', clinic: vet.name, date: d(-12) },
-      { id: 'doc-cleo-1', petId: 'cleo', title: 'Spay surgery discharge', clinic: vet.name, date: addMonths(t, -4) },
+      { id: 'doc-rocky-1', petId: 'rocky', title: 'Vaccine certificate', clinic: vet.clinic, date: addMonths(t, -7) },
+      { id: 'doc-rocky-2', petId: 'rocky', title: 'Visit invoice · ear infection', clinic: vet.clinic, date: d(-12) },
+      { id: 'doc-cleo-1', petId: 'cleo', title: 'Spay surgery discharge', clinic: vet.clinic, date: addMonths(t, -4) },
     ],
     vaccines: [
       { id: 'v1', petId: 'rocky', name: 'Rabies (3-year)', given: addMonths(t, -35), due: d(19), documentId: 'doc-rocky-1' },
@@ -128,6 +128,6 @@ export function sampleData(): AppData {
       { id: 't14', petId: 'rocky', kind: 'med', title: 'Ear drops', detail: 'Otomax · 4 drops', date: d(-1), time: '20:00', doneAt: `${d(-1)}T20:25:00` },
       { id: 't15', petId: 'tank', kind: 'chore', title: 'Change 20% of the water', date: d(4) },
     ],
-    settings: { remindDaysBefore: 14, booConsent: false },
+    settings: { remindDaysBefore: 14, booConsent: false, owner: { name: 'Anna', phone: '+14155550193' } },
   }
 }

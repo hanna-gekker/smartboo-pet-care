@@ -281,7 +281,7 @@ function StepView({ step, setStep, text, setText }: { step: Step; setStep: (s: S
                 try {
                   if ((await askPermission()) !== 'granted') return setStep({ name: 'notifications-off', ...next })
                   const s = useApp.getState()
-                  await syncReminders(s.tasks, s.pets, s.settings.remindDaysBefore)
+                  await syncReminders(s.tasks, s.pets, s.settings)
                   showToast(`${n} reminder${n === 1 ? '' : 's'} set`)
                 } catch {
                   showToast("Couldn't set reminders. They're still in your Schedule.")

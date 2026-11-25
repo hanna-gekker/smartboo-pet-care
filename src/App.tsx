@@ -6,6 +6,7 @@ import { Toast } from './components/Toast'
 import { useApp } from './data/useApp'
 import { useUi } from './data/useUi'
 import { onReminderTap } from './lib/reminders'
+import { applyTheme } from './lib/theme'
 import { taskState } from './lib/tasks'
 import { PetFolder } from './screens/PetFolder'
 import { AddPet } from './screens/AddPet'
@@ -13,12 +14,16 @@ import { PetForm } from './screens/PetForm'
 import { PetList } from './screens/PetList'
 import { Schedule } from './screens/Schedule'
 import { Settings } from './screens/Settings'
+import { AddVet } from './screens/settings/AddVet'
+import { AiConsent } from './screens/settings/AiConsent'
+import { Privacy } from './screens/settings/Privacy'
+import { Profile } from './screens/settings/Profile'
 import { Share } from './screens/Share'
 import { Today } from './screens/Today'
 import { Welcome } from './screens/Welcome'
 
 /** Screens without the tab bar: first launch and focused flows. */
-const NO_TAB_BAR = ['/welcome', '/pets/new', '/share']
+const NO_TAB_BAR = ['/welcome', '/pets/new', '/share', '/settings/profile', '/settings/vet']
 
 /** The tab that is open for a path, if any (Settings has none). */
 function tabFor(pathname: string): Tab | undefined {
@@ -87,6 +92,10 @@ const router = createBrowserRouter([
       { path: '/pets/:id/edit', element: <PetForm /> },
       { path: '/share', element: <Share /> },
       { path: '/settings', element: <Settings /> },
+      { path: '/settings/profile', element: <Profile /> },
+      { path: '/settings/vet', element: <AddVet /> },
+      { path: '/settings/privacy', element: <Privacy /> },
+      { path: '/settings/ai', element: <AiConsent /> },
       { path: '*', element: <Navigate to="/" replace /> },
     ],
   },
@@ -95,10 +104,14 @@ const router = createBrowserRouter([
 export default function App() {
   const loaded = useApp((s) => s.loaded)
   const init = useApp((s) => s.init)
+  const theme = useApp((s) => s.settings.theme)
 
   useEffect(() => {
     void init()
   }, [init])
+
+  // Settings → Appearance
+  useEffect(() => applyTheme(theme), [theme])
 
   if (!loaded) return null
   return <RouterProvider router={router} />

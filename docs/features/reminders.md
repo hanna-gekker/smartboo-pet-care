@@ -29,6 +29,7 @@ Notification copy:
 | On the day, a med with a time | Time for Rocky's ear drops | Otomax · 4 drops |
 | On the day, a visit with a time | Today at 10:30 AM: Rocky's ear recheck | Bayside Animal Clinic |
 | Insurance, before | Submit the ear-visit claim · in 2 weeks | For Rocky · due Wed, Dec 9. |
+| Daily tasks (Settings → Reminders → Daily tasks, 8:00 AM by default; only on days with tasks; tap opens Today) | SmartBoo | Today: Rocky's ear drops, Milo's walk +2 more. |
 
 "2 weeks" follows the Settings value ("in 3 days", "in 1 week", "in 1 month"). The title uses the task title; the body adds the detail when there is one.
 
