@@ -3,7 +3,8 @@
 import { create } from 'zustand'
 
 /** Where the Boo sheet opens. `reading`: straight to reading a paper (the one that waited for the connection). */
-export type BooStart = 'menu' | 'talk' | 'snap' | 'type' | 'reading'
+/** Where the sheet opens. `send`: Boo reads the text it was given right away (typed in place on Welcome). */
+export type BooStart = 'menu' | 'talk' | 'snap' | 'type' | 'reading' | 'send'
 
 type Toast = { id: number; text: string; undo?: () => void }
 

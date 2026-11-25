@@ -1,16 +1,17 @@
 // Boo: a bottom sheet over the current screen (not a chat). Talk · Snap a paper · Type → toast, review card or answer.
 // Boo's "brain" is faked in lib/boo.ts until the Boo spike.
 
-import { useEffect, useRef, useState, type ReactNode } from 'react'
+import { useEffect, useRef, useState, type ChangeEvent, type ReactNode } from 'react'
 import { useNavigate } from 'react-router'
 import { newId, petById, useApp } from '../data/useApp'
 import { useUi } from '../data/useUi'
-import type { Pet, PetRecord, Task, Vaccine } from '../data/types'
+import { SPECIES, type Pet, type PetRecord, type Species, type Task, type Vaccine } from '../data/types'
 import { readPaper, understand, type BooResult, type ParsedPaper } from '../lib/boo'
 import { BOO_ERRORS, BooPaperError, type BooErrorCase } from '../lib/booErrors'
 import { askPermission, openAppSettings, syncReminders } from '../lib/reminders'
-import { addDays, formatDay, nowTime, today } from '../lib/dates'
-import { convertWeight } from '../lib/weight'
+import { addDays, ageShort, formatDay, nowTime, today } from '../lib/dates'
+import { speciesLabel } from '../lib/species'
+import { convertWeight, weightUnits } from '../lib/weight'
 import { BottomSheet } from './BottomSheet'
 import { BooCharacter, type BooPose } from './BooCharacter'
 import { BooError } from './BooError'
@@ -18,6 +19,7 @@ import { Button } from './Button'
 import { Card } from './Card'
 import { Icon } from './Icon'
 import { IconButton } from './IconButton'
+import { ListRow } from './ListRow'
 import { PetAvatar } from './PetAvatar'
 import { TextField } from './TextField'
 
@@ -33,6 +35,7 @@ type Step =
   | { name: 'notifications-off'; petId: string; petName: string }
   | { name: 'photo'; petId: string; petName: string }
   | { name: 'thinking' }
+  | { name: 'new-pet'; found: Extract<BooResult, { kind: 'new-pet' }> }
   | { name: 'result'; result: BooResult }
   | { name: 'error'; kind: BooErrorCase }
 
@@ -60,12 +63,12 @@ export function BooSheet() {
 /** One opening of the sheet. A new key on every opening starts it fresh. */
 function BooFlow() {
   const { booStart, booText } = useUi()
-  const [step, setStep] = useState<Step>({ name: booStart } as Step)
+  const [step, setStep] = useState<Step>(booStart === 'send' ? { name: 'thinking' } : ({ name: booStart } as Step))
   const [text, setText] = useState(booText)
-  return <StepView step={step} setStep={setStep} text={text} setText={setText} />
+  return <StepView step={step} setStep={setStep} text={text} setText={setText} sendNow={booStart === 'send'} />
 }
 
-function StepView({ step, setStep, text, setText }: { step: Step; setStep: (s: Step) => void; text: string; setText: (t: string) => void }) {
+function StepView({ step, setStep, text, setText, sendNow }: { step: Step; setStep: (s: Step) => void; text: string; setText: (t: string) => void; sendNow?: boolean }) {
   const app = useApp()
   const { closeBoo, showToast, setPaperWaiting } = useUi()
   const navigate = useNavigate()
@@ -114,9 +117,19 @@ function StepView({ step, setStep, text, setText }: { step: Step; setStep: (s: S
       setStep({ name: 'thinking' })
       const result = await understand(phrase, app)
       if (result.kind === 'weight' || result.kind === 'record') saveSimple(result)
+      else if (result.kind === 'new-pet') setStep({ name: 'new-pet', found: result })
       else setStep({ name: 'result', result })
     })
   }
+
+  // Opened with text to read (Welcome, typed in place): read it once, right away
+  const sentOnce = useRef(false)
+  useEffect(() => {
+    if (!sendNow || sentOnce.current) return
+    sentOnce.current = true
+    send(text)
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- once, on opening
+  }, [])
 
   /** Simple records are saved right away, with "Saved · Undo". */
   const saveSimple = (result: Extract<BooResult, { kind: 'weight' | 'record' }>) => {
@@ -181,13 +194,13 @@ function StepView({ step, setStep, text, setText }: { step: Step; setStep: (s: S
 
     case 'consent':
       return (
-        <div className="pt-8">
-          <h2 className="font-display text-title font-medium">Before Boo reads anything</h2>
-          <p className="mt-12 text-body leading-24 text-text-secondary">
-            Boo sends your photo or words to an AI service to read them. Nothing is kept after that. Your records stay on this phone.
-          </p>
-          <p className="mt-12 text-body-s text-text-secondary">Boo keeps your pet’s records. It isn’t a vet.</p>
-          <div className="mt-24 flex flex-col gap-8">
+        // Figma 6j "AI consent": the mini Boo and one sentence, Continue / Not now. Asked once.
+        <div className="flex flex-col gap-24">
+          <div className="flex items-center gap-12">
+            <BooCharacter look="mini" size={56} />
+            <p className="min-w-0 flex-1 text-body text-text-primary">Boo sends your photo or words to an AI service to read them. Nothing is kept after that.</p>
+          </div>
+          <div className="flex flex-col gap-8">
             <Button
               full
               onClick={() => {
@@ -197,11 +210,23 @@ function StepView({ step, setStep, text, setText }: { step: Step; setStep: (s: S
             >
               Continue
             </Button>
-            <Button full variant="ghost" onClick={() => setStep({ name: 'menu' })}>
+            <Button full variant="ghost" onClick={closeBoo}>
               Not now
             </Button>
           </div>
         </div>
+      )
+
+    case 'new-pet':
+      return (
+        <NewPetReview
+          found={step.found}
+          onConfirm={(pet) => {
+            navigator.vibrate?.(10)
+            app.addPet(pet)
+            setStep({ name: 'photo', petId: pet.id, petName: pet.name })
+          }}
+        />
       )
 
     case 'snap':
@@ -482,6 +507,56 @@ function ReadingPicture() {
             <span className="h-icon-20 w-[56px] rounded-full bg-surface-subtle" />
           </div>
         ))}
+      </div>
+    </div>
+  )
+}
+
+/** Figma 6k "Review card · from words": the pet Boo heard about. Looks right saves it; Edit details opens its fields. */
+function NewPetReview({ found, onConfirm }: { found: Extract<BooResult, { kind: 'new-pet' }>; onConfirm: (pet: Pet) => void }) {
+  const [editing, setEditing] = useState(false)
+  const [pet, setPet] = useState<Pet>(() => ({
+    id: newId('pet'),
+    name: found.name,
+    species: found.species,
+    breed: found.breed,
+    birthDate: found.birthDate,
+    weightUnit: weightUnits(found.species)[0],
+    allergies: [],
+  }))
+  const set = (patch: Partial<Pet>) => setPet((p) => ({ ...p, ...patch }))
+  return (
+    <div className="flex flex-col gap-16">
+      <SheetHeader title="Here’s what I found" />
+      {editing ? (
+        <Card className="flex flex-col gap-8">
+          <TextField label="Name" required value={pet.name} onChange={(e) => set({ name: e.target.value })} autoComplete="off" />
+          <TextField
+            label="Species"
+            value={pet.species}
+            onChange={(e: ChangeEvent<HTMLSelectElement>) => {
+              const species = e.target.value as Species
+              set({ species, weightUnit: weightUnits(species)[0] })
+            }}
+            options={SPECIES.map((s) => ({ value: s, label: speciesLabel(s) }))}
+          />
+          <TextField label="Breed" value={pet.breed ?? ''} onChange={(e) => set({ breed: e.target.value })} />
+          <TextField label="Date of birth" type="date" value={pet.birthDate ?? ''} onChange={(e) => set({ birthDate: e.target.value })} />
+        </Card>
+      ) : (
+        <Card variant="list" className="overflow-hidden">
+          <ListRow pet={pet} title={pet.name} subtitle={[speciesLabel(pet.species), pet.breed, ageShort(pet.birthDate)].filter(Boolean).join(' · ')} />
+        </Card>
+      )}
+      <div className="flex flex-col gap-8">
+        <Button full size="large" disabled={!pet.name.trim()} onClick={() => onConfirm({ ...pet, name: pet.name.trim(), breed: pet.breed?.trim() || undefined })}>
+          Looks right
+        </Button>
+        {!editing && (
+          <Button full variant="ghost" onClick={() => setEditing(true)}>
+            Edit details
+          </Button>
+        )}
       </div>
     </div>
   )
