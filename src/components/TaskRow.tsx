@@ -34,7 +34,7 @@ export function TaskRow({ title, detail, meta, state, pet, onToggle, flush, 'dat
       type="button"
       role="checkbox"
       aria-checked={done}
-      aria-label={[title, detail, meta].filter(Boolean).join(', ')}
+      aria-label={[title, detail, meta, state === 'waiting' && !done ? 'Overdue' : ''].filter(Boolean).join(', ')}
       onClick={onToggle}
       data-state={show}
       className={`focus-inset flex w-full items-center gap-12 py-16 text-left active:bg-surface-subtle data-[state=pressed]:bg-surface-subtle ${flush ? 'px-0' : 'px-16'}`}

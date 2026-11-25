@@ -3,7 +3,8 @@ import { useUi } from '../data/useUi'
 import { Button } from './Button'
 import { Icon } from './Icon'
 
-/** "Saved · Undo" — disappears after 5 seconds. */
+/** "Saved · Undo" — over the bottom of the screen, just above the tab bar (Figma 3 "Saved · Undo", 4 "Task done");
+ *  disappears after 5 seconds. */
 export function Toast() {
   const toast = useUi((s) => s.toast)
   const hide = useUi((s) => s.hideToast)
@@ -16,7 +17,8 @@ export function Toast() {
 
   if (!toast) return null
   return (
-    <div className="pt-safe pointer-events-none fixed inset-x-0 top-0 z-50 flex justify-center px-16">
+    // Figma 3 / 4: just above the tab bar, where the thumb is
+    <div className="pointer-events-none fixed inset-x-0 bottom-0 z-50 flex justify-center px-16 pb-tab-bar-room">
       <div role="status" className="animate-fade-in pointer-events-auto flex min-h-control-56 w-full max-w-420 items-center gap-12 rounded-full bg-surface-nav py-4 pr-4 pl-16 text-text-on-dark">
         <span className="flex size-icon-24 shrink-0 items-center justify-center rounded-full bg-text-on-dark text-surface-nav">
           <Icon name="check" size={16} />

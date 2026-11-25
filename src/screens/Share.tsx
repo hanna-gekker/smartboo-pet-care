@@ -89,7 +89,7 @@ export function Share() {
     >
       {step === 1 && (
         <>
-          <h2 className="mt-8 font-display text-title font-medium">Who is it for?</h2>
+          <h2 className="mt-16 font-display text-title font-medium">Who is it for?</h2>
           <Card variant="list" className="mt-16 overflow-hidden" role="radiogroup" aria-label="Who is it for?">
             {SETS.map((s) => (
               <ListRow key={s.key} icon={s.icon} iconTone="soft" title={s.title} subtitle={s.what} selected={s.key === set} onClick={() => setSet(s.key)} />
@@ -100,7 +100,7 @@ export function Share() {
 
       {step === 2 && (
         <>
-          <h2 className="mt-8 font-display text-title font-medium">Which pets?</h2>
+          <h2 className="mt-16 font-display text-title font-medium">Which pets?</h2>
           <Card variant="list" className="mt-16 overflow-hidden">
             {app.pets.map((p) => (
               <button
@@ -109,10 +109,13 @@ export function Share() {
                 role="checkbox"
                 aria-checked={chosen.includes(p.id)}
                 onClick={() => toggle(p.id)}
-                className="press focus-inset flex w-full items-center gap-16 px-24 py-12 text-left active:bg-surface-subtle"
+                className="press focus-inset flex w-full items-center gap-12 p-16 text-left active:bg-surface-subtle"
               >
-                <Checkbox checked={chosen.includes(p.id)} />
-                <PetAvatar pet={p} size="md" />
+                {/* Figma 16: laid out like a Task row — the 24 circle 18 from the edge, a 40 photo, 12 between */}
+                <span className="mx-2">
+                  <Checkbox checked={chosen.includes(p.id)} />
+                </span>
+                <PetAvatar pet={p} size="sm" />
                 <span className="flex min-w-0 flex-1 flex-col gap-2">
                   <span className="text-body font-medium">{p.name}</span>
                   <span className="text-body-s text-text-secondary">{petLine(p, app).text}</span>
@@ -131,7 +134,7 @@ export function Share() {
       {step === 3 && record && (
         <>
           {/* Figma 17: the paper as it will look */}
-          <Card className="mt-8 flex flex-col gap-16 p-24 text-body-s ring-1 ring-inset ring-border-control">
+          <Card className="mt-16 flex flex-col gap-16 p-24 text-caption ring-1 ring-inset ring-border-control">
             <div className="flex items-center justify-between gap-16">
               <Logo />
               <span className="text-caption text-text-secondary">{record.date}</span>

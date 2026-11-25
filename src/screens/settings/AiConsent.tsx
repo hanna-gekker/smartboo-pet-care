@@ -9,7 +9,7 @@ export function AiConsent() {
   const { settings, updateSettings } = useApp()
   return (
     <StackScreen title="AI consent">
-      <Card className="mt-8">
+      <Card className="mt-16">
         <Switch
           label="Let Boo read papers and phrases"
           hint="Sent to an AI service to be read, never kept."

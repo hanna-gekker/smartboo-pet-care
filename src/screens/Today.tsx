@@ -16,7 +16,8 @@ import type { Task } from '../data/types'
 import { addDays, formatDay, greeting, relative, today } from '../lib/dates'
 import { petColor } from '../lib/petColors'
 import { getsVaccines } from '../lib/species'
-import { nextUpMeta, taskMeta, taskPill, taskState } from '../lib/tasks'
+import { nextUpMeta, rowDetail, taskMeta, taskPill, taskState } from '../lib/tasks'
+import { joinNames, shortVaccine } from '../lib/vaccines'
 
 const byUrgency = (a: Task, b: Task) => (a.date + (a.time ?? '99')).localeCompare(b.date + (b.time ?? '99'))
 
@@ -26,6 +27,7 @@ export function Today() {
   const navigate = useNavigate()
   const openBoo = useUi((s) => s.openBoo)
   const { pets, tasks, vaccines, settings, updateSettings, toggleTask } = useApp()
+  const showToast = useUi((s) => s.showToast)
   const t = today()
 
   const open = tasks.filter((x) => !x.doneAt).sort(byUrgency)
@@ -33,7 +35,10 @@ export function Today() {
   // Important items (not daily chores), overdue first
   const important = open.filter((x) => x.kind !== 'chore' && x.date <= addDays(t, 60))
   const nextUp = overdue[0] ?? open.find((x) => x.date === t) ?? important[0]
-  const upcoming = [...overdue, ...open.filter((x) => !overdue.includes(x))].filter((x) => x !== nextUp && (x.date <= addDays(t, 1) || (x.kind !== 'chore' && x.date <= addDays(t, 60)))).slice(0, 5)
+  // Figma 1: vaccines of one pet due the same day are one Next up — "Rabies & DHPP"
+  const nextGroup = !nextUp ? [] : nextUp.kind === 'vaccine' ? open.filter((x) => x.kind === 'vaccine' && x.petId === nextUp.petId && x.date === nextUp.date) : [nextUp]
+  const nextTitle = nextGroup.length > 1 ? joinNames(nextGroup.map((x) => shortVaccine(x.vaccine ?? x.title))) : nextUp?.title
+  const upcoming = [...overdue, ...open.filter((x) => !overdue.includes(x))].filter((x) => !nextGroup.includes(x) && (x.date <= addDays(t, 1) || (x.kind !== 'chore' && x.date <= addDays(t, 60)))).slice(0, 5)
   // A checklist: what was done today stays in the list, checked and crossed out, in its place by time
   const doneToday = tasks.filter((x) => x.doneAt?.startsWith(t) && x.date === t)
   const late = upcoming.filter((x) => x.date < t)
@@ -46,9 +51,26 @@ export function Today() {
   const hintHidden = !!settings.gapHintHiddenUntil && settings.gapHintHiddenUntil > t
   const noShots = hintHidden || nextUp ? undefined : pets.find((p) => getsVaccines(p.species) && !vaccines.some((v) => v.petId === p.id))
 
+  /** Figma 4 "Task done": checking something off says so, with Undo. */
+  const markDone = (items: Task[], title: string) => {
+    const ids = items.filter((x) => !x.doneAt).map((x) => x.id)
+    ids.forEach((id) => toggleTask(id))
+    if (ids.length) showToast(`${title} — done`, () => ids.forEach((id) => toggleTask(id)))
+  }
+
   const row = (x: Task, showDate = x.date !== t) => {
     const pet = petById(pets, x.petId)
-    return <TaskRow key={x.id} title={x.title} detail={x.detail} meta={taskMeta(x, pet?.name, { showDate })} state={taskState(x)} pet={pet} onToggle={() => toggleTask(x.id)} />
+    return (
+      <TaskRow
+        key={x.id}
+        title={x.title}
+        detail={rowDetail(x)}
+        meta={taskMeta(x, pet?.name, { showDate })}
+        state={taskState(x)}
+        pet={pet}
+        onToggle={() => (x.doneAt ? toggleTask(x.id) : markDone([x], x.title))}
+      />
+    )
   }
 
   return (
@@ -69,10 +91,10 @@ export function Today() {
         {nextUp ? (
           <NextUpCard
             pet={nextUpPet}
-            title={nextUp.title}
+            title={nextTitle!}
             meta={nextUpMeta(nextUp, nextUpPet?.name, nextUpPet?.vet?.name)}
             status={taskPill(nextUp)}
-            onDone={() => toggleTask(nextUp.id)}
+            onDone={() => markDone(nextGroup, nextTitle!)}
             onBookVet={
               nextUpPet?.vet
                 ? () => {
@@ -82,9 +104,15 @@ export function Today() {
             }
           />
         ) : noShots ? null : (
-          <Card className="p-24">
-            <p className="font-display text-title font-medium">All good.</p>
-            <p className="mt-4 text-body text-text-secondary">{nextBig ? `Next: ${petById(pets, nextBig.petId)?.name}'s ${nextBig.title.toLowerCase()} ${relative(nextBig.date)}.` : 'Nothing due soon.'}</p>
+          // Figma 6h "All good card": a 48 soft check, "All good." and what comes next ("Next: Bordetella in 5 months.")
+          <Card className="flex items-center gap-16 p-24">
+            <span className="flex size-avatar-48 shrink-0 items-center justify-center rounded-full bg-accent-primary-subtle text-accent-on-subtle" aria-hidden="true">
+              <Icon name="check" size={24} />
+            </span>
+            <div className="flex min-w-0 flex-col gap-2">
+              <p className="text-body font-medium text-text-primary">All good.</p>
+              <p className="text-body-s text-text-secondary">{nextBig ? `Next: ${nextBig.title} ${relative(nextBig.date)}.` : 'Nothing due soon.'}</p>
+            </div>
           </Card>
         )}
 

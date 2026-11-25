@@ -32,3 +32,6 @@ export function vaccineSummary(vax: Vaccine[], t = today()) {
     attentionDetail: overdue.length ? `Due since ${formatDay(overdue[0].due!)} · boarding will ask for proof` : undefined,
   }
 }
+
+/** A vaccine's short name for titles: "Rabies (3-year)" → "Rabies". */
+export const shortVaccine = (name: string) => name.split(' (')[0]

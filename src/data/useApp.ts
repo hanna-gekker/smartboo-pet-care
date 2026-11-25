@@ -94,6 +94,7 @@ export const useApp = create<AppState>((set, get) => ({
       kind: 'vaccine',
       title: v.name,
       detail: 'vaccine due',
+      vaccine: v.name,
       date: v.due!,
       remind: true,
     }))

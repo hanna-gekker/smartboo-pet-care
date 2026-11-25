@@ -36,6 +36,7 @@ export function AddPet() {
   const [species, setSpecies] = useState<Species>()
   const [name, setName] = useState('')
   const [color, setColor] = useState<PetColor>('ocean')
+  const [noFrame, setNoFrame] = useState(false)
   const [photo, setPhoto] = useState<string>()
   const [breed, setBreed] = useState('')
   const [notSure, setNotSure] = useState(false)
@@ -51,7 +52,7 @@ export function AddPet() {
   const flow: Step[] = ['species', 'name', 'breed', 'birthday', ...(species && !getsWeighed(species) ? [] : (['weight'] as Step[]))]
   const index = flow.indexOf(step)
   const last = index === flow.length - 1
-  const pet: Pet = { id: saved?.id ?? 'new-pet', name: name.trim() || 'Your pet', species: species ?? 'other', color, photo, weightUnit: unit, allergies: [] }
+  const pet: Pet = { id: saved?.id ?? 'new-pet', name: name.trim() || 'Your pet', species: species ?? 'other', color, noFrame: noFrame || undefined, photo, weightUnit: unit, allergies: [] }
   const petName = name.trim()
 
   const pickSpecies = (s: Species) => {
@@ -184,16 +185,19 @@ export function AddPet() {
         </div>
       }
     >
-      <div className="mt-8 flex flex-col gap-24">
+      {/* Figma: Progress, Heading, Body — 16 apart; the blocks inside a step's Body are 24 apart */}
+      <div className="mt-16 flex flex-col gap-16">
         <StepBar steps={flow.length} current={index + 1} />
 
         {step === 'species' && (
           <>
             <Question title="Who's joining the family?" sub="Pick one. You can add more pets later." />
-            <div role="radiogroup" aria-label="Species" className="grid grid-cols-4 gap-8">
-              {SPECIES.map((s) => (
-                <SpeciesTile key={s} species={s} label={speciesLabel(s)} color={SPECIES_COLOR[s]} selected={s === species} onSelect={() => pickSpecies(s)} />
-              ))}
+            <div className="flex flex-col gap-24">
+              <div role="radiogroup" aria-label="Species" className="grid grid-cols-4 gap-8">
+                {SPECIES.map((s) => (
+                  <SpeciesTile key={s} species={s} label={speciesLabel(s)} color={SPECIES_COLOR[s]} selected={s === species} onSelect={() => pickSpecies(s)} />
+                ))}
+              </div>
             </div>
           </>
         )}
@@ -201,49 +205,61 @@ export function AddPet() {
         {step === 'name' && (
           <>
             <Question title="What's their name?" />
-            <div className="flex flex-col items-center gap-12">
-              <PetAvatar pet={pet} size="hero" petals={color} onAddPhoto={() => photoInput.current?.click()} />
-              <button type="button" onClick={() => photoInput.current?.click()} className="press min-h-control-44 rounded-full px-16 text-body-s font-medium text-accent-on-subtle">
-                {photo ? 'Change photo' : 'Add a photo'}
-              </button>
-              <input
-                ref={photoInput}
-                type="file"
-                accept="image/*"
-                className="hidden"
-                onChange={(e) => {
-                  const file = e.target.files?.[0]
-                  if (file) setPhoto(URL.createObjectURL(file))
-                }}
-              />
+            <div className="flex flex-col gap-24">
+              <div className="mt-8 flex flex-col items-center gap-12">
+                <PetAvatar pet={pet} size="hero" petals={color} onAddPhoto={() => photoInput.current?.click()} />
+                <button type="button" onClick={() => photoInput.current?.click()} className="press -my-12 min-h-control-44 rounded-full px-16 text-body-s font-medium text-accent-on-subtle">
+                  {photo ? 'Change photo' : 'Add a photo'}
+                </button>
+                <input
+                  ref={photoInput}
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0]
+                    if (file) setPhoto(URL.createObjectURL(file))
+                  }}
+                />
+              </div>
+              <TextField label="Name" required value={name} onChange={(e) => setName(e.target.value)} autoComplete="off" />
+              <Card className="p-16">
+                <p className="mb-8 text-caption font-medium text-text-secondary">Frame colour</p>
+                <ColorSwatches
+                  label="Frame colour"
+                  allowNone
+                  value={noFrame ? 'none' : color}
+                  onChange={(c) => {
+                    setNoFrame(c === 'none')
+                    if (c !== 'none') setColor(c)
+                  }}
+                />
+              </Card>
             </div>
-            <TextField label="Name" required value={name} onChange={(e) => setName(e.target.value)} autoComplete="off" />
-            <Card className="p-16">
-              <p className="mb-4 text-caption text-text-secondary">Frame colour</p>
-              <ColorSwatches label="Frame colour" value={color} onChange={setColor} />
-            </Card>
           </>
         )}
 
         {step === 'breed' && (
           <>
             <Question title={isFish ? 'What kind of fish?' : 'Do you know the breed?'} sub="Optional. You can change it later." />
-            {!popular.length || species === 'dog' ? (
-              <TextField label="Breed" placeholder="Search breeds" value={notSure ? '' : breed} onChange={(e) => { setBreed(e.target.value); setNotSure(false) }} autoComplete="off" />
-            ) : null}
-            <div className="flex flex-col gap-8">
-              {species === 'dog' && <p className="text-caption text-text-secondary">Popular</p>}
-              <div role="radiogroup" aria-label={isFish ? 'Kind of fish' : 'Breed'} className="flex flex-wrap gap-8">
-                {popular
-                  .filter((b) => species !== 'dog' || !breed || notSure || popular.includes(breed) || b.toLowerCase().includes(breed.toLowerCase()))
-                  .map((b) => (
-                    <Chip key={b} role="radio" active={!notSure && breed === b} onClick={() => { setBreed(b); setNotSure(false) }}>
-                      {b}
-                    </Chip>
-                  ))}
-                <Chip role="radio" active={notSure} onClick={() => { setNotSure(true); setBreed('') }}>
-                  {NOT_SURE}
-                </Chip>
+            <div className="flex flex-col gap-24">
+              {!popular.length || species === 'dog' ? (
+                <TextField label="Breed" placeholder="Search breeds" value={notSure ? '' : breed} onChange={(e) => { setBreed(e.target.value); setNotSure(false) }} autoComplete="off" />
+              ) : null}
+              <div className="flex flex-col gap-8">
+                {species === 'dog' && <p className="text-caption text-text-secondary">Popular</p>}
+                <div role="radiogroup" aria-label={isFish ? 'Kind of fish' : 'Breed'} className="flex flex-wrap gap-8">
+                  {popular
+                    .filter((b) => species !== 'dog' || !breed || notSure || popular.includes(breed) || b.toLowerCase().includes(breed.toLowerCase()))
+                    .map((b) => (
+                      <Chip key={b} role="radio" active={!notSure && breed === b} onClick={() => { setBreed(b); setNotSure(false) }}>
+                        {b}
+                      </Chip>
+                    ))}
+                  <Chip role="radio" active={notSure} onClick={() => { setNotSure(true); setBreed('') }}>
+                    {NOT_SURE}
+                  </Chip>
+                </div>
               </div>
             </div>
           </>
@@ -252,13 +268,15 @@ export function AddPet() {
         {step === 'birthday' && (
           <>
             <Question title={`When was ${petName} born?`} />
-            <div className="flex flex-col gap-8">
-              <TextField label="Date of birth" type="date" max={today()} value={noDate ? '' : birthDate} disabled={noDate} onChange={(e) => setBirthDate(e.target.value)} />
-              <label className="-ml-12 flex items-center gap-4 text-body text-text-primary">
-                <Checkbox checked={noDate} label="I don't know the exact date" onChange={setNoDate} />
-                <span aria-hidden="true">I don't know the exact date</span>
-              </label>
-              <p className="text-caption text-text-secondary">If unsure, Boo asks for an approximate age instead.</p>
+            <div className="flex flex-col gap-24">
+              <div className="flex flex-col gap-8">
+                <TextField label="Date of birth" type="date" max={today()} value={noDate ? '' : birthDate} disabled={noDate} onChange={(e) => setBirthDate(e.target.value)} />
+                <label className="-ml-12 flex items-center gap-4 text-body text-text-primary">
+                  <Checkbox checked={noDate} label="I don't know the exact date" onChange={setNoDate} />
+                  <span aria-hidden="true">I don't know the exact date</span>
+                </label>
+                <p className="text-caption text-text-secondary">If unsure, Boo asks for an approximate age instead.</p>
+              </div>
             </div>
           </>
         )}
@@ -266,14 +284,16 @@ export function AddPet() {
         {step === 'weight' && species && (
           <>
             <Question title={`How much does ${petName} weigh?`} sub={unit === 'g' || unit === 'oz' ? 'Optional. Small pets are weighed in grams.' : 'Optional. Helps Boo track changes.'} />
-            <div className="flex flex-col gap-12">
-              <TextField label="Weight" inputMode="decimal" value={weight} onChange={(e) => setWeight(e.target.value)} autoComplete="off" />
-              <div role="radiogroup" aria-label="Unit" className="flex gap-8">
-                {weightUnits(species).map((u) => (
-                  <Chip key={u} role="radio" active={unit === u} onClick={() => setUnit(u)}>
-                    {u}
-                  </Chip>
-                ))}
+            <div className="flex flex-col gap-24">
+              <div className="flex flex-col gap-12">
+                <TextField label="Weight" inputMode="decimal" value={weight} onChange={(e) => setWeight(e.target.value)} autoComplete="off" />
+                <div role="radiogroup" aria-label="Unit" className="flex gap-8">
+                  {weightUnits(species).map((u) => (
+                    <Chip key={u} role="radio" active={unit === u} onClick={() => setUnit(u)}>
+                      {u}
+                    </Chip>
+                  ))}
+                </div>
               </div>
             </div>
           </>
@@ -286,7 +306,8 @@ export function AddPet() {
 /** The step's question (SB/Title) with an optional grey line under it. */
 function Question({ title, sub }: { title: string; sub?: string }) {
   return (
-    <div className="flex flex-col gap-8">
+    // Figma "Heading": 8 on top, the title, 6, the line under it
+    <div className="flex flex-col gap-6 pt-8">
       <h2 className="font-display text-title font-medium">{title}</h2>
       {sub && <p className="text-body-s text-text-secondary">{sub}</p>}
     </div>

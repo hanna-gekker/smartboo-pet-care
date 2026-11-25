@@ -21,7 +21,7 @@ export const Pressed: Story = { parameters: { pseudo: { active: ['button'] } } }
 /** Focus: the ring inside the row */
 export const Focus: Story = { parameters: { pseudo: { focusVisible: ['button'] } } }
 export const Done: Story = { args: { state: 'done' } }
-export const Waiting: Story = { args: { title: 'Ear drops', meta: 'Rocky · waiting since 8 AM', state: 'waiting', pet: rocky } }
+export const Waiting: Story = { args: { title: 'Ear drops', meta: 'Rocky · 8 AM', state: 'waiting', pet: rocky } }
 export const WithDose: Story = { args: { title: 'Ear drops', detail: 'Otomax · 4 drops', meta: 'Rocky · 8 PM', pet: rocky } }
 /** Tap the circle: done ⇄ not done. */
 export const Interactive: Story = {

@@ -20,6 +20,8 @@ export type Pet = {
   photo?: string
   /** Frame colour, picked when the pet is added. Older pets have none and get one by their place in the list. */
   color?: PetColor
+  /** Edit → Frame colour → "No frame" (Figma 14): the photo without the flower around it. */
+  noFrame?: boolean
   /** lb / kg for larger pets, g / oz for small ones. */
   weightUnit: WeightUnit
   allergies: string[]
@@ -69,6 +71,8 @@ export type Task = {
   kind: TaskKind
   title: string
   detail?: string // e.g. dose
+  /** A vaccine task: the vaccine's name as on the paper, e.g. "Rabies (3-year)". Older tasks have none; their title is the name. */
+  vaccine?: string
   date: string // YYYY-MM-DD
   time?: string // HH:mm
   doneAt?: string // ISO time when crossed out

@@ -59,7 +59,7 @@ export function ListRow({ title, subtitle, label, value, icon, iconTone = 'accen
       <span className="flex min-w-0 flex-1 flex-col gap-2 text-left">
         {label && <span className="text-caption text-text-secondary">{label}</span>}
         <span className="truncate text-body font-medium text-text-primary">{title}</span>
-        {subtitle && <span className="text-body-s text-text-secondary">{subtitle}</span>}
+        {subtitle && <span className={`${label ? 'text-caption' : 'text-body-s'} text-text-secondary`}>{subtitle}</span>}
       </span>
       {value !== undefined && <span className="min-w-0 max-w-3/5 truncate text-right text-body-s text-text-secondary">{value}</span>}
       {selected !== undefined && <Checkbox checked={selected} />}

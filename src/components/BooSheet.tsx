@@ -12,6 +12,7 @@ import { askPermission, openAppSettings, syncReminders } from '../lib/reminders'
 import { addDays, ageShort, formatDay, nowTime, today } from '../lib/dates'
 import { speciesLabel } from '../lib/species'
 import { convertWeight, weightUnits } from '../lib/weight'
+import { shortVaccine } from '../lib/vaccines'
 import { BottomSheet } from './BottomSheet'
 import { BooCharacter, type BooPose } from './BooCharacter'
 import { BooError } from './BooError'
@@ -610,7 +611,7 @@ function PaperReview({ paper, onConfirm }: { paper: ParsedPaper; onConfirm: (pet
     const vaccines: Vaccine[] = paper.vaccines.map((v) => ({ id: newId('vax'), petId, documentId, ...v }))
     const records: PetRecord[] = [
       { id: newId('rec'), petId, type: 'document', date: paper.date, title: paper.title, detail: `${paper.clinic} · ${paper.amount}`, documentId },
-      { id: newId('rec'), petId, type: 'vaccine', date: paper.date, title: `${paper.vaccines.map((v) => v.name.split(' (')[0]).join(', ')} given`, documentId },
+      { id: newId('rec'), petId, type: 'vaccine', date: paper.date, title: `${paper.vaccines.map((v) => shortVaccine(v.name)).join(', ')} given`, documentId },
     ]
     app.addPaper({ pet, isNewPet: !existing, document: { id: documentId, petId, title: paper.title, clinic: paper.clinic, date: paper.date }, vaccines, records })
     onConfirm(petId, documentId, pet.name)

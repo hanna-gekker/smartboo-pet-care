@@ -30,7 +30,7 @@ export function AttentionCard({ title, detail, icon, actions, 'aria-label': aria
           <span aria-hidden="true" className="mt-8 size-[8px] shrink-0 rounded-full bg-status-waiting-dot" />
         )}
         <div className="flex min-w-0 flex-1 flex-col gap-2">
-          <p className={`text-text-primary ${icon ? 'text-body font-medium' : 'text-body'}`}>{title}</p>
+          <p className={`text-text-primary ${icon ? 'text-body font-medium' : 'text-body-s'}`}>{title}</p>
           {detail && <p className="text-body-s text-status-waiting-text">{detail}</p>}
         </div>
       </div>

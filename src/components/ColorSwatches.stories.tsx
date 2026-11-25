@@ -15,11 +15,13 @@ type Story = StoryObj<typeof meta>
 
 export const Default: Story = {}
 export const Pink: Story = { args: { value: 'pink' } }
+/** Edit and Add your pet: a 7th circle, No frame (Figma 14) */
+export const WithNoFrame: Story = { args: { allowNone: true, value: 'none' } }
 export const Focus: Story = { parameters: { pseudo: { focusVisible: ['[aria-checked="true"]'] } } }
 /** Tap a colour */
 function Picker() {
-  const [value, setValue] = useState<PetColor>('ocean')
-  return <ColorSwatches label="Frame colour" value={value} onChange={setValue} />
+  const [value, setValue] = useState<PetColor | 'none'>('ocean')
+  return <ColorSwatches label="Frame colour" allowNone value={value} onChange={setValue} />
 }
 export const Interactive: Story = { render: () => <Picker /> }
 export const Disabled: Story = { args: { disabled: true } }
