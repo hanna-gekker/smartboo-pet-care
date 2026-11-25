@@ -357,11 +357,31 @@ body:has(.bg-welcome)::before {
 /* Tab bar capsule: frosted glass. A see-through surface/glass fill (white 60% in light, 8% in dark) over a strong
    background blur, so what scrolls under it shows through, softened; a 1px glass/highlight on top inside, the
    border/card hairline (TabBar.tsx) and a soft shadow. (Figma draws it solid surface/card; Anna asked for the glass.) */
-.glass-bar {
-  background: var(--surface-glass);
-  -webkit-backdrop-filter: blur(24px) saturate(180%);
-  backdrop-filter: blur(24px) saturate(180%);
-  box-shadow: inset 0 0 0 1px var(--border-card), inset 0 1px 1px var(--glass-highlight), 0 1px 3px var(--glass-shadow), 0 10px 28px var(--glass-shadow);
+/* Tab bar capsule (Figma "Tab bar", Nov 25): solid surface/card with the border/card hairline and the soft shadow.
+   No background blur: the capsule is opaque. */
+.tab-capsule {
+  background: var(--surface-card);
+  box-shadow: inset 0 0 0 1px var(--border-card), 0 1px 3px var(--glass-shadow), 0 10px 28px var(--glass-shadow);
+}
+/* The selected tab: a soft pill. Light: accent/primary-subtle with accent/on-subtle icon and label;
+   dark: accent/primary-soft with text/primary. The due dot's ring takes the pill's colour (a cut-out). */
+.tab-on {
+  --tab-on-fill: var(--accent-primary-subtle);
+  background: var(--tab-on-fill);
+  color: var(--accent-on-subtle);
+}
+:root[data-theme="dark"] .tab-on {
+  --tab-on-fill: var(--accent-primary-soft);
+  color: var(--text-primary);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .tab-on {
+    --tab-on-fill: var(--accent-primary-soft);
+    color: var(--text-primary);
+  }
+}
+.tab-on .tab-dot {
+  --tw-ring-color: var(--tab-on-fill);
 }
 
 /* Bottom scroll edge (as in iOS 26): below and around the floating tab bar, content fades into the screen background

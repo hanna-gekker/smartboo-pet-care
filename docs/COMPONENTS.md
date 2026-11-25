@@ -379,3 +379,13 @@ Figma: ★ Screens → "Welcome & empty states". Each empty screen says what com
 | **Boo bubble** *(new)* | `BooBubble.tsx` | Boo (96, in a pose) with a speech bubble under him: `surface/card`, card shadow, radius 24, a small tail pointing up at Boo, centred Body text. Props: `pose`, the text, and an optional action under the bubble. Used on the empty Schedule (sleeping) and for a search with no results (reading) |
 
 Where: **Schedule** with no tasks at all ("Nothing planned yet. Reminders show up here once I read a vet paper." — Snap a vet paper); **a new pet's folder** (Health: Boo hint "I don't know {name}'s shots yet. Snap the last vet paper?"; History: "Papers, weights and notes will show up here by date."; Profile: empty values are an **Add** link to Edit); **History search** with no results ("I couldn't find "{query}" in {name}'s records." — Clear search). The camera-off sheet waits for the camera plugin.
+
+## 26. Tab bar: soft selected tab, solid capsule (built, Nov 25, 2026)
+
+Figma: Design system → "Tab bar" (Active × Theme) and the tab bars on the Dark mode screens.
+
+| Component | File | What changes |
+|---|---|---|
+| **Tab bar** | `TabBar.tsx`, `.tab-capsule` / `.tab-on` in `base.css` | The capsule is solid `surface/card` with the `border/card` hairline and the soft shadow; no background blur. In Figma the dark capsule is the primitive `lavender/900`; the app uses `surface/card` until Figma binds it to a colour role. The selected tab is a soft pill with the filled icon: light `accent/primary-subtle` with `accent/on-subtle`, dark `accent/primary-soft` with `text/primary`. The due dot's ring takes the pill's colour on the selected tab |
+
+The `nav/active-*` variables stay in the tokens: the Segmented control (Week / Month, Appearance) still uses them for its chosen segment.
