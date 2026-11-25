@@ -57,6 +57,7 @@ export type Med = {
   petId: string
   name: string
   dose: string
+  start?: string // YYYY-MM-DD
   until?: string // YYYY-MM-DD
 }
 
