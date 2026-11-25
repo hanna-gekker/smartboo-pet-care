@@ -1,6 +1,8 @@
 import { useState, type ReactNode } from 'react'
 import { useNavigate, useSearchParams } from 'react-router'
+import { BooBubble } from '../components/BooBubble'
 import { BooHint } from '../components/BooHint'
+import { Button } from '../components/Button'
 import { Calendar } from '../components/Calendar'
 import { IconButton } from '../components/IconButton'
 import { ListRow } from '../components/ListRow'
@@ -8,6 +10,7 @@ import { Logo } from '../components/Logo'
 import { SegmentedControl } from '../components/SegmentedControl'
 import { TaskRow } from '../components/TaskRow'
 import { petById, useApp } from '../data/useApp'
+import { useUi } from '../data/useUi'
 import type { Pet, PetRecord, Task } from '../data/types'
 import { addDays, addMonths, formatDay, formatTime, fromDay, relative, today } from '../lib/dates'
 import { taskMeta, taskState } from '../lib/tasks'
@@ -21,6 +24,7 @@ const byDay = (a: Task, b: Task) => rank(a) - rank(b) || byTime(a, b)
 export function Schedule() {
   const navigate = useNavigate()
   const { pets, tasks, records, toggleTask } = useApp()
+  const openBoo = useUi((s) => s.openBoo)
   const t = today()
   // ?day=2026-12-09 (a tapped reminder) opens on that day
   const [params] = useSearchParams()
@@ -132,7 +136,20 @@ export function Schedule() {
           </Section>
         )}
 
-        {toDo.length === 0 && happened.length === 0 && (
+        {/* Nothing planned at all (Figma "Empty · Schedule"): Boo says where reminders come from */}
+        {tasks.length === 0 && happened.length === 0 && (
+          <BooBubble
+            pose="sleeping"
+            action={
+              <Button full size="large" icon="camera" onClick={() => openBoo('snap')}>
+                Snap a vet paper
+              </Button>
+            }
+          >
+            Nothing planned yet. Reminders show up here once I read a vet paper.
+          </BooBubble>
+        )}
+        {tasks.length > 0 && toDo.length === 0 && happened.length === 0 && (
           <BooHint title="All good." pose="sleeping">{next ? `Next: ${next.title} for ${nextPet?.name} ${relative(next.date)}.` : 'Nothing due soon.'}</BooHint>
         )}
       </div>
