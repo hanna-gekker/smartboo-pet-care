@@ -1,26 +1,22 @@
+// Share records — Figma 15 "Who is it for?" → 16 "Which pets?" → 17 PDF preview → 17a the iOS share sheet.
+// The preview and the PDF come from one builder (lib/shareRecord.ts), so what you see is what they get.
+
 import { useState } from 'react'
 import { useSearchParams } from 'react-router'
+import { AttentionCard } from '../components/AttentionCard'
 import { Button } from '../components/Button'
 import { Card } from '../components/Card'
 import { Checkbox } from '../components/Checkbox'
 import { ListRow } from '../components/ListRow'
+import { Logo } from '../components/Logo'
 import { PetAvatar } from '../components/PetAvatar'
 import { StackScreen } from '../components/ui'
 import { useApp } from '../data/useApp'
 import { useUi } from '../data/useUi'
-import { addDays, age, formatDay, today } from '../lib/dates'
-import { formatPhone } from '../lib/phone'
-import { speciesLabel } from '../lib/species'
+import { sharePdf } from '../lib/pdf'
+import { buildRecord, petLine, SETS, type SetKey } from '../lib/shareRecord'
+import { joinNames } from '../lib/vaccines'
 
-type SetKey = 'boarding' | 'vet' | 'emergency'
-
-const SETS: { key: SetKey; emoji: string; title: string; what: string }[] = [
-  { key: 'boarding', emoji: '🏨', title: 'Boarding & groomer', what: 'Vaccines, vet, owner contacts' },
-  { key: 'vet', emoji: '🩺', title: 'New vet', what: 'Everything: history, vaccines, meds, documents' },
-  { key: 'emergency', emoji: '🚨', title: 'Emergency', what: 'Current meds, allergies, symptoms from the last 2 weeks, vet, weight' },
-]
-
-/** Share: pick a set → pick pets → PDF preview → iOS share sheet. */
 export function Share() {
   const [params] = useSearchParams()
   const app = useApp()
@@ -28,34 +24,83 @@ export function Share() {
   const [step, setStep] = useState<1 | 2 | 3>(1)
   const [set, setSet] = useState<SetKey>('boarding')
   const [chosen, setChosen] = useState<string[]>(params.get('pet') ? [params.get('pet')!] : [])
+  const [making, setMaking] = useState(false)
 
   const toggle = (id: string) => setChosen((c) => (c.includes(id) ? c.filter((x) => x !== id) : [...c, id]))
   const setInfo = SETS.find((s) => s.key === set)!
+  // Keep the order of the pack, not the order of taps
+  const picked = app.pets.filter((p) => chosen.includes(p.id)).map((p) => p.id)
+
+  // Figma 16: an overdue vaccine on a boarding record gets a heads-up
+  const overdueByPet = app.pets
+    .filter((p) => picked.includes(p.id))
+    .map((p) => ({ name: p.name, overdue: petLine(p, app).overdue }))
+    .filter((x) => x.overdue.length > 0)
+  const overdueCount = overdueByPet.reduce((n, x) => n + x.overdue.length, 0)
+  // "Rocky's rabies & DHPP are overdue — the boarding may ask for proof." (a name in capitals stays as it is)
+  const word = (v: string) => (/[A-Z]/.test(v.slice(1)) ? v : v.toLowerCase())
+  const overdueNote = overdueByPet.length
+    ? `${joinNames(overdueByPet.map((x) => `${x.name}’s ${joinNames(x.overdue.map(word))}`))} ${overdueCount === 1 ? 'is' : 'are'} overdue — the boarding may ask for proof.`
+    : undefined
+
+  const record = step === 3 ? buildRecord(set, picked, app) : undefined
 
   return (
-    <StackScreen title={step === 1 ? 'Share records' : step === 2 ? 'Which pets?' : 'Preview'} withTabBar={false}>
-      <p className="mt-4 text-body-s font-medium text-text-secondary">Step {step} of 3</p>
-
+    <StackScreen
+      title={step === 1 ? 'Share records' : step === 2 ? setInfo.title : 'Preview'}
+      withTabBar={false}
+      onBack={step > 1 ? () => setStep((step - 1) as 1 | 2) : undefined}
+      footer={
+        step === 1 ? (
+          <Button full size="large" onClick={() => setStep(2)}>
+            Next · pick pets
+          </Button>
+        ) : step === 2 ? (
+          <Button full size="large" disabled={!picked.length} onClick={() => setStep(3)}>
+            {picked.length ? `Make PDF · ${picked.length} ${picked.length === 1 ? 'pet' : 'pets'}` : 'Make PDF'}
+          </Button>
+        ) : (
+          record && (
+            <div className="flex flex-col gap-8">
+              <Button
+                full
+                size="large"
+                icon="share"
+                loading={making}
+                onClick={async () => {
+                  setMaking(true)
+                  try {
+                    const names = app.pets.filter((p) => picked.includes(p.id)).map((p) => p.name)
+                    await sharePdf(record, `${names.join('-')} · ${record.title}.pdf`)
+                  } catch {
+                    showToast('Couldn’t make the PDF. Try again.')
+                  } finally {
+                    setMaking(false)
+                  }
+                }}
+              >
+                Share PDF
+              </Button>
+              <p className="text-center text-caption text-text-secondary">Opens the iOS share sheet — Mail, Messages, AirDrop…</p>
+            </div>
+          )
+        )
+      }
+    >
       {step === 1 && (
-        <Card variant="list" className="mt-16 overflow-hidden">
-          {SETS.map((s) => (
-            <ListRow
-              key={s.key}
-              emoji={s.emoji}
-              title={s.title}
-              subtitle={s.what}
-              trailing="chevron"
-              onClick={() => {
-                setSet(s.key)
-                setStep(chosen.length ? 3 : 2)
-              }}
-            />
-          ))}
-        </Card>
+        <>
+          <h2 className="mt-8 font-display text-title font-medium">Who is it for?</h2>
+          <Card variant="list" className="mt-16 overflow-hidden" role="radiogroup" aria-label="Who is it for?">
+            {SETS.map((s) => (
+              <ListRow key={s.key} icon={s.icon} iconTone="soft" title={s.title} subtitle={s.what} selected={s.key === set} onClick={() => setSet(s.key)} />
+            ))}
+          </Card>
+        </>
       )}
 
       {step === 2 && (
         <>
+          <h2 className="mt-8 font-display text-title font-medium">Which pets?</h2>
           <Card variant="list" className="mt-16 overflow-hidden">
             {app.pets.map((p) => (
               <button
@@ -64,85 +109,62 @@ export function Share() {
                 role="checkbox"
                 aria-checked={chosen.includes(p.id)}
                 onClick={() => toggle(p.id)}
-                className="press focus-inset flex w-full items-center gap-16 px-24 py-16 text-left active:bg-surface-subtle"
+                className="press focus-inset flex w-full items-center gap-16 px-24 py-12 text-left active:bg-surface-subtle"
               >
-                <PetAvatar pet={p} size="md" />
-                <span className="flex-1 text-body font-medium">{p.name}</span>
                 <Checkbox checked={chosen.includes(p.id)} />
+                <PetAvatar pet={p} size="md" />
+                <span className="flex min-w-0 flex-1 flex-col gap-2">
+                  <span className="text-body font-medium">{p.name}</span>
+                  <span className="text-body-s text-text-secondary">{petLine(p, app).text}</span>
+                </span>
               </button>
             ))}
           </Card>
-          <div className="mt-24">
-            <Button full size="large" disabled={!chosen.length} onClick={() => setStep(3)}>
-              Preview PDF
-            </Button>
-          </div>
+          {set === 'boarding' && overdueNote && (
+            <div className="mt-16">
+              <AttentionCard title={overdueNote} />
+            </div>
+          )}
         </>
       )}
 
-      {step === 3 && (
+      {step === 3 && record && (
         <>
-          {/* A preview of the PDF. On the phone the PDF is generated with jsPDF and handed to the iOS share sheet. */}
-          <Card className="mt-16 text-body-s">
-            <p className="text-caption font-medium text-accent-primary uppercase">SmartBoo · {setInfo.title}</p>
-            <p className="text-caption text-text-tertiary">Prepared {formatDay(today(), { month: 'long', day: 'numeric', year: 'numeric' })}</p>
-            {chosen.map((id) => {
-              const p = app.pets.find((x) => x.id === id)
-              if (!p) return null
-              const vax = app.vaccines.filter((v) => v.petId === id)
-              const meds = app.meds.filter((m) => m.petId === id && (!m.until || m.until >= today()))
-              const weight = app.records.filter((r) => r.petId === id && r.type === 'weight').sort((a, b) => b.date.localeCompare(a.date))[0]
-              const symptoms = app.records.filter((r) => r.petId === id && r.type === 'health' && r.date >= addDays(today(), -14))
-              return (
-                <div key={id} className="mt-16 border-t border-surface-subtle pt-12">
-                  <p className="font-display text-body font-medium">{p.name}</p>
-                  <p className="text-text-secondary">{[speciesLabel(p.species), p.breed, age(p.birthDate), p.microchip && `Chip ${p.microchip}`].filter(Boolean).join(' · ')}</p>
-                  {set !== 'emergency' && (
-                    <PdfBlock title="Vaccines">{vax.length ? vax.map((v) => `${v.name} — given ${formatDay(v.given)}${v.due ? `, due ${formatDay(v.due, { month: 'short', day: 'numeric', year: 'numeric' })}` : ''}`) : ['No vaccine records']}</PdfBlock>
-                  )}
-                  {set !== 'boarding' && <PdfBlock title="Current meds">{meds.length ? meds.map((m) => `${m.name} — ${m.dose}`) : ['None']}</PdfBlock>}
-                  {set !== 'boarding' && <PdfBlock title="Allergies">{[p.allergies.join(', ') || 'None known']}</PdfBlock>}
-                  {set === 'emergency' && <PdfBlock title="Symptoms, last 2 weeks">{symptoms.length ? symptoms.map((s) => `${formatDay(s.date)} — ${s.title}`) : ['None logged']}</PdfBlock>}
-                  {set !== 'boarding' && weight && <PdfBlock title="Weight">{[`${weight.value} ${p.weightUnit} (${formatDay(weight.date)})`]}</PdfBlock>}
-                  {p.vet && <PdfBlock title="Vet">{[`${[p.vet.name, p.vet.clinic].filter(Boolean).join(' · ')} · ${formatPhone(p.vet.phone)}`]}</PdfBlock>}
-                </div>
-              )
-            })}
+          {/* Figma 17: the paper as it will look */}
+          <Card className="mt-8 flex flex-col gap-16 p-24 text-body-s ring-1 ring-inset ring-border-control">
+            <div className="flex items-center justify-between gap-16">
+              <Logo />
+              <span className="text-caption text-text-secondary">{record.date}</span>
+            </div>
+            <h2 className="font-display text-title font-medium">{record.title}</h2>
+            {record.pets.map((p) => (
+              <div key={p.heading} className="flex flex-col gap-2">
+                <p className="text-body font-medium text-text-primary">{p.heading}</p>
+                {p.sections.map((s, i) => (
+                  <div key={s.title ?? i} className={s.title ? 'mt-8' : ''}>
+                    {s.title && <p className="text-caption font-medium text-text-secondary uppercase">{s.title}</p>}
+                    {s.lines.map((l) => (
+                      <p key={l.text} className={l.warn ? 'text-status-waiting-text' : 'text-text-secondary'}>
+                        {l.text}
+                      </p>
+                    ))}
+                  </div>
+                ))}
+              </div>
+            ))}
+            {record.contacts.lines.length > 0 && (
+              <div className="flex flex-col gap-2">
+                <p className="text-body font-medium text-text-primary">{record.contacts.title}</p>
+                {record.contacts.lines.map((l) => (
+                  <p key={l.text} className="text-text-secondary">
+                    {l.text}
+                  </p>
+                ))}
+              </div>
+            )}
           </Card>
-          <div className="mt-24">
-            <Button
-              full
-              size="large"
-              icon="share"
-              onClick={async () => {
-                const text = `${setInfo.title} records for ${chosen.map((id) => app.pets.find((p) => p.id === id)?.name).join(', ')}`
-                if (navigator.share) {
-                  try {
-                    await navigator.share({ title: 'SmartBoo records', text })
-                  } catch {
-                    // closed the share sheet
-                  }
-                } else {
-                  showToast('The share sheet opens in the iPhone app')
-                }
-              }}
-            >
-              Share PDF
-            </Button>
-          </div>
         </>
       )}
     </StackScreen>
-  )
-}
-
-function PdfBlock({ title, children }: { title: string; children: string[] }) {
-  return (
-    <div className="mt-8">
-      <p className="text-caption font-medium text-text-secondary uppercase">{title}</p>
-      {children.map((line) => (
-        <p key={line}>{line}</p>
-      ))}
-    </div>
   )
 }

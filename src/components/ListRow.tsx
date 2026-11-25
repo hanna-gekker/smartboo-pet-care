@@ -8,6 +8,7 @@
 
 import type { ReactNode } from 'react'
 import type { Pet } from '../data/types'
+import { Checkbox } from './Checkbox'
 import { Icon, type IconName } from './Icon'
 import { PetAvatar } from './PetAvatar'
 import type { ShowState } from './showState'
@@ -31,16 +32,19 @@ type ListRowProps = {
   trailing?: 'chevron' | { label: string; icon?: IconName }
   href?: string
   onClick?: () => void
+  /** A choice in a list (Share → Who is it for?): the row is a radio, tinted accent/primary-subtle with a checked
+   *  circle when chosen, an empty circle when not. */
+  selected?: boolean
   'data-state'?: ShowState
 }
 
-export function ListRow({ title, subtitle, label, value, icon, iconTone = 'accent', pet, emoji, trailing, href, onClick, 'data-state': state }: ListRowProps) {
+export function ListRow({ title, subtitle, label, value, icon, iconTone = 'accent', pet, emoji, trailing, href, onClick, selected, 'data-state': state }: ListRowProps) {
   const content = (
     <>
       {icon && (
         <span
           className={`flex size-control-40 shrink-0 items-center justify-center rounded-full ${
-            iconTone === 'soft' ? 'bg-accent-primary-subtle text-accent-on-subtle' : 'chip-category text-icon-category-on-chip'
+            iconTone === 'soft' ? `${selected ? 'bg-surface-card' : 'bg-accent-primary-subtle'} text-accent-on-subtle` : 'chip-category text-icon-category-on-chip'
           }`}
         >
           <Icon name={icon} size={20} />
@@ -58,6 +62,7 @@ export function ListRow({ title, subtitle, label, value, icon, iconTone = 'accen
         {subtitle && <span className="text-body-s text-text-secondary">{subtitle}</span>}
       </span>
       {value !== undefined && <span className="min-w-0 max-w-3/5 truncate text-right text-body-s text-text-secondary">{value}</span>}
+      {selected !== undefined && <Checkbox checked={selected} />}
       {trailing === 'chevron' && <Icon name="chevron-right" size={20} className="shrink-0 text-text-secondary" />}
       {trailing && trailing !== 'chevron' && (
         <span className="flex h-control-32 shrink-0 items-center gap-4 rounded-full bg-accent-primary-subtle px-12 text-body font-medium text-accent-on-subtle">
@@ -77,7 +82,14 @@ export function ListRow({ title, subtitle, label, value, icon, iconTone = 'accen
     )
   if (onClick)
     return (
-      <button type="button" onClick={onClick} data-state={state} className={`press ${cls} active:bg-surface-subtle data-[state=pressed]:bg-surface-subtle`}>
+      <button
+        type="button"
+        onClick={onClick}
+        role={selected !== undefined ? 'radio' : undefined}
+        aria-checked={selected}
+        data-state={state}
+        className={`press ${cls} ${selected ? 'bg-accent-primary-subtle' : 'active:bg-surface-subtle data-[state=pressed]:bg-surface-subtle'}`}
+      >
         {content}
       </button>
     )

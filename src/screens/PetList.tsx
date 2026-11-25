@@ -4,6 +4,7 @@ import { IconButton } from '../components/IconButton'
 import { ListRow } from '../components/ListRow'
 import { useApp } from '../data/useApp'
 import { ageShort } from '../lib/dates'
+import { speciesLabel } from '../lib/species'
 import { petStatus } from '../lib/tasks'
 
 /** Figma "11 · Pets": "Your pack" with a + button (the only way to add a pet by hand), the pet list with a status
@@ -39,7 +40,7 @@ export function PetList() {
             key={pet.id}
             pet={pet}
             title={pet.name}
-            subtitle={<span className="block truncate">{[pet.breed ?? pet.species, ageShort(pet.birthDate)].filter(Boolean).join(' · ')}</span>}
+            subtitle={<span className="block truncate">{[pet.breed || speciesLabel(pet.species), ageShort(pet.birthDate)].filter(Boolean).join(' · ')}</span>}
             value={<span className={status.overdue ? 'text-status-waiting-text' : undefined}>{status.label}</span>}
             trailing="chevron"
             onClick={() => navigate(`/pets/${pet.id}`)}

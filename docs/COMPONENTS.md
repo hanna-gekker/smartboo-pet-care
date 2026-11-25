@@ -402,3 +402,14 @@ Figma: ★ Screens → "Boo": 8 Boo sheet, 8b Which pet, 8c Red flag, 8d Call th
 | **Pet tile** | `BooSheet.tsx` | Which pet is this for? A card-like button with the pet's photo (56) and name, three in a row; "Both" shows two photos overlapping |
 
 Every result in the Boo sheet starts with **You said** and **Boo says**. The answer adds the Source card and Book vet / Remind me (a vaccine that is due); the red flag adds **Call {vet}** and **I'll watch {name} — save it**. The sheet title adds the owner's name ("What's up, Anna?"); a saved note reads "Saved to {name}'s notes".
+
+## 28. Share records (built, Nov 25, 2026)
+
+Figma: ★ Screens → "Pets & Share": 15 Pick a set, 16 Pick pets, 17 PDF preview, 17a iOS share sheet.
+
+| Component | File | What changes |
+|---|---|---|
+| **List row** | `ListRow.tsx` | New `selected`: the row is a radio in a group, tinted `accent/primary-subtle` with a checked circle (Checkbox picture) when chosen, an empty circle when not (Share → "Who is it for?") |
+| **Attention card** | `AttentionCard.tsx` | Used on Pick pets: "Rocky's rabies is overdue — the boarding may ask for proof." |
+
+Screens: **Who is it for?** (three sets with soft icons, Next · pick pets), **Which pets?** (the set's name above; each pet with its vaccine status; Make PDF · N pets), **Preview** (the SmartBoo wordmark and date, "{Set} record", a block per pet, "Vet & owner"; Share PDF opens the iOS share sheet). One builder (`lib/shareRecord.ts`) makes both the preview and the PDF (`lib/pdf.ts`, jsPDF + `@capacitor/share`).
