@@ -14,6 +14,8 @@ type AppState = AppData & {
   loaded: boolean
   init: () => Promise<void>
   toggleTask: (id: string) => void
+  addTask: (task: Task) => void
+  removeTask: (id: string) => void
   addPet: (pet: Pet) => void
   updatePet: (id: string, patch: Partial<Pet>) => void
   addRecord: (record: PetRecord) => void
@@ -60,6 +62,10 @@ export const useApp = create<AppState>((set, get) => ({
     })),
 
   // A new pet gets a frame colour no other pet of its species uses
+  addTask: (task) => set((s) => ({ tasks: [...s.tasks, task] })),
+
+  removeTask: (id) => set((s) => ({ tasks: s.tasks.filter((t) => t.id !== id) })),
+
   addPet: (pet) => set((s) => ({ pets: [...s.pets, { ...pet, color: pet.color ?? pickPetColor(pet.species, s.pets) }] })),
 
   updatePet: (id, patch) => set((s) => ({ pets: s.pets.map((p) => (p.id === id ? { ...p, ...patch } : p)) })),

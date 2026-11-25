@@ -1,7 +1,7 @@
 // Boo client — FAKE for now (step 04). It pretends to read papers and phrases so the flows can be clicked through.
 // The Boo spike (week 2) replaces these functions with calls to the server function functions/api/boo.
 
-import type { Pet, PetRecord, Species, Vaccine } from '../data/types'
+import type { Pet, PetDocument, PetRecord, Species, Task, Vaccine } from '../data/types'
 import { addDays, addMonths, formatDay, relative, today } from './dates'
 
 const wait = (ms: number) => new Promise((r) => setTimeout(r, ms))
@@ -42,8 +42,18 @@ export type BooResult =
   | { kind: 'weight'; petId: string; value: number; unit: 'kg' | 'g'; text: string }
   | { kind: 'record'; petId: string; type: PetRecord['type']; title: string; text: string }
   | { kind: 'symptom'; petId: string; title: string; question: string }
-  | { kind: 'meds'; petId: string; name: string; dose: string; days: number; perDay: number }
-  | { kind: 'answer'; text: string; source?: { petId: string; label: string } }
+  | { kind: 'meds'; petId: string; name: string; dose: string; days: number; perDay: number; /** Both (8b): the same course for each. */ petIds?: string[] }
+  | {
+      kind: 'answer'
+      text: string
+      /** Where it comes from (Figma 10 "Source: vaccine certificate · Paws & Claws · Nov 1, 2023"); tap opens `to`. */
+      source?: { petId: string; label: string; detail?: string; to: string }
+      /** A vaccine that is due: Book vet (the pet's vet) and Remind me (the open task to remind about tomorrow). */
+      petId?: string
+      taskId?: string
+    }
+  /** Figma 8c: something that needs a vet today. No diagnosis, just a call and an option to save it. */
+  | { kind: 'red-flag'; petId?: string; text: string }
   | { kind: 'which-pet'; candidates: string[]; text: string }
   | { kind: 'unclear'; text: string }
   /** Figma 6k: Boo heard about a new pet ("Rocky, my beagle, he's 7"). Saved only after "Looks right". */
@@ -124,7 +134,7 @@ export function vaccineAnswer(petName: string, vaccine: string, due: string): st
 /** Pretends to understand a phrase. Simple patterns only. */
 export async function understand(
   text: string,
-  ctx: { pets: Pet[]; vaccines: Vaccine[]; records: PetRecord[] },
+  ctx: { pets: Pet[]; vaccines: Vaccine[]; records: PetRecord[]; documents?: PetDocument[]; tasks?: Task[] },
 ): Promise<BooResult> {
   await wait(900)
   const lower = text.toLowerCase().trim()
@@ -138,24 +148,29 @@ export async function understand(
   const matched = findPets(lower, ctx.pets)
   const pet = matched.length === 1 ? matched[0] : ctx.pets.length === 1 ? ctx.pets[0] : undefined
 
-  if (RED_FLAGS.some((f) => lower.includes(f))) {
-    return {
-      kind: 'answer',
-      text: 'That sounds worth a call to your vet today. Boo keeps records — it isn’t a vet.',
-      source: pet ? { petId: pet.id, label: `Call ${pet.name}'s vet` } : undefined,
-    }
-  }
+  if (RED_FLAGS.some((f) => lower.includes(f))) return { kind: 'red-flag', petId: pet?.id, text }
 
   // Questions
   if (lower.endsWith('?') || /^(when|what|how|did|is|has)\b/.test(lower)) {
     if (!pet) return { kind: 'which-pet', candidates: ctx.pets.map((p) => p.id), text }
     const vax = ctx.vaccines.filter((v) => v.petId === pet.id && lower.includes(v.name.split(' ')[0].toLowerCase()))
     if (vax.length && vax[0].due) {
+      const v = vax[0]
+      const doc = ctx.documents?.find((d) => d.id === v.documentId)
+      // The open reminder task for this vaccine, if there is one (Remind me moves a copy to tomorrow)
+      const task = ctx.tasks?.find((t) => t.petId === pet.id && t.kind === 'vaccine' && !t.doneAt && (t.detail === v.name || t.title.toLowerCase().includes(v.name.split(' ')[0].toLowerCase())))
       return {
         kind: 'answer',
         // Figma 10: "Rocky's rabies booster was due on Nov 1 — that's 3 days ago. Want to book the vet?"
-        text: vaccineAnswer(pet.name, vax[0].name, vax[0].due),
-        source: { petId: pet.id, label: 'From the vaccine certificate' },
+        text: vaccineAnswer(pet.name, v.name, v.due!),
+        source: {
+          petId: pet.id,
+          label: `Source: ${(doc?.title ?? 'Vaccine certificate').toLowerCase()}`,
+          detail: doc ? [doc.clinic, formatDay(doc.date, { month: 'short', day: 'numeric', year: 'numeric' })].filter(Boolean).join(' · ') : undefined,
+          to: `/pets/${pet.id}/vaccines`,
+        },
+        petId: pet.id,
+        taskId: v.due! <= addDays(today(), 30) ? task?.id : undefined,
       }
     }
     const words = lower.replace(/[?.,!]/g, '').split(/\s+/).filter((w) => w.length > 3)
@@ -166,7 +181,7 @@ export async function understand(
       return {
         kind: 'answer',
         text: `Last time: ${formatDay(hit.date, { month: 'long', day: 'numeric' })} (${relative(hit.date)}) — “${hit.title}”.`,
-        source: { petId: pet.id, label: `Open ${pet.name}'s history` },
+        source: { petId: pet.id, label: `Source: ${hit.title}`, detail: formatDay(hit.date, { month: 'short', day: 'numeric', year: 'numeric' }), to: `/pets/${pet.id}` },
       }
     }
     return { kind: 'answer', text: `I don't have that in ${pet.name}'s records yet.` }
@@ -196,7 +211,7 @@ export async function understand(
   const course = lower.match(/(once|twice|three times|\d+ times) a day for (\d+) days?/)
   if (course) {
     const perDay = course[1] === 'once' ? 1 : course[1] === 'twice' ? 2 : course[1] === 'three times' ? 3 : parseInt(course[1])
-    const name = text.replace(new RegExp(p.name, 'i'), '').split(/,|\bonce\b|\btwice\b|\bthree times\b|\d+ times/i)[0].replace(/\b(gets?|give|start(ed)?|on)\b/gi, '').trim()
+    const name = text.replace(new RegExp(p.name, 'i'), '').split(/,|\bonce\b|\btwice\b|\bthree times\b|\d+ times/i)[0].replace(/\b(gets?|gave|give|start(ed)?|on|the|both|cats?|dogs?)\b/gi, '').replace(/\s+/g, ' ').trim()
     return { kind: 'meds', petId: p.id, name: name ? name[0].toUpperCase() + name.slice(1) : 'New medication', dose: `${course[1]} a day`, days: parseInt(course[2]), perDay }
   }
 
