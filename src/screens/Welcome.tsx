@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { useNavigate } from 'react-router'
 import { AskBooInput } from '../components/AskBooInput'
 import { BooCharacter } from '../components/BooCharacter'
@@ -17,12 +18,14 @@ const sparkles = [
 /**
  * Figma "6 · Welcome": first launch only, until the first pet exists. Talk first.
  * Boo on a calm glow (tap to talk), then a white card: the title, "Just hand it to Boo.", one field to tell Boo
- * about your pet (type, camera or mic) and "Add your pet". At the bottom: Boo isn't a vet.
+ * about your pet (type in place, camera or mic) and "Add your pet". At the bottom: Boo isn't a vet.
  */
 export function Welcome() {
   const navigate = useNavigate()
   const openBoo = useUi((s) => s.openBoo)
   const talk = () => openBoo('talk')
+  // Figma 6i: type right here; Send hands the words to Boo, which creates the pet (6j consent → 6k review)
+  const [text, setText] = useState('')
 
   return (
     <div className="bg-welcome relative isolate min-h-dvh overflow-hidden">
@@ -58,7 +61,15 @@ export function Welcome() {
               <p className="text-body-l text-text-secondary">Just hand it to Boo.</p>
             </div>
             <div className="flex flex-col gap-12">
-              <AskBooInput surface="canvas" placeholder="Tell me about your pet…" onType={() => openBoo('type')} onSnap={() => openBoo('snap')} onTalk={talk} />
+              <AskBooInput
+                surface="canvas"
+                placeholder="Tell me about your pet…"
+                value={text}
+                onChange={setText}
+                onSend={(words) => openBoo('send', words.trim())}
+                onSnap={() => openBoo('snap')}
+                onTalk={talk}
+              />
               <Button full size="large" variant="outline" icon="plus" onClick={() => navigate('/pets/new')}>
                 Add your pet
               </Button>
