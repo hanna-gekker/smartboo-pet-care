@@ -71,6 +71,8 @@ export type Task = {
   kind: TaskKind
   title: string
   detail?: string // e.g. dose
+  /** A vaccine task: the vaccine's name as on the paper, e.g. "Rabies (3-year)". Older tasks have none; their title is the name. */
+  vaccine?: string
   date: string // YYYY-MM-DD
   time?: string // HH:mm
   doneAt?: string // ISO time when crossed out

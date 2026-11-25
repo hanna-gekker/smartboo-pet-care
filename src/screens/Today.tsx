@@ -17,7 +17,7 @@ import { addDays, formatDay, greeting, relative, today } from '../lib/dates'
 import { petColor } from '../lib/petColors'
 import { getsVaccines } from '../lib/species'
 import { nextUpMeta, rowDetail, taskMeta, taskPill, taskState } from '../lib/tasks'
-import { joinNames } from '../lib/vaccines'
+import { joinNames, shortVaccine } from '../lib/vaccines'
 
 const byUrgency = (a: Task, b: Task) => (a.date + (a.time ?? '99')).localeCompare(b.date + (b.time ?? '99'))
 
@@ -37,7 +37,7 @@ export function Today() {
   const nextUp = overdue[0] ?? open.find((x) => x.date === t) ?? important[0]
   // Figma 1: vaccines of one pet due the same day are one Next up — "Rabies & DHPP"
   const nextGroup = !nextUp ? [] : nextUp.kind === 'vaccine' ? open.filter((x) => x.kind === 'vaccine' && x.petId === nextUp.petId && x.date === nextUp.date) : [nextUp]
-  const nextTitle = nextGroup.length > 1 ? joinNames(nextGroup.map((x) => (x.detail ?? x.title).split(' (')[0])) : nextUp?.title
+  const nextTitle = nextGroup.length > 1 ? joinNames(nextGroup.map((x) => shortVaccine(x.vaccine ?? x.title))) : nextUp?.title
   const upcoming = [...overdue, ...open.filter((x) => !overdue.includes(x))].filter((x) => !nextGroup.includes(x) && (x.date <= addDays(t, 1) || (x.kind !== 'chore' && x.date <= addDays(t, 60)))).slice(0, 5)
   // A checklist: what was done today stays in the list, checked and crossed out, in its place by time
   const doneToday = tasks.filter((x) => x.doneAt?.startsWith(t) && x.date === t)
