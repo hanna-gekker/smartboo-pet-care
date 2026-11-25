@@ -19,7 +19,7 @@ const variants: Record<CardVariant, string> = {
 }
 
 export function Card({ children, variant = 'plain', onClick, className = '', ...rest }: CardProps) {
-  const cls = `block rounded-24 bg-surface-panel ring-1 ring-inset ring-border-card shadow-card ${variants[variant]} ${className}`
+  const cls = `panel-card block rounded-24 ${variants[variant]} ${className}`
   if (onClick) {
     return (
       <button

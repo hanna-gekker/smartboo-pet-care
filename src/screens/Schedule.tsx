@@ -120,7 +120,7 @@ export function Schedule() {
         )}
 
         {toDo.length === 0 && happened.length === 0 && (
-          <BooHint title="All good.">{next ? `Next: ${next.title} for ${nextPet?.name} ${relative(next.date)}.` : 'Nothing due soon.'}</BooHint>
+          <BooHint title="All good." pose="sleeping">{next ? `Next: ${next.title} for ${nextPet?.name} ${relative(next.date)}.` : 'Nothing due soon.'}</BooHint>
         )}
       </div>
     </div>
@@ -130,7 +130,7 @@ export function Schedule() {
 /** Figma "Section header" in a card: the title and a grey count on one baseline, then the rows. */
 function Section({ title, trailing, children }: { title: string; trailing?: string; children: ReactNode }) {
   return (
-    <section aria-label={title} className="overflow-hidden rounded-24 bg-surface-panel ring-1 ring-inset ring-border-card shadow-card pb-8">
+    <section aria-label={title} className="panel-card overflow-hidden rounded-24 pb-8">
       <div className="flex items-baseline justify-between gap-16 px-24 pt-24 pb-8">
         <h3 className="min-w-0 font-display text-title font-medium">{title}</h3>
         {trailing && <p className="shrink-0 text-caption text-text-secondary">{trailing}</p>}

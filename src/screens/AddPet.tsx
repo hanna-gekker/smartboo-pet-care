@@ -122,6 +122,7 @@ export function AddPet() {
           </Card>
           {hint && getsVaccines(saved.species) && (
             <BooHint
+              pose="happy"
               actions={
                 <>
                   <Button

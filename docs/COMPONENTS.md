@@ -315,3 +315,16 @@ Figma: ★ Screens → "Boo" (8e Photo too blurry, 8f Couldn't read, 8g Camera a
 | **Reading** | in `BooSheet.tsx` | moving · still (reduced motion) | — | Figma 6c: a 112 × 140 paper (radius 8, grey lines, an accent title bar and circle) with an accent scan line moving down and up; under it a review-card skeleton (`surface/panel`, radius 24, grey bars) with a soft shimmer |
 
 When each error shows up today (Boo is still faked): **Offline** when you pick a paper with no connection (the paper waits and is read as soon as you're back online); **Didn't catch that** when Talk hears nothing. **Photo too blurry**, **Couldn't read** and **Camera access off** come from the real Boo and the iPhone camera later; their place is ready (`readPaper` can fail with them) and they are in Storybook and on `/components`.
+
+## 21. Plush Boo and the paw logo (Nov 25, 2026)
+
+Figma: Design system → "Boo / Character" (15 states × Light / Dark), Logo page → "Logo" and "Logo / App icon".
+
+| Component | File | What changes |
+|---|---|---|
+| **Boo / Character** | `BooCharacter.tsx`, images in `src/assets/boo/` | Boo is now a plush lavender paw with a face: a picture, not a drawing. Nine poses (the Figma states share these pictures): **idle** (Idle, Sway, Rest, Blink), **listening**, **wave**, **reading**, **writing**, **happy**, **oops**, **sleeping**, **bell**. Each pose has a dark version exported with Figma's dark image filters (exposure −0.15, contrast +0.15, highlights −0.2, saturation +0.1), so Boo doesn't glow on the dark screen. `look="full"` (176 × 192): the picture over a soft oval shadow (`ai/float-shadow`, 70%, blur 6), as in Figma; `look="mini"`: the picture alone (tab bar). Motion: idle = a slow gentle sway and float (about 6 s); listening = a soft pulse; reduced motion = still. No blink (there is no closed-eyes picture). `BooFlower.tsx` is removed |
+| Where each pose goes (Figma ★ Screens) | screens | Welcome and the Boo card: **wave** · sheet headers, Boo sheet, tab bar: **idle** · Talk: **listening** · Reading…: **reading** · Remind you…: **bell** · Boo errors and "Notifications are off": **oops** · empty day: **sleeping** · "{Name} is all set": **happy** |
+| **Boo hint** | `BooHint.tsx` | New `pose` prop (default **wave**) |
+| **Logo** | `Logo.tsx` | The word "SmartBoo" alone (Figma "Logo", Type=Wordmark, Color=Blue — the app header): "Smart" in `text/primary`, "Boo" in `accent/primary`; in dark "Smart" is light and "Boo" lavender. Two sharp 3× pictures exported in the Light and Dark modes (the Figma letters are a traced shape, ~240 KB) |
+| App icon | `ios/App/App/Assets.xcassets/AppIcon.appiconset`, `public/` | From Figma "Logo / App icon" |
+| Cards | `Card.tsx`, section cards | A soft top-to-bottom gradient `surface/panel` → `surface/panel-end` and a light `border/panel-edge` hairline (new Figma Variables); the screen background `surface/canvas` changed in both themes |

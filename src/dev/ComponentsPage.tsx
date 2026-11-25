@@ -178,14 +178,18 @@ function Board({ theme }: { theme: 'light' | 'dark' }) {
         />
       </Section>
 
-      <Section title="Boo" note="Idle (breathing) · Listening (pulse) · Mini (tab bar)">
+      <Section title="Boo" note="Plush paw: idle (sway and float) · listening (pulse) · the nine poses · mini (tab bar)">
         <Row label="idle · listening">
           <BooCharacter state="idle" size={150} />
           <BooCharacter state="listening" size={150} />
         </Row>
-        <Row label="mini · still (Idle 1)">
+        <Row label="poses">
+          {(['wave', 'reading', 'writing', 'happy', 'oops', 'sleeping', 'bell'] as const).map((p) => (
+            <BooCharacter key={p} pose={p} size={80} />
+          ))}
+        </Row>
+        <Row label="mini · still">
           <BooCharacter look="mini" />
-          <BooCharacter look="mini" state="listening" />
           <BooCharacter look="full" animated={false} size={100} />
         </Row>
       </Section>
