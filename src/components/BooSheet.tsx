@@ -302,7 +302,7 @@ function StepView({ step, setStep, text, setText }: { step: Step; setStep: (s: S
       // Permission denied: the app keeps working, the tasks are in Schedule; a way back to the iPhone Settings
       return (
         <div className="flex flex-col gap-16">
-          <SheetHeader title="Notifications are off" />
+          <SheetHeader title="Notifications are off" pose="oops" />
           <p className="text-body-l text-text-primary">So I can't remind you. You can turn them on in Settings — your reminders are still in Schedule.</p>
           <div className="flex flex-col gap-8">
             <Button full size="large" onClick={openAppSettings}>

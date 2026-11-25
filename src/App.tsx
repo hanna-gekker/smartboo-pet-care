@@ -43,7 +43,7 @@ function Shell() {
 
   // A tapped reminder opens Schedule on its task's day
   const navigate = useNavigate()
-  useEffect(() => onReminderTap((day) => navigate(`/schedule?day=${day}`)), [navigate])
+  useEffect(() => onReminderTap((path) => navigate(path)), [navigate])
 
   // Welcome shows only until the first pet exists.
   let redirect: string | undefined

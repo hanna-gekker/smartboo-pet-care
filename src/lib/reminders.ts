@@ -17,8 +17,10 @@ export type PlannedReminder = {
   title: string
   body: string
   at: Date
-  /** The task's day: tapping the reminder opens Schedule there. */
+  /** The task's day. */
   day: string
+  /** Where tapping it goes: the pet's folder for a vaccine (Figma "Push from Boo"), else Schedule on that day. */
+  path: string
 }
 
 /** Dated things get a reminder some days before; meds only on the day, at their time. Chores get none. */
@@ -56,26 +58,31 @@ export function planReminders(tasks: Task[], pets: Pet[], daysBefore: number, no
     const what = t.kind === 'insurance' ? t.title : `${pet.name}'s ${lower(t.title)}`
     const due = formatDay(t.date, { weekday: 'short', month: 'short', day: 'numeric' })
 
+    const path = t.kind === 'vaccine' ? `/pets/${pet.id}` : `/schedule?day=${t.date}`
+
     if (BEFORE.includes(t.kind)) {
-      out.push({
-        title: t.kind === 'insurance' ? `${t.title} · ${spanLabel(daysBefore)}` : `${what} is ${spanLabel(daysBefore)}`,
-        body:
-          t.kind === 'vaccine'
-            ? `Due ${due}. Book the vet or snap the new certificate.`
-            : t.kind === 'insurance'
-              ? `For ${pet.name} · due ${due}.`
-              : `Due ${due}. Tap to see ${pet.name}'s day.`,
-        at: at(addDays(t.date, -daysBefore), MORNING),
-        day: t.date,
-      })
+      out.push(
+        t.kind === 'vaccine'
+          ? // Figma "0 · Push from Boo": SmartBoo, "Rocky's rabies is due in 2 weeks." — tap opens his folder
+            { title: 'SmartBoo', body: `${what} is due ${spanLabel(daysBefore)}.`, at: at(addDays(t.date, -daysBefore), MORNING), day: t.date, path }
+          : {
+              title: t.kind === 'insurance' ? `${t.title} · ${spanLabel(daysBefore)}` : `${what} is ${spanLabel(daysBefore)}`,
+              body: t.kind === 'insurance' ? `For ${pet.name} · due ${due}.` : `Due ${due}. Tap to see ${pet.name}'s day.`,
+              at: at(addDays(t.date, -daysBefore), MORNING),
+              day: t.date,
+              path,
+            },
+      )
     }
 
     if (t.time && t.kind === 'med') {
-      out.push({ title: `Time for ${pet.name}'s ${lower(t.title)}`, body: t.detail ?? `Tap to see ${pet.name}'s day.`, at: at(t.date, t.time), day: t.date })
+      out.push({ title: `Time for ${pet.name}'s ${lower(t.title)}`, body: t.detail ?? `Tap to see ${pet.name}'s day.`, at: at(t.date, t.time), day: t.date, path })
     } else if (t.time) {
-      out.push({ title: `Today at ${formatTime(t.time)}: ${what}`, body: t.detail ?? `Tap to see ${pet.name}'s day.`, at: at(t.date, t.time), day: t.date })
+      out.push({ title: `Today at ${formatTime(t.time)}: ${what}`, body: t.detail ?? `Tap to see ${pet.name}'s day.`, at: at(t.date, t.time), day: t.date, path })
+    } else if (t.kind === 'vaccine') {
+      out.push({ title: 'SmartBoo', body: `${what} is due today.`, at: at(t.date, MORNING), day: t.date, path })
     } else {
-      out.push({ title: `Today: ${what}`, body: `Due today. Tap to see ${pet.name}'s day.`, at: at(t.date, MORNING), day: t.date })
+      out.push({ title: `Today: ${what}`, body: `Due today. Tap to see ${pet.name}'s day.`, at: at(t.date, MORNING), day: t.date, path })
     }
   }
   return out
@@ -111,7 +118,7 @@ export async function syncReminders(tasks: Task[], pets: Pet[], daysBefore: numb
   if (old.length) await LocalNotifications.cancel({ notifications: old.map((n) => ({ id: n.id })) })
   if (plan.length) {
     await LocalNotifications.schedule({
-      notifications: plan.map((r) => ({ id: r.id, title: r.title, body: r.body, schedule: { at: r.at, allowWhileIdle: true }, extra: { day: r.day } })),
+      notifications: plan.map((r) => ({ id: r.id, title: r.title, body: r.body, schedule: { at: r.at, allowWhileIdle: true }, extra: { day: r.day, path: r.path } })),
     })
   }
   return plan.length
@@ -128,12 +135,13 @@ export function openAppSettings() {
   if (isNative()) window.location.href = 'app-settings:'
 }
 
-/** Calls back with the task's day when a reminder is tapped (also when the tap opened the app). Returns a remover. */
-export function onReminderTap(open: (day: string) => void): () => void {
+/** Calls back with where to go when a reminder is tapped (also when the tap opened the app). Returns a remover. */
+export function onReminderTap(open: (path: string) => void): () => void {
   if (!isNative()) return () => {}
   const handle = LocalNotifications.addListener('localNotificationActionPerformed', (a) => {
-    const day = (a.notification.extra as { day?: string } | undefined)?.day
-    if (day) open(day)
+    const extra = a.notification.extra as { day?: string; path?: string } | undefined
+    if (extra?.path) open(extra.path)
+    else if (extra?.day) open(`/schedule?day=${extra.day}`)
   })
   return () => void handle.then((h) => h.remove())
 }
@@ -144,7 +152,9 @@ export async function sendTestReminder(tasks: Task[], pets: Pet[], daysBefore: n
   let permission = await checkPermission()
   if (permission === 'prompt') permission = await askPermission()
   if (permission !== 'granted' || !isNative()) return permission
-  const next = planReminders(tasks, pets, daysBefore)[0]
+  // The test shows the Figma push (a vaccine) when there is one, else the next reminder
+  const plan = planReminders(tasks, pets, daysBefore)
+  const next = plan.find((r) => r.path.startsWith('/pets/')) ?? plan[0]
   await LocalNotifications.schedule({
     notifications: [
       {
@@ -152,7 +162,7 @@ export async function sendTestReminder(tasks: Task[], pets: Pet[], daysBefore: n
         title: next?.title ?? 'Reminders are on',
         body: next?.body ?? 'This is how SmartBoo will remind you.',
         schedule: { at: new Date(Date.now() + 60_000), allowWhileIdle: true },
-        extra: { day: next?.day },
+        extra: { day: next?.day, path: next?.path },
       },
     ],
   })

@@ -15,15 +15,17 @@ Owners forget vaccines, meds and rechecks because the dates live on paper; Smart
    - **Before** — at 9:00 AM, as many days before as set in Settings → Reminders (2 weeks by default), for dated items: vaccines, lab and vet rechecks, insurance.
    - **On the day** — at 9:00 AM for items without a time; at the dose time for meds and visits that have one (e.g. ear drops at 8:00 AM and 8:00 PM).
 5. A toast confirms: "3 reminders set".
-6. Two weeks later, the lock screen shows the reminder (if SmartBoo is open at that moment, it shows as a banner on top of the app). Anna taps it → SmartBoo opens **Schedule** on that day, with the task in **To do**, so she can check it off or see what else is due.
+6. Two weeks later, the lock screen shows the reminder (if SmartBoo is open at that moment, it shows as a banner on top of the app). Anna taps it → a vaccine reminder opens the pet's folder (Figma "Push from Boo"; the Vaccines screen comes later); any other opens **Schedule** on that day, with the task in **To do**.
 7. When a task is checked off, moved or deleted, its reminders are updated; when it's done, they're gone.
 
 Notification copy:
 
 | When | Title | Body |
 |---|---|---|
-| Before (vaccine, lab, vet, insurance) | Rocky's rabies booster is in 2 weeks | Due Wed, Dec 9. Book the vet or snap the new certificate. |
-| On the day, no time | Today: Rocky's rabies booster | Due today. Tap to see Rocky's day. |
+| Before, a vaccine (Figma "0 · Push from Boo"; tap opens the pet's folder) | SmartBoo | Rocky's rabies booster is due in 2 weeks. |
+| Before (lab, vet, insurance) | Rocky's ear recheck is in 2 weeks | Due Wed, Dec 9. Tap to see Rocky's day. |
+| On the day, a vaccine | SmartBoo | Rocky's rabies booster is due today. |
+| On the day, no time | Today: Milo's Revolution Plus | Due today. Tap to see Milo's day. |
 | On the day, a med with a time | Time for Rocky's ear drops | Otomax · 4 drops |
 | On the day, a visit with a time | Today at 10:30 AM: Rocky's ear recheck | Bayside Animal Clinic |
 | Insurance, before | Submit the ear-visit claim · in 2 weeks | For Rocky · due Wed, Dec 9. |
