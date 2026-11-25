@@ -389,3 +389,16 @@ Figma: Design system → "Tab bar" (Active × Theme) and the tab bars on the Dar
 | **Tab bar** | `TabBar.tsx`, `.tab-capsule` / `.tab-on` in `base.css` | The capsule is solid `surface/card` with the `border/card` hairline and the soft shadow; no background blur. In Figma the dark capsule is the primitive `lavender/900`; the app uses `surface/card` until Figma binds it to a colour role. The selected tab is a soft pill with the filled icon: light `accent/primary-subtle` with `accent/on-subtle`, dark `accent/primary-soft` with `text/primary`. The due dot's ring takes the pill's colour on the selected tab |
 
 The `nav/active-*` variables stay in the tokens: the Segmented control (Week / Month, Appearance) still uses them for its chosen segment.
+
+## 27. Boo replies as a conversation (built, Nov 25, 2026)
+
+Figma: ★ Screens → "Boo": 8 Boo sheet, 8b Which pet, 8c Red flag, 8d Call the vet, 10 Boo answer, 3 Logged.
+
+| Part | File | What it is |
+|---|---|---|
+| **You said** | `BooSheet.tsx` | Your phrase on the right: a `surface/subtle` bubble (radius 24), Body S, up to 80% wide |
+| **Boo says** | `BooSheet.tsx` | The mini Boo (40) and Boo's reply in Body, on the left |
+| **Source card** | `BooSheet.tsx` (a List row in a Card) | Where an answer comes from: a soft file icon, "Source: vaccine certificate", "Paws & Claws · Nov 1, 2023", a chevron to the pet's Vaccines (or folder) |
+| **Pet tile** | `BooSheet.tsx` | Which pet is this for? A card-like button with the pet's photo (56) and name, three in a row; "Both" shows two photos overlapping |
+
+Every result in the Boo sheet starts with **You said** and **Boo says**. The answer adds the Source card and Book vet / Remind me (a vaccine that is due); the red flag adds **Call {vet}** and **I'll watch {name} — save it**. The sheet title adds the owner's name ("What's up, Anna?"); a saved note reads "Saved to {name}'s notes".

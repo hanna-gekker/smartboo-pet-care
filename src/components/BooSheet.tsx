@@ -36,7 +36,7 @@ type Step =
   | { name: 'photo'; petId: string; petName: string }
   | { name: 'thinking' }
   | { name: 'new-pet'; found: Extract<BooResult, { kind: 'new-pet' }> }
-  | { name: 'result'; result: BooResult }
+  | { name: 'result'; result: BooResult; phrase: string }
   | { name: 'error'; kind: BooErrorCase }
 
 export function BooSheet() {
@@ -118,8 +118,29 @@ function StepView({ step, setStep, text, setText, sendNow }: { step: Step; setSt
       const result = await understand(phrase, app)
       if (result.kind === 'weight' || result.kind === 'record') saveSimple(result)
       else if (result.kind === 'new-pet') setStep({ name: 'new-pet', found: result })
-      else setStep({ name: 'result', result })
+      else setStep({ name: 'result', result, phrase })
     })
+  }
+
+  /** "Both" (Figma 8b): Boo files the same phrase for each pet. Simple records are saved for each; a course of meds
+   *  gets one review card with both pets. */
+  const sendFor = async (petIds: string[], phrase: string, shown: string) => {
+    setStep({ name: 'thinking' })
+    const named = petIds.map((id) => petById(app.pets, id)!).filter(Boolean)
+    const results = await Promise.all(named.map((p) => understand(`${p.name} ${phrase}`, app)))
+    if (results.every((x) => x.kind === 'record')) {
+      const ids = results.map((x) => {
+        const id = newId('rec')
+        if (x.kind === 'record') app.addRecord({ id, petId: x.petId, type: x.type, date: today(), time: nowTime(), title: x.title })
+        return id
+      })
+      showToast(`Saved to ${named.map((p) => p.name).join(' & ')}’s notes`, () => ids.forEach((id) => app.removeRecord(id)))
+      closeBoo()
+      return
+    }
+    const first = results[0]
+    if (first.kind === 'meds') setStep({ name: 'result', result: { ...first, petIds }, phrase: shown })
+    else setStep({ name: 'result', result: first, phrase: shown })
   }
 
   // Opened with text to read (Welcome, typed in place): read it once, right away
@@ -144,7 +165,7 @@ function StepView({ step, setStep, text, setText, sendNow }: { step: Step; setSt
       showToast(`Saved · ${pet.name}, ${value} ${pet.weightUnit}${change}`, () => app.removeRecord(id))
     } else {
       app.addRecord({ id, petId: pet.id, type: result.type, date: today(), time: nowTime(), title: result.title })
-      showToast(`Saved to ${pet.name}'s folder`, () => app.removeRecord(id))
+      showToast(`Saved to ${pet.name}’s notes`, () => app.removeRecord(id))
     }
     navigator.vibrate?.(10)
     setText('')
@@ -372,17 +393,29 @@ function StepView({ step, setStep, text, setText, sendNow }: { step: Step; setSt
     }
 
     case 'result':
-      return <ResultView result={step.result} onBack={() => setStep({ name: 'menu' })} onPick={(petId) => step.result.kind === 'which-pet' && send(`${petById(app.pets, petId)?.name} ${step.result.text}`)} />
+      return (
+        <ResultView
+          result={step.result}
+          phrase={step.phrase}
+          onBack={() => setStep({ name: 'menu' })}
+          onPick={(petIds) => {
+            if (step.result.kind !== 'which-pet') return
+            if (petIds.length === 1) send(`${petById(app.pets, petIds[0])?.name} ${step.result.text}`)
+            else void sendFor(petIds, step.result.text, step.phrase)
+          }}
+        />
+      )
   }
 }
 
 /** Boo and the question on top of the sheet (Figma "Header"). No name: there are no accounts. */
 function BooHeader() {
+  const name = useApp((s) => s.settings.owner?.name)
   return (
     <div className="flex items-center gap-12">
       <BooCharacter size={56} />
       <div className="flex min-w-0 flex-col gap-2">
-        <p className="font-display text-title font-medium">What’s up?</p>
+        <p className="font-display text-title font-medium">{name ? `What’s up, ${name}?` : 'What’s up?'}</p>
         <p className="text-body-s text-text-secondary">Talk, snap a paper or type — I’ll file it.</p>
       </div>
     </div>
@@ -635,49 +668,120 @@ function PaperReview({ paper, onConfirm }: { paper: ParsedPaper; onConfirm: (pet
   )
 }
 
-function ResultView({ result, onBack, onPick }: { result: BooResult; onBack: () => void; onPick: (petId: string) => void }) {
+/** Figma 8b / 10 / 8c: a short conversation — your phrase on the right, Boo's reply under it, then what to do. */
+function YouSaid({ children }: { children: ReactNode }) {
+  return <p className="ml-auto w-fit max-w-4/5 rounded-24 bg-surface-subtle px-16 py-8 text-body-s text-text-primary">{children}</p>
+}
+
+function BooSays({ children }: { children: ReactNode }) {
+  return (
+    <div className="flex items-start gap-12">
+      <BooCharacter look="mini" size={40} animated={false} />
+      <p className="min-w-0 flex-1 pt-8 text-body text-text-primary">{children}</p>
+    </div>
+  )
+}
+
+function ResultView({ result, phrase, onBack, onPick }: { result: BooResult; phrase: string; onBack: () => void; onPick: (petIds: string[]) => void }) {
   const app = useApp()
   const { closeBoo, showToast } = useUi()
   const navigate = useNavigate()
+  const said = phrase && <YouSaid>{phrase}</YouSaid>
+  const call = (phone: string) => {
+    window.location.href = `tel:${phone}`
+  }
 
   if (result.kind === 'which-pet') {
     const pets = result.candidates.map((id) => petById(app.pets, id)).filter(Boolean) as Pet[]
     return (
-      <div className="pt-8">
-        <h2 className="font-display text-title font-medium">Which pet?</h2>
-        <p className="mt-4 text-body-s text-text-secondary">“{result.text}”</p>
-        <div className="mt-16 flex flex-wrap gap-8">
+      <div className="flex flex-col gap-16 pt-8">
+        {said}
+        <BooSays>Which pet is this for?</BooSays>
+        <div className="grid grid-cols-3 gap-8">
           {pets.map((p) => (
-            <button key={p.id} type="button" onClick={() => onPick(p.id)} className="press flex min-h-control-44 items-center gap-8 rounded-full bg-surface-card py-4 pr-16 pl-4 ring-1 ring-inset ring-border-control active:bg-surface-subtle">
-              <PetAvatar pet={p} size="sm" />
-              <span className="text-body font-medium">{p.name}</span>
-            </button>
+            <PetTile key={p.id} pets={[p]} label={p.name} onClick={() => onPick([p.id])} />
           ))}
+          {pets.length === 2 && <PetTile pets={pets} label="Both" onClick={() => onPick(pets.map((p) => p.id))} />}
+        </div>
+      </div>
+    )
+  }
+
+  if (result.kind === 'red-flag') {
+    const pet = result.petId ? petById(app.pets, result.petId) : undefined
+    const vet = pet?.vet ?? app.pets.find((p) => p.vet)?.vet
+    return (
+      <div className="flex flex-col gap-16 pt-8">
+        {said}
+        <BooSays>That sounds worth a call to your vet today.</BooSays>
+        <div className="flex flex-col gap-8">
+          {vet && (
+            <Button full size="large" icon="phone" onClick={() => call(vet.phone)}>
+              Call {vet.name}
+            </Button>
+          )}
+          {pet && (
+            <Button
+              full
+              variant="ghost"
+              onClick={() => {
+                const id = newId('rec')
+                app.addRecord({ id, petId: pet.id, type: 'health', date: today(), time: nowTime(), title: result.text.replace(/\.$/, '') })
+                showToast(`Saved to ${pet.name}’s notes`, () => app.removeRecord(id))
+                closeBoo()
+              }}
+            >
+              I’ll watch {pet.name} — save it
+            </Button>
+          )}
         </div>
       </div>
     )
   }
 
   if (result.kind === 'answer') {
+    const pet = result.petId ? petById(app.pets, result.petId) : undefined
+    const task = result.taskId ? app.tasks.find((t) => t.id === result.taskId) : undefined
     return (
-      <div className="pt-8">
-        <p className="text-body-l leading-24">{result.text}</p>
+      <div className="flex flex-col gap-16 pt-8">
+        {said}
+        <BooSays>{result.text}</BooSays>
         {result.source && (
-          <button
-            type="button"
-            onClick={() => {
-              closeBoo()
-              navigate(`/pets/${result.source!.petId}`)
-            }}
-            className="press mt-12 flex min-h-control-44 items-center gap-4 rounded-full text-body font-medium text-accent-primary"
-          >
-            {result.source.label}
-            <Icon name="chevron-right" size={20} />
-          </button>
+          <Card variant="list" className="overflow-hidden">
+            <ListRow
+              icon="file-text"
+              iconTone="soft"
+              title={result.source.label}
+              subtitle={result.source.detail}
+              trailing="chevron"
+              onClick={() => {
+                closeBoo()
+                navigate(result.source!.to)
+              }}
+            />
+          </Card>
         )}
-        <Button variant="ghost" onClick={onBack} className="mt-16 -ml-16">
-          Ask something else
-        </Button>
+        {task ? (
+          <div className="flex gap-8 [&>*]:flex-1">
+            {pet?.vet && <Button onClick={() => call(pet.vet!.phone)}>Book vet</Button>}
+            <Button
+              variant="secondary"
+              onClick={() => {
+                // Remind me: the same reminder again tomorrow at 9:00
+                const id = newId('task')
+                app.addTask({ ...task, id, date: addDays(today(), 1), time: '09:00', remind: true, doneAt: undefined })
+                showToast('Saved', () => app.removeTask(id))
+                closeBoo()
+              }}
+            >
+              Remind me
+            </Button>
+          </div>
+        ) : (
+          <Button variant="ghost" onClick={onBack} className="-ml-16 self-start">
+            Ask something else
+          </Button>
+        )}
       </div>
     )
   }
@@ -685,72 +789,103 @@ function ResultView({ result, onBack, onPick }: { result: BooResult; onBack: () 
   if (result.kind === 'symptom') {
     const pet = petById(app.pets, result.petId)!
     return (
-      <ReviewShell
-        pet={pet}
-        kind="Symptom"
-        title={result.title}
-        onConfirm={() => {
-          app.addRecord({ id: newId('rec'), petId: pet.id, type: 'health', date: today(), time: nowTime(), title: result.title })
-          showToast(`Saved to ${pet.name}'s history`)
-          closeBoo()
-        }}
-      >
-        <p className="mt-12 text-body">{result.question}</p>
-        <div className="mt-8 flex gap-8">
-          <span className="rounded-full bg-surface-canvas px-12 py-4 text-body-s ring-1 ring-surface-subtle">Once</span>
-          <span className="rounded-full bg-surface-canvas px-12 py-4 text-body-s ring-1 ring-surface-subtle">Eating fine</span>
-        </div>
-      </ReviewShell>
+      <div className="flex flex-col gap-16 pt-8">
+        {said}
+        <ReviewShell
+          pets={[pet]}
+          kind="Symptom"
+          title={result.title}
+          onConfirm={() => {
+            app.addRecord({ id: newId('rec'), petId: pet.id, type: 'health', date: today(), time: nowTime(), title: result.title })
+            showToast(`Saved to ${pet.name}'s history`)
+            closeBoo()
+          }}
+        >
+          <p className="mt-12 text-body">{result.question}</p>
+          <div className="mt-8 flex gap-8">
+            <span className="rounded-full bg-surface-canvas px-12 py-4 text-body-s ring-1 ring-surface-subtle">Once</span>
+            <span className="rounded-full bg-surface-canvas px-12 py-4 text-body-s ring-1 ring-surface-subtle">Eating fine</span>
+          </div>
+        </ReviewShell>
+      </div>
     )
   }
 
   if (result.kind === 'meds') {
-    const pet = petById(app.pets, result.petId)!
+    const pets = (result.petIds ?? [result.petId]).map((id) => petById(app.pets, id)).filter(Boolean) as Pet[]
     const until = addDays(today(), result.days - 1)
     return (
-      <ReviewShell
-        pet={pet}
-        kind="New course of meds"
-        title={result.name}
-        onConfirm={() => {
-          const times = result.perDay === 1 ? ['08:00'] : result.perDay === 2 ? ['08:00', '20:00'] : ['08:00', '14:00', '20:00']
-          const tasks: Task[] = []
-          for (let i = 0; i < result.days; i++)
-            for (const time of times) tasks.push({ id: newId('task'), petId: pet.id, kind: 'med', title: result.name, date: addDays(today(), i), time })
-          app.addMed({ id: newId('med'), petId: pet.id, name: result.name, dose: result.dose, until }, tasks, {
-            id: newId('rec'),
-            petId: pet.id,
-            type: 'meds',
-            date: today(),
-            title: `Started ${result.name}`,
-            detail: `${result.dose} for ${result.days} days`,
-          })
-          showToast(`${result.name} added to ${pet.name}'s schedule`)
-          closeBoo()
-        }}
-      >
-        <p className="mt-8 text-body text-text-secondary">
-          {result.dose} · {result.days} days · until {formatDay(until)}
-        </p>
-      </ReviewShell>
+      <div className="flex flex-col gap-16 pt-8">
+        {said}
+        <ReviewShell
+          pets={pets}
+          kind="New course of meds"
+          title={result.name}
+          onConfirm={() => {
+            const times = result.perDay === 1 ? ['08:00'] : result.perDay === 2 ? ['08:00', '20:00'] : ['08:00', '14:00', '20:00']
+            for (const pet of pets) {
+              const tasks: Task[] = []
+              for (let i = 0; i < result.days; i++)
+                for (const time of times) tasks.push({ id: newId('task'), petId: pet.id, kind: 'med', title: result.name, date: addDays(today(), i), time })
+              app.addMed({ id: newId('med'), petId: pet.id, name: result.name, dose: result.dose, start: today(), until }, tasks, {
+                id: newId('rec'),
+                petId: pet.id,
+                type: 'meds',
+                date: today(),
+                title: `Started ${result.name}`,
+                detail: `${result.dose} for ${result.days} days`,
+              })
+            }
+            showToast(`${result.name} added to ${pets.map((p) => p.name).join(' & ')}’s schedule`)
+            closeBoo()
+          }}
+        >
+          <p className="mt-8 text-body text-text-secondary">
+            {result.dose} · {result.days} days · until {formatDay(until)}
+          </p>
+        </ReviewShell>
+      </div>
     )
   }
 
   return (
-    <div className="pt-8">
-      <p className="text-body-l leading-24">I’m not sure what to do with that yet. Try “Cleo weighs 3.9 kg” or “When is Rocky’s rabies due?”.</p>
-      <Button variant="ghost" onClick={onBack} className="mt-16 -ml-16">
+    <div className="flex flex-col gap-16 pt-8">
+      {said}
+      <BooSays>I’m not sure what to do with that yet. Try “Cleo weighs 3.9 kg” or “When is Rocky’s rabies due?”.</BooSays>
+      <Button variant="ghost" onClick={onBack} className="-ml-16 self-start">
         Back
       </Button>
     </div>
   )
 }
 
-function ReviewShell({ pet, kind, title, children, onConfirm }: { pet: Pet; kind: string; title: string; children: ReactNode; onConfirm: () => void }) {
+/** Figma 8b pet tile: the photo (56) and the name; "Both" overlaps two photos. */
+function PetTile({ pets, label, onClick }: { pets: Pet[]; label: string; onClick: () => void }) {
+  return (
+    <button type="button" onClick={onClick} className="press panel-card flex min-h-control-64 flex-col items-center gap-8 rounded-24 py-16">
+      <span className="flex">
+        {pets.map((p, i) => (
+          <span key={p.id} className={i > 0 ? '-ml-16' : ''}>
+            <PetAvatar pet={p} size="md" outlined={pets.length > 1} />
+          </span>
+        ))}
+      </span>
+      <span className="text-body font-medium text-text-primary">{label}</span>
+    </button>
+  )
+}
+
+function ReviewShell({ pets, kind, title, children, onConfirm }: { pets: Pet[]; kind: string; title: string; children: ReactNode; onConfirm: () => void }) {
   return (
     <div className="pt-4">
       <div className="flex items-center gap-12">
-        <PetAvatar pet={pet} size="md" />
+        <span className="flex shrink-0">
+          {pets.map((p, i) => (
+            <span key={p.id} className={i > 0 ? '-ml-16' : ''}>
+              <PetAvatar pet={p} size="md" outlined={pets.length > 1} />
+            </span>
+          ))}
+        </span>
         <div>
           <p className="text-body-s font-medium text-accent-primary">{kind}</p>
           <h2 className="font-display text-title font-medium">{title}</h2>
