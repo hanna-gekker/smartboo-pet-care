@@ -22,7 +22,7 @@ export type PlannedReminder = {
   at: Date
   /** The task's day. */
   day: string
-  /** Where tapping it goes: the pet's folder for a vaccine (Figma "Push from Boo"), else Schedule on that day. */
+  /** Where tapping it goes: the pet's Vaccines for a vaccine (Figma "Push from Boo"), else Schedule on that day. */
   path: string
 }
 
@@ -93,12 +93,12 @@ export function planReminders(tasks: Task[], pets: Pet[], settings: ReminderSett
     const what = t.kind === 'insurance' ? t.title : `${pet.name}'s ${lower(t.title)}`
     const due = formatDay(t.date, { weekday: 'short', month: 'short', day: 'numeric' })
 
-    const path = t.kind === 'vaccine' ? `/pets/${pet.id}` : `/schedule?day=${t.date}`
+    const path = t.kind === 'vaccine' ? `/pets/${pet.id}/vaccines` : `/schedule?day=${t.date}`
 
     if (BEFORE.includes(t.kind)) {
       out.push(
         t.kind === 'vaccine'
-          ? // Figma "0 · Push from Boo": SmartBoo, "Rocky's rabies is due in 2 weeks." — tap opens his folder
+          ? // Figma "0 · Push from Boo": SmartBoo, "Rocky's rabies is due in 2 weeks." — tap opens his Vaccines
             { title: 'SmartBoo', body: `${what} is due ${spanLabel(daysBefore)}.`, at: at(addDays(t.date, -daysBefore), MORNING), day: t.date, path }
           : {
               title: t.kind === 'insurance' ? `${t.title} · ${spanLabel(daysBefore)}` : `${what} is ${spanLabel(daysBefore)}`,
@@ -189,7 +189,7 @@ export async function sendTestReminder(tasks: Task[], pets: Pet[], settings: Rem
   if (permission !== 'granted' || !isNative()) return permission
   // The test shows the Figma push (a vaccine) when there is one, else the next reminder
   const plan = planReminders(tasks, pets, settings)
-  const next = plan.find((r) => r.path.startsWith('/pets/')) ?? plan[0]
+  const next = plan.find((r) => r.path.endsWith('/vaccines')) ?? plan[0]
   await LocalNotifications.schedule({
     notifications: [
       {

@@ -439,7 +439,7 @@ function PhotoPick({ onPick }: { onPick: (file: File) => void }) {
 }
 
 /** Figma "Header" of the first-launch sheets: the mini Boo (56) in the step's pose and the title, 12 apart. */
-function SheetHeader({ title, pose = 'idle' }: { title: string; pose?: BooPose }) {
+export function SheetHeader({ title, pose = 'idle' }: { title: string; pose?: BooPose }) {
   return (
     <div className="flex items-center gap-12">
       <BooCharacter look="mini" size={56} pose={pose} />

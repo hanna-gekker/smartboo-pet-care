@@ -20,6 +20,7 @@ import { Privacy } from './screens/settings/Privacy'
 import { Profile } from './screens/settings/Profile'
 import { Share } from './screens/Share'
 import { Today } from './screens/Today'
+import { Vaccines } from './screens/Vaccines'
 import { Welcome } from './screens/Welcome'
 
 /** Screens without the tab bar: first launch and focused flows. */
@@ -90,6 +91,7 @@ const router = createBrowserRouter([
       { path: '/pets/new', element: <AddPet /> },
       { path: '/pets/:id', element: <PetFolder /> },
       { path: '/pets/:id/edit', element: <PetForm /> },
+      { path: '/pets/:id/vaccines', element: <Vaccines /> },
       { path: '/share', element: <Share /> },
       { path: '/settings', element: <Settings /> },
       { path: '/settings/profile', element: <Profile /> },
