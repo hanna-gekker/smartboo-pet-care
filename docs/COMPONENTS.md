@@ -369,3 +369,13 @@ Figma: ★ Screens → "Main flow · tell Boo": 6i Tell Boo, 6j AI consent, 6k R
 | **Boo hint** | `BooHint.tsx` | Used on Today (6m) in place of the Boo card while a pet's shots are unknown: "I don't know {name}'s shots yet. Snap the last vet paper?" — Snap a vet paper / Not now (quiet for a week) |
 
 Today's greeting adds the owner's name from Your profile: "Good morning, Anna".
+
+## 25. Empty states (built, Nov 25, 2026)
+
+Figma: ★ Screens → "Welcome & empty states". Each empty screen says what comes next and offers one way forward.
+
+| Component | File | What it is |
+|---|---|---|
+| **Boo bubble** *(new)* | `BooBubble.tsx` | Boo (96, in a pose) with a speech bubble under him: `surface/card`, card shadow, radius 24, a small tail pointing up at Boo, centred Body text. Props: `pose`, the text, and an optional action under the bubble. Used on the empty Schedule (sleeping) and for a search with no results (reading) |
+
+Where: **Schedule** with no tasks at all ("Nothing planned yet. Reminders show up here once I read a vet paper." — Snap a vet paper); **a new pet's folder** (Health: Boo hint "I don't know {name}'s shots yet. Snap the last vet paper?"; History: "Papers, weights and notes will show up here by date."; Profile: empty values are an **Add** link to Edit); **History search** with no results ("I couldn't find "{query}" in {name}'s records." — Clear search). The camera-off sheet waits for the camera plugin.
