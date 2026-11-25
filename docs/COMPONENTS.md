@@ -344,3 +344,16 @@ Figma: ★ Screens → "18 · Settings", "18a · Your profile", "18b · Settings
 Appearance is saved with the data and sets `<html data-theme>`; on the iPhone the status bar follows it (`@capacitor/status-bar`).
 
 Screens built from these: **Settings** (profile row, Vets, Reminders, Appearance, About, For testing), **Your profile** (Name, Phone, Email optional, photo, Save), **Add a vet** (Name, Clinic, Phone, Save), **Privacy** and **AI consent** (a text and the Switch).
+
+## 23. Pets, Pet folder and Vaccines (built, Nov 25, 2026)
+
+Figma: ★ Screens → "Pets & Share": "11 · Pets", "12 · Pet folder · Rocky", "13 · Vaccines · Rocky", "14 · Edit profile".
+
+| Component | File | What changes |
+|---|---|---|
+| **Attention card** | `AttentionCard.tsx` | Moves out of the Pet folder into its own file (it was the Key fact tile's Attention tone). Honey `status/waiting-bg`. With an icon: a status chip, the title, a rose line and up to two buttons (Pet folder: "Rabies & DHPP are overdue" — Book vet / Mark done). Without an icon: a one-line banner with the rose dot (Vaccines: "2 vaccines are overdue. Book a visit with Dr. Lee?") |
+| **Key fact tile** | — | Removed: the Pet folder shows key facts as one **Health** list (List rows with a label, a rose overdue line, a weight sparkline as the value) |
+| **List row** | `ListRow.tsx` | The value on the right may take up to 3/5 of the row (was 2/5), so "985 141 000 123 456" fits in the Profile list |
+| **Sheet header** | `BooSheet.tsx` | Exported, for the vaccine source sheet on the Vaccines screen |
+
+Screens: **Pets** (no "Add a pet" card; the + button adds), **Pet folder** (photo in its flower, facts line with the weight, Share records, Attention card, Health, History with a Search link, Profile with an Edit link), **Vaccines** (new; tapping a vaccine opens the vet paper it came from), **Edit {name}** (Frame colour card, the Vet picked from your vets). A vaccine reminder now opens Vaccines.

@@ -1,15 +1,18 @@
-import { useState, type ReactNode } from 'react'
+import { useRef, useState } from 'react'
 import { useNavigate, useParams } from 'react-router'
+import { AttentionCard } from '../components/AttentionCard'
 import { Icon, type IconName } from '../components/Icon'
 import { Button } from '../components/Button'
 import { Card } from '../components/Card'
 import { ListRow } from '../components/ListRow'
 import { PetAvatar } from '../components/PetAvatar'
 import { TextField } from '../components/TextField'
-import { Chip, SectionTitle, StackScreen } from '../components/ui'
+import { Chip, SectionTitle, StackScreen, TextLink } from '../components/ui'
 import { petById, useApp } from '../data/useApp'
 import type { PetRecord, RecordType } from '../data/types'
-import { age, formatDay, relative, today } from '../lib/dates'
+import { ageLong, daysBetween, formatDay, today } from '../lib/dates'
+import { petColor } from '../lib/petColors'
+import { vaccineSummary } from '../lib/vaccines'
 import { getsVaccines, speciesLabel } from '../lib/species'
 
 const filters: { key: 'all' | RecordType; label: string }[] = [
@@ -34,9 +37,11 @@ const recordIcon: Record<RecordType, IconName> = {
 export function PetFolder() {
   const { id = '' } = useParams()
   const navigate = useNavigate()
-  const { pets, records, vaccines, meds, documents } = useApp()
+  const { pets, records, vaccines, meds, documents, tasks, toggleTask } = useApp()
   const [filter, setFilter] = useState<'all' | RecordType>('all')
   const [query, setQuery] = useState('')
+  const [searching, setSearching] = useState(false)
+  const historyRef = useRef<HTMLDivElement>(null)
   const pet = petById(pets, id)
 
   if (!pet) {
@@ -48,56 +53,126 @@ export function PetFolder() {
   }
 
   const t = today()
-  const petVax = vaccines.filter((v) => v.petId === pet.id).sort((a, b) => (a.due ?? '').localeCompare(b.due ?? ''))
-  const nextVax = petVax.find((v) => v.due && v.due >= t)
+  const petVax = vaccines.filter((v) => v.petId === pet.id)
+  const vax = vaccineSummary(petVax, t)
   const medsNow = meds.filter((m) => m.petId === pet.id && (!m.until || m.until >= t))
   const weights = records.filter((r) => r.petId === pet.id && r.type === 'weight' && r.value !== undefined).sort((a, b) => a.date.localeCompare(b.date))
   const lastWeight = weights.at(-1)
+  const weightText = (v: number) => `${v} ${pet.weightUnit}`
+  const claim = tasks.filter((x) => x.petId === pet.id && x.kind === 'insurance' && !x.doneAt).sort((a, b) => a.date.localeCompare(b.date))[0]
+  // Mark done on the Attention card: the overdue vaccine tasks (as Done on Today)
+  const overdueVaxTasks = tasks.filter((x) => x.petId === pet.id && x.kind === 'vaccine' && !x.doneAt && x.date < t)
+  const callVet = pet.vet
+    ? () => {
+        window.location.href = `tel:${pet.vet!.phone}`
+      }
+    : undefined
+  const showHistory = (f: RecordType) => {
+    setFilter(f)
+    historyRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
 
   const history = records
     .filter((r) => r.petId === pet.id)
     .filter((r) => filter === 'all' || r.type === filter)
     .filter((r) => !query || `${r.title} ${r.detail ?? ''}`.toLowerCase().includes(query.toLowerCase()))
-    .sort((a, b) => b.date.localeCompare(a.date))
+    .sort((a, b) => b.date.localeCompare(a.date) || (b.time ?? '').localeCompare(a.time ?? ''))
 
   return (
-    <StackScreen
-      title=""
-      right={
-        <Button variant="secondary" icon="share" onClick={() => navigate(`/share?pet=${pet.id}`)}>
-          Share
-        </Button>
-      }
-    >
-      {/* Header */}
-      <div className="mt-8 flex flex-col items-center text-center">
-        <PetAvatar pet={pet} size="hero" onAddPhoto={pet.photo ? undefined : () => navigate(`/pets/${pet.id}/edit`)} />
+    <StackScreen title="">
+      {/* Header: the photo in its flower, the name, a line of facts and Share records */}
+      <div className="flex flex-col items-center text-center">
+        <PetAvatar pet={pet} size="hero" petals={petColor(pet, pets)} onAddPhoto={pet.photo ? undefined : () => navigate(`/pets/${pet.id}/edit`)} />
         <h1 className="mt-12 font-display text-display font-medium">{pet.name}</h1>
-        <p className="text-body text-text-secondary">{[speciesLabel(pet.species), pet.breed, age(pet.birthDate)].filter(Boolean).join(' · ')}</p>
+        <p className="text-body text-text-secondary">
+          {[speciesLabel(pet.species), pet.breed, ageLong(pet.birthDate), lastWeight && weightText(lastWeight.value!)].filter(Boolean).join(' · ')}
+        </p>
+        <Button variant="secondary" icon="share" onClick={() => navigate(`/share?pet=${pet.id}`)} className="mt-16">
+          Share records
+        </Button>
       </div>
 
-      {/* Key facts */}
-      <SectionTitle>Key facts</SectionTitle>
-      <div className="grid grid-cols-2 gap-8">
+      {/* Shown while the overdue vaccine tasks are open; Mark done closes them (the vaccine records stay as the
+          papers say until a new paper comes in) */}
+      {vax.attention && overdueVaxTasks.length > 0 && (
+        <div className="mt-24">
+          <AttentionCard
+            icon="syringe"
+            title={vax.attention}
+            detail={vax.attentionDetail}
+            actions={
+              <>
+                {callVet && <Button onClick={callVet}>Book vet</Button>}
+                <Button variant="secondary" onClick={() => overdueVaxTasks.forEach((x) => toggleTask(x.id))}>
+                  Mark done
+                </Button>
+              </>
+            }
+          />
+        </div>
+      )}
+
+      {/* Health: one list of key facts (Figma 12) */}
+      <SectionTitle>Health</SectionTitle>
+      <Card variant="list" className="overflow-hidden">
         {getsVaccines(pet.species) && (
-          <Tile icon="syringe" label="Vaccines" value={nextVax ? `${nextVax.name.split(' (')[0]} ${relative(nextVax.due!)}` : petVax.length ? 'All up to date' : 'Not known yet'} warn={!petVax.length} />
+          <ListRow
+            icon="syringe"
+            label="Vaccines"
+            title={petVax.length ? vax.line : 'Not known yet'}
+            subtitle={vax.overdueLine && <span className="text-status-waiting-text">{vax.overdueLine}</span>}
+            trailing="chevron"
+            onClick={() => navigate(`/pets/${pet.id}/vaccines`)}
+          />
         )}
-        <Tile icon="pill" label="Meds now" value={medsNow.length ? medsNow.map((m) => m.name).join(', ') : 'None'} />
+        <ListRow
+          icon="pill"
+          label="Meds now"
+          title={medsNow.length ? medsNow.map((m) => `${m.name} ${m.dose}`).join(', ') : 'None'}
+          subtitle={medsNow.length === 1 ? courseLine(medsNow[0].start, medsNow[0].until, t) : undefined}
+          trailing="chevron"
+          onClick={() => showHistory('meds')}
+        />
         {lastWeight && (
-          <Tile icon="weight" label="Weight" value={`${lastWeight.value} ${pet.weightUnit}`}>
-            <Sparkline values={weights.map((w) => w.value!)} />
-          </Tile>
+          <ListRow
+            icon="weight"
+            label="Weight"
+            title={weightText(lastWeight.value!)}
+            subtitle={weightChange(weights, pet.weightUnit)}
+            value={<Sparkline values={weights.map((w) => w.value!)} />}
+            trailing="chevron"
+            onClick={() => showHistory('weight')}
+          />
         )}
-        <Tile icon="shield-alert" label="Allergies" value={pet.allergies.length ? pet.allergies.join(', ') : 'None known'} />
+        <ListRow
+          icon="shield-alert"
+          label="Allergies"
+          title={pet.allergies.length ? pet.allergies.join(', ') : 'None known'}
+          trailing="chevron"
+          onClick={() => navigate(`/pets/${pet.id}/edit`)}
+        />
         {pet.vet && (
-          <Card variant="list" className="col-span-2 overflow-hidden">
-            <ListRow icon="phone" label="Vet" title={pet.vet.name} trailing={{ label: 'Call', icon: 'phone' }} href={`tel:${pet.vet.phone}`} />
-          </Card>
+          <ListRow icon="stethoscope" label="Vet" title={pet.vet.name} subtitle={pet.vet.clinic} trailing={{ label: 'Call', icon: 'phone' }} href={`tel:${pet.vet.phone}`} />
         )}
-      </div>
+        {pet.insurance && (
+          <ListRow
+            icon="file-text"
+            label="Insurance"
+            title={pet.insurance.split(' · ')[0]}
+            subtitle={claim ? `${claim.title} · file by ${formatDay(claim.date)}` : undefined}
+            trailing="chevron"
+            onClick={() => navigate(`/pets/${pet.id}/edit`)}
+          />
+        )}
+      </Card>
 
       {/* History */}
-      <SectionTitle>History</SectionTitle>
+      <div ref={historyRef} className="scroll-mt-16">
+        <SectionTitle action={<TextLink onClick={() => setSearching((v) => !v)}>Search</TextLink>}>History</SectionTitle>
+      </div>
+      {searching && (
+        <TextField label="Search history" type="search" value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search history" trailingIcon="search" className="mb-12" autoFocus />
+      )}
       <div role="tablist" className="swipe-row -mx-16 -my-4 flex gap-8 px-16 py-4">
         {filters.map((f) => (
           <Chip key={f.key} active={filter === f.key} onClick={() => setFilter(f.key)}>
@@ -105,12 +180,17 @@ export function PetFolder() {
           </Chip>
         ))}
       </div>
-      <TextField label="Search history" type="search" value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search history" trailingIcon="search" className="mt-12" />
       {history.length > 0 ? (
         <Card variant="list" className="mt-12 overflow-hidden">
           <ol>
             {history.map((r) => (
-              <HistoryItem key={r.id} record={r} unit={pet.weightUnit} docTitle={documents.find((d) => d.id === r.documentId && r.type !== 'document')?.title} />
+              <HistoryItem
+                key={r.id}
+                record={r}
+                unit={pet.weightUnit}
+                clinic={documents.find((d) => d.id === r.documentId)?.clinic}
+                before={r.type === 'weight' ? weights.filter((w) => w.date < r.date).at(-1) : undefined}
+              />
             ))}
           </ol>
         </Card>
@@ -119,42 +199,38 @@ export function PetFolder() {
       )}
 
       {/* Profile */}
-      <SectionTitle>Profile</SectionTitle>
+      <SectionTitle action={<TextLink onClick={() => navigate(`/pets/${pet.id}/edit`)}>Edit</TextLink>}>Profile</SectionTitle>
       <Card variant="list" className="overflow-hidden">
         {[
           ['Species', speciesLabel(pet.species)],
           ['Breed', pet.breed],
-          ['Born', pet.birthDate && formatDay(pet.birthDate, { month: 'long', day: 'numeric', year: 'numeric' })],
+          ['Born', pet.birthDate && formatDay(pet.birthDate, { month: 'short', day: 'numeric', year: 'numeric' })],
           ['Microchip', pet.microchip],
           ['Insurance', pet.insurance],
-          ['Vet', pet.vet?.name],
+          ['Vet', pet.vet && [pet.vet.name, pet.vet.clinic].filter(Boolean).join(' · ')],
         ].map(([label, value]) => (
           <ListRow key={label} title={label} value={value || '—'} />
         ))}
       </Card>
-      <Button full variant="ghost" onClick={() => navigate(`/pets/${pet.id}/edit`)} className="mt-8">
-        Edit profile
-      </Button>
     </StackScreen>
   )
 }
 
-// Figma "Key fact tile": Default on a panel; Attention on the honey tint (status/waiting-bg) with status/attention-border.
-function Tile({ icon, label, value, warn, children }: { icon: IconName; label: string; value: string; warn?: boolean; children?: ReactNode }) {
-  return (
-    <div
-      className={`flex min-h-avatar-80 flex-col gap-8 rounded-24 p-16 ${warn ? 'bg-status-waiting-bg shadow-card ring-1 ring-inset ring-status-attention-border' : 'panel-card'}`}
-    >
-      <div className="flex items-center gap-8 text-text-secondary">
-        <span className={`flex size-control-32 shrink-0 items-center justify-center rounded-full ${warn ? 'bg-surface-card text-status-waiting-text' : 'bg-accent-primary-subtle text-accent-primary'}`}>
-          <Icon name={icon} size={16} />
-        </span>
-        <span className="text-caption font-medium">{label}</span>
-      </div>
-      <p className={`line-clamp-2 text-body font-medium ${warn ? 'text-status-waiting-text' : ''}`}>{value}</p>
-      {children}
-    </div>
-  )
+/** "Day 12 of 30 · ends Nov 22" (Meds now), or "ends Nov 22" when the start isn't known. */
+function courseLine(start: string | undefined, until: string | undefined, t: string): string | undefined {
+  if (!until) return undefined
+  const ends = `ends ${formatDay(until)}`
+  if (!start) return ends
+  return `Day ${daysBetween(start, t) + 1} of ${daysBetween(start, until) + 1} · ${ends}`
+}
+
+/** "↓ 0.4 lb since Sep" against the weight before the last one. */
+function weightChange(weights: PetRecord[], unit: string): string | undefined {
+  const [prev, last] = weights.slice(-2)
+  if (!prev || !last) return undefined
+  const diff = Math.round((last.value! - prev.value!) * 10) / 10
+  const since = formatDay(prev.date, { month: 'short' })
+  return diff === 0 ? `No change since ${since}` : `${diff < 0 ? '↓' : '↑'} ${Math.abs(diff)} ${unit} since ${since}`
 }
 
 function Sparkline({ values }: { values: number[] }) {
@@ -163,31 +239,37 @@ function Sparkline({ values }: { values: number[] }) {
   const max = Math.max(...values)
   const pts = values.map((v, i) => `${(i / (values.length - 1)) * 100},${max === min ? 10 : 18 - ((v - min) / (max - min)) * 16}`).join(' ')
   return (
-    <svg viewBox="0 0 100 20" preserveAspectRatio="none" className="mt-auto h-icon-20 w-full shrink-0 pt-4 text-accent-primary" aria-hidden="true">
+    <svg viewBox="0 0 100 20" preserveAspectRatio="none" className="block h-icon-20 w-[56px] text-accent-primary" aria-hidden="true">
       <polyline points={pts} fill="none" stroke="currentColor" strokeWidth="2" vectorEffect="non-scaling-stroke" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   )
 }
 
-function HistoryItem({ record, unit, docTitle }: { record: PetRecord; unit: string; docTitle?: string }) {
+function HistoryItem({ record, unit, clinic, before }: { record: PetRecord; unit: string; clinic?: string; before?: PetRecord }) {
+  // Figma "Timeline item": what it is, a grey line saying where it came from, the date on the right
+  let title = record.title
+  let line = record.detail
+  if (record.type === 'weight') {
+    title = `Weight · ${record.value} ${unit}`
+    if (before) {
+      const diff = Math.round((record.value! - before.value!) * 10) / 10
+      line = `${diff > 0 ? '+' : diff < 0 ? '−' : '±'}${Math.abs(diff)} ${unit} since ${formatDay(before.date, { month: 'short' })}`
+    }
+  } else if (record.type === 'document') line = ['Document', clinic].filter(Boolean).join(' · ')
+  else if (!record.detail && record.documentId) line = [clinic, 'from vet paper'].filter(Boolean).join(' · ')
+  else if (record.type === 'health' && !record.documentId && record.detail) line = `Health note · ${record.detail}`
+  const sameYear = record.date.slice(0, 4) === today().slice(0, 4)
   return (
-    // Figma "Timeline item": a category chip (a meaning icon), the text, the date on the right; no fill, no divider
     <li className="flex gap-16 px-24 py-16">
       <span className="chip-category flex size-control-40 shrink-0 items-center justify-center rounded-full text-icon-category-on-chip">
         <Icon name={recordIcon[record.type]} size={20} />
       </span>
       <div className="min-w-0 flex-1">
         <div className="flex items-baseline justify-between gap-8">
-          <p className="text-body font-medium">{record.type === 'weight' ? `${record.value} ${unit}` : record.title}</p>
-          <span className="shrink-0 text-caption text-text-secondary">{formatDay(record.date, { month: 'short', day: 'numeric', year: '2-digit' })}</span>
+          <p className="text-body font-medium">{title}</p>
+          <span className="shrink-0 text-caption text-text-secondary">{formatDay(record.date, sameYear ? { month: 'short', day: 'numeric' } : { month: 'short', day: 'numeric', year: 'numeric' })}</span>
         </div>
-        {record.detail && <p className="text-body-s text-text-secondary">{record.detail}</p>}
-        {docTitle && (
-          <p className="mt-2 flex items-center gap-4 text-body-s text-accent-primary">
-            <Icon name="file-text" size={14} />
-            From: {docTitle}
-          </p>
-        )}
+        {line && <p className="text-body-s text-text-secondary">{line}</p>}
       </div>
     </li>
   )

@@ -6,7 +6,8 @@ import { useApp } from '../data/useApp'
 import { ageShort } from '../lib/dates'
 import { petStatus } from '../lib/tasks'
 
-/** Figma "11 · Pets": "Your pack" with a + button, the pet list with a status on the right, then "Add a pet". */
+/** Figma "11 · Pets": "Your pack" with a + button (the only way to add a pet by hand), the pet list with a status
+ *  on the right. */
 export function PetList() {
   const navigate = useNavigate()
   const { pets, tasks } = useApp()
@@ -32,25 +33,19 @@ export function PetList() {
         <IconButton variant="primary" icon="plus" label="Add a pet" onClick={addPet} className="-mr-2 -mb-2" />
       </header>
 
-      <div className="flex flex-col gap-16">
-        <Card variant="list" className="overflow-hidden">
-          {rows.map(({ pet, status }) => (
-            <ListRow
-              key={pet.id}
-              pet={pet}
-              title={pet.name}
-              subtitle={<span className="block truncate">{[pet.breed ?? pet.species, ageShort(pet.birthDate)].filter(Boolean).join(' · ')}</span>}
-              value={<span className={status.overdue ? 'text-status-waiting-text' : undefined}>{status.label}</span>}
-              trailing="chevron"
-              onClick={() => navigate(`/pets/${pet.id}`)}
-            />
-          ))}
-        </Card>
-
-        <Card variant="list" className="overflow-hidden">
-          <ListRow icon="plus" title="Add a pet" subtitle="or snap a vet paper" trailing="chevron" onClick={addPet} />
-        </Card>
-      </div>
+      <Card variant="list" className="overflow-hidden">
+        {rows.map(({ pet, status }) => (
+          <ListRow
+            key={pet.id}
+            pet={pet}
+            title={pet.name}
+            subtitle={<span className="block truncate">{[pet.breed ?? pet.species, ageShort(pet.birthDate)].filter(Boolean).join(' · ')}</span>}
+            value={<span className={status.overdue ? 'text-status-waiting-text' : undefined}>{status.label}</span>}
+            trailing="chevron"
+            onClick={() => navigate(`/pets/${pet.id}`)}
+          />
+        ))}
+      </Card>
     </div>
   )
 }
