@@ -1,5 +1,7 @@
 import { useNavigate } from 'react-router'
 import { AskBooInput } from '../components/AskBooInput'
+import { BooHint } from '../components/BooHint'
+import { Button } from '../components/Button'
 import { BooCharacter } from '../components/BooCharacter'
 import { Card } from '../components/Card'
 import { Icon } from '../components/Icon'
@@ -13,15 +15,17 @@ import { useUi } from '../data/useUi'
 import type { Task } from '../data/types'
 import { addDays, formatDay, greeting, relative, today } from '../lib/dates'
 import { petColor } from '../lib/petColors'
+import { getsVaccines } from '../lib/species'
 import { nextUpMeta, taskMeta, taskPill, taskState } from '../lib/tasks'
 
 const byUrgency = (a: Task, b: Task) => (a.date + (a.time ?? '99')).localeCompare(b.date + (b.time ?? '99'))
 
-/** Figma "1 · Today": header, Next up, Boo card, Coming up (a checklist: done tasks stay, crossed out), Your pack. */
+/** Figma "1 · Today": header, Next up, Boo card, Coming up (a checklist: done tasks stay, crossed out), Your pack.
+ *  Figma 6m: while a pet's shots are unknown, Boo's hint asks for the last vet paper in place of the Boo card. */
 export function Today() {
   const navigate = useNavigate()
   const openBoo = useUi((s) => s.openBoo)
-  const { pets, tasks, toggleTask } = useApp()
+  const { pets, tasks, vaccines, settings, updateSettings, toggleTask } = useApp()
   const t = today()
 
   const open = tasks.filter((x) => !x.doneAt).sort(byUrgency)
@@ -37,6 +41,9 @@ export function Today() {
   const dueSoon = new Set(open.filter((x) => x.date <= addDays(t, 7)).map((x) => x.petId))
   const nextBig = important.find((x) => x.date > t)
   const nextUpPet = nextUp && petById(pets, nextUp.petId)
+  // Figma 6m: a pet whose shots Boo doesn't know yet → Boo asks for the last vet paper (Not now: a week of quiet)
+  const hintHidden = !!settings.gapHintHiddenUntil && settings.gapHintHiddenUntil > t
+  const noShots = hintHidden ? undefined : pets.find((p) => getsVaccines(p.species) && !vaccines.some((v) => v.petId === p.id))
 
   const row = (x: Task, showDate = x.date !== t) => {
     const pet = petById(pets, x.petId)
@@ -53,7 +60,7 @@ export function Today() {
         </div>
         <div className="flex flex-col gap-8 pt-24 pb-16">
           <p className="text-body-s text-text-secondary">{formatDay(t, { weekday: 'long', month: 'short', day: 'numeric' })}</p>
-          <h1 className="font-display text-display font-medium">{greeting()}</h1>
+          <h1 className="font-display text-display font-medium">{settings.owner?.name ? `${greeting()}, ${settings.owner.name}` : greeting()}</h1>
         </div>
       </header>
 
@@ -73,29 +80,46 @@ export function Today() {
                 : undefined
             }
           />
-        ) : (
+        ) : noShots ? null : (
           <Card className="p-24">
             <p className="font-display text-title font-medium">All good.</p>
             <p className="mt-4 text-body text-text-secondary">{nextBig ? `Next: ${petById(pets, nextBig.petId)?.name}'s ${nextBig.title.toLowerCase()} ${relative(nextBig.date)}.` : 'Nothing due soon.'}</p>
           </Card>
         )}
 
-        {/* Boo card */}
-        <section aria-label="Boo" className="flex flex-col gap-16 rounded-24 bg-ai-card p-24 ring-1 ring-inset ring-border-ai-card shadow-card">
-          <div className="flex items-center gap-16">
-            <button type="button" aria-label="Talk to Boo" onClick={() => openBoo('talk')} className="press shrink-0 rounded-full">
-              <BooCharacter size={94} pose="wave" />
-            </button>
-            <div className="flex min-w-0 flex-col gap-4">
-              <p className="flex items-center gap-4 text-caption text-text-primary">
-                <Icon name="sparkle-ai" size={16} className="shrink-0" />
-                Boo · your pet assistant
-              </p>
-              <p className="text-body font-medium text-text-primary">Snap a vet paper or just tell me — I’ll file it.</p>
+        {/* Boo card — or, while a pet's shots are unknown, Boo asking for the last vet paper (Figma 6m) */}
+        {noShots ? (
+          <BooHint
+            actions={
+              <>
+                <Button icon="camera" onClick={() => openBoo('snap')}>
+                  Snap a vet paper
+                </Button>
+                <Button variant="ghost" onClick={() => updateSettings({ gapHintHiddenUntil: addDays(t, 7) })}>
+                  Not now
+                </Button>
+              </>
+            }
+          >
+            I don’t know {noShots.name}’s shots yet. Snap the last vet paper?
+          </BooHint>
+        ) : (
+          <section aria-label="Boo" className="flex flex-col gap-16 rounded-24 bg-ai-card p-24 ring-1 ring-inset ring-border-ai-card shadow-card">
+            <div className="flex items-center gap-16">
+              <button type="button" aria-label="Talk to Boo" onClick={() => openBoo('talk')} className="press shrink-0 rounded-full">
+                <BooCharacter size={94} pose="wave" />
+              </button>
+              <div className="flex min-w-0 flex-col gap-4">
+                <p className="flex items-center gap-4 text-caption text-text-primary">
+                  <Icon name="sparkle-ai" size={16} className="shrink-0" />
+                  Boo · your pet assistant
+                </p>
+                <p className="text-body font-medium text-text-primary">Snap a vet paper or just tell me — I’ll file it.</p>
+              </div>
             </div>
-          </div>
-          <AskBooInput placeholder="Tell Boo anything…" onType={() => openBoo('type')} onSnap={() => openBoo('snap')} onTalk={() => openBoo('talk')} />
-        </section>
+            <AskBooInput placeholder="Tell Boo anything…" onType={() => openBoo('type')} onSnap={() => openBoo('snap')} onTalk={() => openBoo('talk')} />
+          </section>
+        )}
 
         {comingUp.length > 0 && (
           <section aria-label="Coming up" className="panel-card overflow-hidden rounded-24">

@@ -357,3 +357,15 @@ Figma: ★ Screens → "Pets & Share": "11 · Pets", "12 · Pet folder · Rocky"
 | **Sheet header** | `BooSheet.tsx` | Exported, for the vaccine source sheet on the Vaccines screen |
 
 Screens: **Pets** (no "Add a pet" card; the + button adds), **Pet folder** (photo in its flower, facts line with the weight, Share records, Attention card, Health, History with a Search link, Profile with an Edit link), **Vaccines** (new; tapping a vaccine opens the vet paper it came from), **Edit {name}** (Frame colour card, the Vet picked from your vets). A vaccine reminder now opens Vaccines.
+
+## 24. Tell Boo about your pet (built, Nov 25, 2026)
+
+Figma: ★ Screens → "Main flow · tell Boo": 6i Tell Boo, 6j AI consent, 6k Review card · from words, 6l Add a photo, 6m Today · told Boo.
+
+| Component | File | What changes |
+|---|---|---|
+| **Ask Boo input** | `AskBooInput.tsx` | New: typing in place (`value`, `onChange`, `onSend`), used on Welcome. The field is a real text input; once it has text, the mic becomes a Send arrow (Primary 56) and Return sends |
+| **Boo sheet** | `BooSheet.tsx` | AI consent is the short Figma 6j version (mini Boo, one sentence, Continue / Not now). New step "Here's what I found" (6k): the pet Boo heard about as a List row, **Looks right** / **Edit details** (Name, Species, Breed, Date of birth in place), then "Add a photo of {name}?" (6l) |
+| **Boo hint** | `BooHint.tsx` | Used on Today (6m) in place of the Boo card while a pet's shots are unknown: "I don't know {name}'s shots yet. Snap the last vet paper?" — Snap a vet paper / Not now (quiet for a week) |
+
+Today's greeting adds the owner's name from Your profile: "Good morning, Anna".
