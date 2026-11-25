@@ -1,7 +1,7 @@
 // Boo client — FAKE for now (step 04). It pretends to read papers and phrases so the flows can be clicked through.
 // The Boo spike (week 2) replaces these functions with calls to the server function functions/api/boo.
 
-import type { Pet, PetRecord, Vaccine } from '../data/types'
+import type { Pet, PetRecord, Species, Vaccine } from '../data/types'
 import { addDays, addMonths, formatDay, relative, today } from './dates'
 
 const wait = (ms: number) => new Promise((r) => setTimeout(r, ms))
@@ -46,6 +46,55 @@ export type BooResult =
   | { kind: 'answer'; text: string; source?: { petId: string; label: string } }
   | { kind: 'which-pet'; candidates: string[]; text: string }
   | { kind: 'unclear'; text: string }
+  /** Figma 6k: Boo heard about a new pet ("Rocky, my beagle, he's 7"). Saved only after "Looks right". */
+  | { kind: 'new-pet'; name: string; species: Species; breed?: string; birthDate?: string; text: string }
+
+// Words that tell the species, and breeds that tell it too (the fake Boo knows a few common ones).
+const SPECIES_WORDS: [RegExp, Species][] = [
+  [/\b(dog|puppy|pup)\b/, 'dog'],
+  [/\b(cat|kitten|kitty)\b/, 'cat'],
+  [/\b(rabbit|bunny)\b/, 'rabbit'],
+  [/\bhamster\b/, 'hamster'],
+  [/\bguinea pig\b/, 'guinea-pig'],
+  [/\bparrot\b/, 'parrot'],
+  [/\b(bird|budgie|canary)\b/, 'bird'],
+  [/\bfish\b/, 'fish'],
+  [/\b(turtle|tortoise)\b/, 'turtle'],
+  [/\bferret\b/, 'ferret'],
+]
+const BREEDS: [string, Species][] = [
+  ['Beagle', 'dog'], ['Labrador Retriever', 'dog'], ['Labrador', 'dog'], ['Golden Retriever', 'dog'], ['Poodle', 'dog'],
+  ['French Bulldog', 'dog'], ['Bulldog', 'dog'], ['German Shepherd', 'dog'], ['Chihuahua', 'dog'], ['Dachshund', 'dog'],
+  ['Husky', 'dog'], ['Corgi', 'dog'], ['Pug', 'dog'], ['Boxer', 'dog'], ['Shih Tzu', 'dog'],
+  ['Maine Coon', 'cat'], ['Siamese', 'cat'], ['Persian', 'cat'], ['Bengal', 'cat'], ['Ragdoll', 'cat'], ['Sphynx', 'cat'], ['Tabby', 'cat'],
+  ['Clownfish', 'fish'], ['Goldfish', 'fish'], ['Betta', 'fish'],
+]
+const NOT_NAMES = new Set(['My', 'Our', 'He', 'She', 'It', 'This', 'That', 'The', 'A', 'An', 'I', 'We', 'Meet', 'Hi', 'Hey', 'Just', 'New'])
+
+/** "Rocky, my beagle, he's 7" → Rocky · dog · Beagle · born 7 years ago. Undefined when it isn't about a new pet. */
+export function parseNewPet(text: string, pets: Pet[]): Omit<Extract<BooResult, { kind: 'new-pet' }>, 'kind' | 'text'> | undefined {
+  const lower = text.toLowerCase()
+  const breed = BREEDS.find(([b]) => new RegExp(`\\b${b.toLowerCase()}\\b`).test(lower))
+  const species = SPECIES_WORDS.find(([re]) => re.test(lower))?.[1] ?? breed?.[1]
+  const intro = /\b(my|our|new|got a|adopted)\b/.test(lower)
+  if (!species && !(pets.length === 0 && intro)) return undefined
+
+  // The name: "named Max" / "called Max" / "name is Max", else the first capitalised word that isn't a breed
+  const called = text.match(/\b(?:named|called|name is|name's)\s+([A-Z][a-zA-Z'-]+)/)
+  const breedWords = new Set((breed?.[0] ?? '').split(' '))
+  const first = text.match(/[A-Z][a-zA-Z'-]+/g)?.find((w) => !NOT_NAMES.has(w) && !breedWords.has(w))
+  const name = called?.[1] ?? first
+  if (!name || pets.some((p) => p.name.toLowerCase() === name.toLowerCase())) return undefined
+
+  // Age: "he's 7", "7 years old", "2 yrs", "5 months"
+  let birthDate: string | undefined
+  const months = lower.match(/(\d+)\s*(?:months?|mos?)\b/)
+  const years = lower.match(/(\d+)\s*(?:years?|yrs?|y\.?o\.?)\b/) ?? lower.match(/\b(?:he|she|it)(?:'s| is)\s+(\d+)\b/)
+  if (months) birthDate = addMonths(today(), -parseInt(months[1]))
+  else if (years) birthDate = addMonths(today(), -12 * parseInt(years[1]))
+
+  return { name, species: species ?? 'other', breed: breed?.[0] === 'Labrador' ? 'Labrador Retriever' : breed?.[0], birthDate }
+}
 
 const RED_FLAGS = ['seizure', 'not breathing', 'collapsed', 'bleeding', 'poison', 'ate chocolate', 'bloated', "can't pee", 'cannot pee']
 
@@ -64,6 +113,13 @@ export async function understand(
 ): Promise<BooResult> {
   await wait(900)
   const lower = text.toLowerCase().trim()
+
+  // A new pet ("Rocky, my beagle, he's 7"): always when there are no pets yet
+  const found = !lower.endsWith('?') ? parseNewPet(text, ctx.pets) : undefined
+  if (found) return { kind: 'new-pet', ...found, text }
+  // No pets yet and not a pet Boo could make out: never ask "which pet?" with nothing to pick
+  if (!ctx.pets.length) return { kind: 'unclear', text }
+
   const matched = findPets(lower, ctx.pets)
   const pet = matched.length === 1 ? matched[0] : ctx.pets.length === 1 ? ctx.pets[0] : undefined
 
