@@ -1,7 +1,7 @@
 // Colour swatch — Figma "Frame colour" (Add your pet, step 2): the six pet/* frame colours as 32 circles.
 // The chosen one has a 2px accent/primary ring with a gap. A radio group; each circle has a 44 tap area.
 // With `allowNone`, a 7th circle "No frame" (Figma 14): an empty surface/card circle with a border/control edge
-// and a diagonal line.
+// and a diagonal line; chosen, it gets the same accent ring as a colour.
 
 import type { PetColor } from '../data/types'
 
@@ -55,8 +55,8 @@ export function ColorSwatches({ label, value, onChange, allowNone, disabled, 'da
           className="press flex size-control-44 items-center justify-center rounded-full disabled:opacity-40"
         >
           <span
-            className={`flex size-control-32 items-center justify-center rounded-full bg-surface-card text-text-secondary ring-1 ring-inset ring-border-control ${
-              value === 'none' ? 'outline-2 outline-offset-2 outline-accent-primary outline' : ''
+            className={`flex size-control-32 items-center justify-center rounded-full border border-border-control bg-surface-card text-text-secondary ${
+              value === 'none' ? 'ring-2 ring-accent-primary ring-offset-2 ring-offset-surface-card' : ''
             }`}
           >
             <svg viewBox="0 0 32 32" className="size-full" aria-hidden="true">
