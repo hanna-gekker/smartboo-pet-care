@@ -294,6 +294,17 @@ body:has(.bg-welcome)::before {
 .shadow-card {
   box-shadow: 0 8px 28px var(--glass-shadow), inset 0 1px 1px var(--glass-highlight);
 }
+/* Figma panels (Coming up, Your pack, cards): a soft top-to-bottom gradient surface/panel → surface/panel-end,
+   a 1.5px border/panel-edge inside, and two soft shadows (0 10 30, 0 1 2). */
+.panel-card {
+  background: linear-gradient(180deg, var(--surface-panel), var(--surface-panel-end));
+  box-shadow: inset 0 0 0 1.5px var(--border-panel-edge), 0 10px 30px var(--glass-shadow), 0 1px 2px var(--glass-shadow);
+}
+/* A tappable panel pressed: one step deeper (surface/subtle), over the gradient */
+.panel-card:is(button, a):active,
+.panel-card[data-state="pressed"] {
+  background: var(--surface-subtle);
+}
 /* Figma "Icon button · Secondary" (header back, settings): the same glass with a 30 blur behind it. */
 .glass-button {
   -webkit-backdrop-filter: blur(30px);
@@ -417,54 +428,52 @@ body:has(.bg-welcome)::before {
   0%, 100% { transform: scale(1); opacity: 1; }
   50% { transform: scale(1.25); opacity: 0.6; }
 }
-/* Boo (BooCharacter): idle = the petals sway ±8° and the eye glints look the same way (Figma Rest → Sway left →
-   Sway right → Rest, ~6 s), no breathing; a blink (eyes squash to a line, glints hidden) is added by BooCharacter
-   at random moments. Listening = Figma Listening 1 ⇄ 2. */
-.boo-flower,
-.boo-core,
-.boo-glow,
-.boo-eyes {
-  transform-box: fill-box;
-  transform-origin: center;
-}
-.boo-idle .boo-flower { animation: boo-sway 6s ease-in-out infinite; }
-.boo-idle .boo-glints { animation: boo-gaze 6s ease-in-out infinite; }
-.boo-blink .boo-eyes { animation: boo-blink 0.41s ease-in-out; }
-.boo-blink .boo-glints { visibility: hidden; }
-.boo-listening .boo-flower { animation: boo-listen-flower 0.7s ease-in-out infinite alternate; }
-.boo-listening .boo-core { animation: boo-listen-core 0.7s ease-in-out infinite alternate; }
-.boo-listening .boo-glow { animation: boo-listen-glow 0.7s ease-in-out infinite alternate; }
-@keyframes boo-sway {
-  0%, 10% { transform: rotate(0); }
-  32% { transform: rotate(-8deg); }
-  58% { transform: rotate(8deg); }
-  80%, 100% { transform: rotate(0); }
-}
-@keyframes boo-gaze {
-  0%, 10% { transform: translateX(0); }
-  32% { transform: translateX(-3.5px); }
-  58% { transform: translateX(2px); }
-  80%, 100% { transform: translateX(0); }
-}
-/* Close in 0.15 s, stay closed 0.06 s, open in 0.2 s: 12.6 → 2.5 high */
-@keyframes boo-blink {
-  0% { transform: scaleY(1); }
-  37% { transform: scaleY(0.2); }
-  51% { transform: scaleY(0.2); }
-  100% { transform: scaleY(1); }
-}
-@keyframes boo-listen-flower { from { transform: rotate(-6deg) scale(0.94); } to { transform: rotate(-16deg) scale(0.86); } }
-@keyframes boo-listen-core { from { transform: scale(0.976); } to { transform: scale(0.905); } }
-@keyframes boo-listen-glow { from { transform: scale(1.15); } to { transform: scale(1.3); } }
-
-/* Boo's colours are the Figma Variables boo/* (tokens.css). In dark the white glow around the face is off, as in Figma. */
-:root[data-theme="dark"] .boo-face-glow {
+/* Pictures with a light and a dark version (Logo, Boo): the light one by default, the dark one in the dark theme. */
+.only-dark {
   display: none;
 }
+:root[data-theme="dark"] .only-light {
+  display: none;
+}
+:root[data-theme="dark"] .only-dark {
+  display: block;
+}
 @media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) .boo-face-glow {
+  :root:not([data-theme="light"]) .only-light {
     display: none;
   }
+  :root:not([data-theme="light"]) .only-dark {
+    display: block;
+  }
+}
+
+/* Boo (BooCharacter): the plush paw picture. Idle = a slow sway and float (~6 s, around its bottom);
+   listening = a soft pulse. The oval shadow under it is Figma "Plush shadow" (ai/float-shadow, 70%, blur 6). */
+.boo-shadow {
+  position: absolute;
+  left: 24%;
+  width: 52%;
+  top: 87%;
+  height: 5.5%;
+  border-radius: 50%;
+  background: var(--ai-float-shadow);
+  opacity: 0.7;
+  filter: blur(5px);
+}
+.boo-plush {
+  transform-origin: 50% 88%;
+}
+.boo-idle .boo-plush { animation: boo-float 6s ease-in-out infinite; }
+.boo-listening .boo-plush { animation: boo-listen 0.7s ease-in-out infinite alternate; }
+@keyframes boo-float {
+  0%, 100% { transform: rotate(0) translateY(0); }
+  25% { transform: rotate(-3deg) translateY(-2%); }
+  50% { transform: rotate(0) translateY(0); }
+  75% { transform: rotate(3deg) translateY(-2%); }
+}
+@keyframes boo-listen {
+  from { transform: scale(0.97); }
+  to { transform: scale(1.03); }
 }
 
 /* Reading (Figma 6c): the scan line runs down the paper and back. Still with reduced motion. */
@@ -485,10 +494,7 @@ body:has(.bg-welcome)::before {
   .animate-fade-in,
   .animate-pulse-dot,
   .animate-spin,
-  .boo-flower,
-  .boo-core,
-  .boo-glow,
-  .boo-glints,
+  .boo-plush,
   .boo-scan {
     animation: none !important;
   }

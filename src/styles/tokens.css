@@ -270,7 +270,7 @@
   --font-line-height-40: 40px;
 
   /* Colors — light */
-  --surface-canvas: var(--neutral-90); /* Screen background. Light: neutral/100 #F2F2F7 (iOS grouped background); Dark: gray/950. */
+  --surface-canvas: var(--neutral-80); /* Screen background. Light: neutral/100 #F2F2F7 (iOS grouped background); Dark: gray/950. */
   --surface-card: var(--base-white); /* Cards, input bar, chips */
   --surface-subtle: var(--neutral-90); /* Dividers, list rows, ring track */
   --surface-nav: var(--gray-950); /* Floating menu capsule */
@@ -286,6 +286,7 @@
   --surface-glow-1: var(--orchid-200); /* Top-right glow, orchid (largest, in the corner) */
   --surface-glow-2: var(--blue-180); /* Right-edge glow, blue (below glow-1) */
   --surface-glow-3: var(--cyan-150); /* Right-edge glow, cyan (lowest) */
+  --surface-panel-end: var(--lavender-40); /* Bottom of the soft panel gradient (surface/panel → surface/panel-end, top to bottom). */
   --text-primary: var(--navy-900); /* Main text and icons (also done checks, home indicator) */
   --text-secondary: var(--navy-600); /* Supporting text (AA on white) */
   --text-on-dark: var(--base-white); /* Text/icons on dark or accent */
@@ -299,6 +300,7 @@
   --border-glass-rim-end: var(--base-white); /* Rim of the glass tab bar (paint at 100%). Light: solid white hairline; Dark: Boo-coloured gradient at ~30%. */
   --border-card: var(--neutral-250); /* 1px inside hairline on cards. Light: white; Dark: white 10%. */
   --border-ai-card: var(--lavender-100);
+  --border-panel-edge: var(--base-white); /* Crisp edge of soft panels (1.5px inside). */
   --accent-primary: var(--indigo-550); /* Buttons, active states, progress, mic */
   --accent-primary-soft: var(--indigo-200); /* Soft accent fills (avatars) */
   --accent-primary-subtle: var(--indigo-75); /* Very light accent tint — backgrounds of icons in circles, soft buttons, selected rows */
@@ -407,7 +409,7 @@
 /* Colors — dark, following the phone */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --surface-canvas: var(--gray-940); /* Screen background. Light: neutral/100 #F2F2F7 (iOS grouped background); Dark: gray/950. */
+    --surface-canvas: var(--lavender-940); /* Screen background. Light: neutral/100 #F2F2F7 (iOS grouped background); Dark: gray/950. */
     --surface-card: var(--gray-900); /* Cards, input bar, chips */
     --surface-subtle: var(--gray-800); /* Dividers, list rows, ring track */
     --surface-nav: var(--gray-700); /* Floating menu capsule */
@@ -423,6 +425,7 @@
     --surface-glow-1: var(--orchid-800); /* Top-right glow, orchid (largest, in the corner) */
     --surface-glow-2: var(--blue-820); /* Right-edge glow, blue (below glow-1) */
     --surface-glow-3: var(--cyan-800); /* Right-edge glow, cyan (lowest) */
+    --surface-panel-end: var(--alpha-white-6); /* Bottom of the soft panel gradient (surface/panel → surface/panel-end, top to bottom). */
     --text-primary: var(--gray-100); /* Main text and icons (also done checks, home indicator) */
     --text-secondary: var(--gray-300); /* Supporting text (AA on white) */
     --text-on-dark: var(--base-white); /* Text/icons on dark or accent */
@@ -436,6 +439,7 @@
     --border-glass-rim-end: var(--alpha-violet-300-30); /* Rim of the glass tab bar (paint at 100%). Light: solid white hairline; Dark: Boo-coloured gradient at ~30%. */
     --border-card: var(--alpha-white-10); /* 1px inside hairline on cards. Light: white; Dark: white 10%. */
     --border-ai-card: var(--alpha-white-10);
+    --border-panel-edge: var(--alpha-white-10); /* Crisp edge of soft panels (1.5px inside). */
     --accent-primary: var(--indigo-400); /* Buttons, active states, progress, mic */
     --accent-primary-soft: var(--indigo-800); /* Soft accent fills (avatars) */
     --accent-primary-subtle: var(--indigo-900); /* Very light accent tint — backgrounds of icons in circles, soft buttons, selected rows */
@@ -544,7 +548,7 @@
 
 /* Colors — dark, chosen in the app */
 [data-theme="dark"] {
-  --surface-canvas: var(--gray-940); /* Screen background. Light: neutral/100 #F2F2F7 (iOS grouped background); Dark: gray/950. */
+  --surface-canvas: var(--lavender-940); /* Screen background. Light: neutral/100 #F2F2F7 (iOS grouped background); Dark: gray/950. */
   --surface-card: var(--gray-900); /* Cards, input bar, chips */
   --surface-subtle: var(--gray-800); /* Dividers, list rows, ring track */
   --surface-nav: var(--gray-700); /* Floating menu capsule */
@@ -560,6 +564,7 @@
   --surface-glow-1: var(--orchid-800); /* Top-right glow, orchid (largest, in the corner) */
   --surface-glow-2: var(--blue-820); /* Right-edge glow, blue (below glow-1) */
   --surface-glow-3: var(--cyan-800); /* Right-edge glow, cyan (lowest) */
+  --surface-panel-end: var(--alpha-white-6); /* Bottom of the soft panel gradient (surface/panel → surface/panel-end, top to bottom). */
   --text-primary: var(--gray-100); /* Main text and icons (also done checks, home indicator) */
   --text-secondary: var(--gray-300); /* Supporting text (AA on white) */
   --text-on-dark: var(--base-white); /* Text/icons on dark or accent */
@@ -573,6 +578,7 @@
   --border-glass-rim-end: var(--alpha-violet-300-30); /* Rim of the glass tab bar (paint at 100%). Light: solid white hairline; Dark: Boo-coloured gradient at ~30%. */
   --border-card: var(--alpha-white-10); /* 1px inside hairline on cards. Light: white; Dark: white 10%. */
   --border-ai-card: var(--alpha-white-10);
+  --border-panel-edge: var(--alpha-white-10); /* Crisp edge of soft panels (1.5px inside). */
   --accent-primary: var(--indigo-400); /* Buttons, active states, progress, mic */
   --accent-primary-soft: var(--indigo-800); /* Soft accent fills (avatars) */
   --accent-primary-subtle: var(--indigo-900); /* Very light accent tint — backgrounds of icons in circles, soft buttons, selected rows */
