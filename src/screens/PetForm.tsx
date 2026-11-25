@@ -58,7 +58,7 @@ export function PetForm() {
       >
         <button type="button" onClick={() => photoInput.current?.click()} className="press mx-auto flex flex-col items-center gap-8 rounded-24">
           <PetAvatar pet={pet.name ? pet : undefined} size="hero" petals={pet.color ?? (existing ? petColor(existing, pets) : undefined)} />
-          <span className="text-body-s font-medium text-accent-primary">{pet.photo ? 'Change photo' : 'Add a photo'}</span>
+          <span className="text-body font-medium text-accent-primary">{pet.photo ? 'Change photo' : 'Add a photo'}</span>
         </button>
         <input
           ref={photoInput}
@@ -74,8 +74,13 @@ export function PetForm() {
 
         {/* Figma 14: the frame colour on its own card */}
         <Card>
-          <p className="mb-4 text-caption text-text-secondary">Frame colour</p>
-          <ColorSwatches label="Frame colour" value={pet.color ?? (existing ? petColor(existing, pets) : 'ocean')} onChange={(color) => set({ color })} />
+          <p className="mb-8 text-caption font-medium text-text-secondary">Frame colour</p>
+          <ColorSwatches
+            label="Frame colour"
+            allowNone
+            value={pet.noFrame ? 'none' : (pet.color ?? (existing ? petColor(existing, pets) : 'ocean'))}
+            onChange={(c) => set(c === 'none' ? { noFrame: true } : { color: c, noFrame: false })}
+          />
         </Card>
 
         <Card className="flex flex-col gap-8">

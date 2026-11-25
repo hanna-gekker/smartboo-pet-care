@@ -110,7 +110,7 @@ Tab bar: a floating capsule with **Today · Schedule · Pets**, and **Boo** to t
 3. **Schedule** — a calendar on top and the selected day below:
    - Week / Month switch; Week is a strip of day tiles, Month the same tiles in a 7-column grid. A tile shows the date and up to two pet photos of that day (or one photo and "+N"); today has the date in a blue circle;
    - the selected day's title, e.g. "Wednesday, Nov 4";
-   - **To do** ("{done} of {total} done"): that day's tasks, overdue first ("{Pet} · waiting since 8 AM", or "waiting since Tue 12 PM" on a past day), then open ones, then done ones (checked and crossed out). Tapping a task's circle checks it in place; tap again to undo;
+   - **To do** ("{done} of {total} done"): that day's tasks, overdue first, in rose, with just when they were due ("{Pet} · 8 AM", or "{Pet} · Tue 12 PM" on a past day), then open ones, then done ones (checked and crossed out). Tapping a task's circle checks it in place; tap again to undo;
    - **Happened**: what was logged that day (weight, a symptom, a note…), e.g. "Cleo weighs 950 g" · "9:20 AM · 30 g less than last week";
    - past days work the same — the answer to "did anyone give the pill yesterday?";
    - an empty day: one card with Boo, "All good." and "Next: {next item}.", e.g. "Next: Change water for Tank tomorrow."

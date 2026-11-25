@@ -36,6 +36,7 @@ export function AddPet() {
   const [species, setSpecies] = useState<Species>()
   const [name, setName] = useState('')
   const [color, setColor] = useState<PetColor>('ocean')
+  const [noFrame, setNoFrame] = useState(false)
   const [photo, setPhoto] = useState<string>()
   const [breed, setBreed] = useState('')
   const [notSure, setNotSure] = useState(false)
@@ -51,7 +52,7 @@ export function AddPet() {
   const flow: Step[] = ['species', 'name', 'breed', 'birthday', ...(species && !getsWeighed(species) ? [] : (['weight'] as Step[]))]
   const index = flow.indexOf(step)
   const last = index === flow.length - 1
-  const pet: Pet = { id: saved?.id ?? 'new-pet', name: name.trim() || 'Your pet', species: species ?? 'other', color, photo, weightUnit: unit, allergies: [] }
+  const pet: Pet = { id: saved?.id ?? 'new-pet', name: name.trim() || 'Your pet', species: species ?? 'other', color, noFrame: noFrame || undefined, photo, weightUnit: unit, allergies: [] }
   const petName = name.trim()
 
   const pickSpecies = (s: Species) => {
@@ -184,7 +185,7 @@ export function AddPet() {
         </div>
       }
     >
-      <div className="mt-8 flex flex-col gap-24">
+      <div className="mt-16 flex flex-col gap-24">
         <StepBar steps={flow.length} current={index + 1} />
 
         {step === 'species' && (
@@ -201,9 +202,9 @@ export function AddPet() {
         {step === 'name' && (
           <>
             <Question title="What's their name?" />
-            <div className="flex flex-col items-center gap-12">
+            <div className="mt-8 flex flex-col items-center gap-12">
               <PetAvatar pet={pet} size="hero" petals={color} onAddPhoto={() => photoInput.current?.click()} />
-              <button type="button" onClick={() => photoInput.current?.click()} className="press min-h-control-44 rounded-full px-16 text-body-s font-medium text-accent-on-subtle">
+              <button type="button" onClick={() => photoInput.current?.click()} className="press -my-12 min-h-control-44 rounded-full px-16 text-body-s font-medium text-accent-on-subtle">
                 {photo ? 'Change photo' : 'Add a photo'}
               </button>
               <input
@@ -219,8 +220,16 @@ export function AddPet() {
             </div>
             <TextField label="Name" required value={name} onChange={(e) => setName(e.target.value)} autoComplete="off" />
             <Card className="p-16">
-              <p className="mb-4 text-caption text-text-secondary">Frame colour</p>
-              <ColorSwatches label="Frame colour" value={color} onChange={setColor} />
+              <p className="mb-8 text-caption font-medium text-text-secondary">Frame colour</p>
+              <ColorSwatches
+                label="Frame colour"
+                allowNone
+                value={noFrame ? 'none' : color}
+                onChange={(c) => {
+                  setNoFrame(c === 'none')
+                  if (c !== 'none') setColor(c)
+                }}
+              />
             </Card>
           </>
         )}
@@ -286,7 +295,8 @@ export function AddPet() {
 /** The step's question (SB/Title) with an optional grey line under it. */
 function Question({ title, sub }: { title: string; sub?: string }) {
   return (
-    <div className="flex flex-col gap-8">
+    // Figma "Heading": title, 6, the line under it; 16 to what follows (the step's gap is 24)
+    <div className="-mb-8 flex flex-col gap-6">
       <h2 className="font-display text-title font-medium">{title}</h2>
       {sub && <p className="text-body-s text-text-secondary">{sub}</p>}
     </div>

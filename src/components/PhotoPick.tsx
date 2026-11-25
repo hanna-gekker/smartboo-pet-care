@@ -1,4 +1,4 @@
-// Photo pick — Figma 18a "Your profile": a 110 circle on surface/card with a camera icon, and "Add a photo"
+// Photo pick — Figma 18a "Your profile": a 112 circle on surface/card with a camera icon, and "Add a photo"
 // under it. With a photo: the photo fills the circle and the link says "Change photo".
 // The picked photo is made small (320 px JPEG) and kept as text in the data file, so it survives a restart.
 
@@ -38,12 +38,12 @@ export function PhotoPick({ photo, onPick, 'aria-label': ariaLabel, 'data-state'
         aria-label={ariaLabel ?? text}
         onClick={() => input.current?.click()}
         data-state={state}
-        className="press mx-auto flex flex-col items-center gap-12 rounded-24"
+        className="press mx-auto flex flex-col items-center gap-8 rounded-24"
       >
-        <span className="shadow-card flex size-[110px] items-center justify-center overflow-hidden rounded-full bg-surface-card text-accent-primary">
+        <span className="shadow-card flex size-[112px] items-center justify-center overflow-hidden rounded-full bg-surface-card text-accent-primary">
           {photo ? <img src={photo} alt="" className="size-full object-cover" /> : <Icon name="camera" size={24} />}
         </span>
-        <span className="text-body-s font-medium text-accent-primary">{text}</span>
+        <span className="text-body font-medium text-accent-primary">{text}</span>
       </button>
       <input
         ref={input}

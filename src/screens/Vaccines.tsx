@@ -38,7 +38,7 @@ export function Vaccines() {
 
   return (
     <StackScreen title={`${pet.name}’s vaccines`}>
-      <div className="mt-8 flex flex-col gap-16">
+      <div className="mt-16 flex flex-col gap-16">
         {overdue.length > 0 && (
           <AttentionCard
             title={`${overdue.length} ${overdue.length === 1 ? 'vaccine is' : 'vaccines are'} overdue.${pet.vet ? ` Book a visit with ${pet.vet.name}?` : ''}`}

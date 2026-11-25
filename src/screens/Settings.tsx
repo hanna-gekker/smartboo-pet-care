@@ -48,7 +48,7 @@ export function Settings() {
 
   return (
     <StackScreen title="Settings">
-      <Card variant="list" className="mt-8 overflow-hidden">
+      <Card variant="list" className="mt-16 overflow-hidden">
         <ListRow
           icon="user"
           iconTone="soft"
@@ -101,7 +101,7 @@ export function Settings() {
       </Card>
 
       <SectionTitle>Appearance</SectionTitle>
-      <SegmentedControl label="Appearance" options={THEMES} value={settings.theme ?? 'system'} onChange={(theme) => updateSettings({ theme })} />
+      <SegmentedControl label="Appearance" tone="quiet" options={THEMES} value={settings.theme ?? 'system'} onChange={(theme) => updateSettings({ theme })} />
 
       <SectionTitle>About</SectionTitle>
       <Card variant="list" className="overflow-hidden">

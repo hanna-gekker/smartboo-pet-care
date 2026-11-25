@@ -16,15 +16,14 @@ export function taskState(task: Task, now = new Date()): TaskState {
   return 'default'
 }
 
-/** "Rocky · 8 AM", "Rocky · Thu, Nov 19 · 8 AM", "Rocky · waiting since 8 AM", "Rocky · overdue since Nov 6".
- *  `weekday` (Schedule, a past day): "Cleo · waiting since Tue 12 PM". */
+/** "Rocky · 8 AM", "Rocky · Thu, Nov 19 · 8 AM". An overdue task shows just when it was due, in rose (Figma "Cleo · 12:00 PM"):
+ *  today "Rocky · 8 AM", a past day "Rocky · Nov 6", or with `weekday` (Schedule) "Cleo · Tue 12 PM". */
 export function taskMeta(task: Task, petName: string | undefined, { showDate = false, weekday = false, now = new Date() } = {}): string {
   let when = showDate ? formatDay(task.date, { weekday: 'short', month: 'short', day: 'numeric' }) : ''
   if (task.time) when = [when, formatTime(task.time)].filter(Boolean).join(' · ')
-  if (taskState(task, now) === 'waiting') {
-    if (task.date === today()) when = `waiting since ${formatTime(task.time)}`
-    else if (weekday) when = `waiting since ${[formatDay(task.date, { weekday: 'short' }), task.time && formatTime(task.time)].filter(Boolean).join(' ')}`
-    else when = `overdue since ${formatDay(task.date)}`
+  if (taskState(task, now) === 'waiting' && task.date !== today()) {
+    if (weekday) when = [formatDay(task.date, { weekday: 'short' }), task.time && formatTime(task.time)].filter(Boolean).join(' ')
+    else when = formatDay(task.date)
   }
   return [petName, when].filter(Boolean).join(' · ')
 }
@@ -43,12 +42,16 @@ export function taskPill(task: Task, now = new Date()): { kind: 'waiting' | 'upc
   return { kind: 'upcoming', label: rel[0].toUpperCase() + rel.slice(1) }
 }
 
-/** The grey line on Next up: "Rocky · was due Nov 1 · Dr. Lee". */
+/** The grey line on Next up (Figma 1): "Rocky · was due Nov 1 · Dr. Lee". */
 export function nextUpMeta(task: Task, petName?: string, vetName?: string, now = new Date()): string {
   const late = taskState(task, now) === 'waiting' && task.date < today()
   const when = late ? `was due ${formatDay(task.date)}` : task.date === today() ? '' : formatDay(task.date)
-  return [petName, task.detail, when, vetName].filter(Boolean).join(' · ')
+  return [petName, when, vetName].filter(Boolean).join(' · ')
 }
+
+/** The grey part after a row's title. A vaccine's detail is the vaccine's name, which the title already says
+ *  ("DHPP booster · DHPP"), so it is left out; a dose or an amount stays ("Ear drops · Otomax · 4 drops"). */
+export const rowDetail = (task: Task) => (task.kind === 'vaccine' ? undefined : task.detail)
 
 /**
  * The status on the right of a pet row (Figma "11 · Pets"):

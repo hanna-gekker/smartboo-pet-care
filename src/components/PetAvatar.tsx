@@ -91,7 +91,9 @@ function AddPhoto({ pet, onClick }: { pet?: Pet; onClick: () => void }) {
   )
 }
 
-export function PetAvatar({ pet, size, dueSoon, outlined, petals: flower, color, onAddPhoto, initial, label }: PetAvatarProps) {
+export function PetAvatar({ pet, size, dueSoon, outlined, petals: chosenFlower, color, onAddPhoto, initial, label }: PetAvatarProps) {
+  // "No frame" (Edit → Frame colour): the photo alone, even where a flower was asked for
+  const flower = pet?.noFrame ? undefined : chosenFlower
   const c = color ?? flower ?? pet?.color ?? petColorAt(0)
   // Decorative unless it stands alone; never hide the add-photo button from VoiceOver.
   const a11y = label && pet ? { role: 'img', 'aria-label': pet.photo ? pet.name : `${pet.name}, no photo` } : onAddPhoto ? {} : { 'aria-hidden': true as const }

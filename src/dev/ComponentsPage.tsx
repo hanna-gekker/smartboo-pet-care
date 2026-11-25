@@ -416,7 +416,7 @@ function TaskRowDemo() {
     <>
       <TaskRow title="Clean litter box" meta="Cleo · 12:00 PM" state={done ? 'done' : 'default'} pet={cleo} onToggle={() => setDone((d) => !d)} />
       <TaskRow title="Clean litter box" meta="Cleo · 12:00 PM" state="done" pet={cleo} onToggle={() => {}} />
-      <TaskRow title="Ear drops" detail="Otomax · 4 drops" meta="Rocky · overdue since Nov 6" state="waiting" pet={rocky} onToggle={() => {}} />
+      <TaskRow title="Ear drops" detail="Otomax · 4 drops" meta="Rocky · Nov 6" state="waiting" pet={rocky} onToggle={() => {}} />
       <TaskRow title="Pressed" meta="surface/subtle" state="default" pet={cleo} onToggle={() => {}} data-state="pressed" />
       <TaskRow title="Focus" meta="Ring inside the row" state="default" pet={cleo} onToggle={() => {}} data-state="focus" />
     </>

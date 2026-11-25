@@ -272,7 +272,7 @@ Figma: ★ Screens → section "Schedule · unified" (S1 Week, S2 Month, S3 Past
 | **Day tile** | **built**, `DayTile.tsx` | default · today · selected · today + selected · pressed · focus · with 0, 1, 2 or more pets | `day`, `label`, `today`, `selected`, `pets`, `onSelect` | 46 × 58 (stretches to its column), radius 16. Default: `surface/card`, 1px `border/card` inside; the number on top (Caption Strong, `text/primary`) in a 22 slot. Today: the number in a 22 `accent/primary` circle, `text/on-accent`. Selected: `accent/primary-subtle` fill + 1px `accent/primary` edge. Under the number up to two 20 pet photos with a 2px ring in the tile's own fill; more than two → one photo + a 20 "+N" badge (`text/secondary` fill, Tab label in `surface/card`, N = pets − 1). A real button with an aria-label like "Wednesday, November 4, today, 3 tasks"; the tap area is the whole tile |
 | **Calendar** | **built**, `Calendar.tsx` (replaces `MonthCalendar.tsx`) | week · month | `view`, `anchor`, `selected`, `today`, `petsByDay`, `countByDay`, `onSelect`, `onPrev`, `onNext` | The month title ("November" + the year in `text/tertiary`, SB/Title), the weekday row (the selected day's column in `text/primary`, Caption Strong) and Day tiles: one row in Week, a 7-column grid in Month. Days and rows are the same 6 apart (`space/6`, added to Figma for this, Nov 19), as in Figma; the 12 is only between the weekday row and the tiles. Tiles keep their tall 46 × 58 shape (aspect 46:58) and the grid fills the width like the cards: 46 × 58 on 390, about 42 × 53 on 360, 48 × 60 on 402 (iPhone 17 Pro), 52 × 65 on 430. ‹ › move by a week or a month: not in Figma, kept so another month can be reached. The old dots and legend are gone |
 
-The day under the calendar is built from existing parts: the day's title (SB/Title), **To do** (Task rows, "{done} of {total} done"; overdue first, then open, then done; on a past day "Cleo · waiting since Tue 12 PM"), **Happened** (List rows with the pet photo: "Cleo weighs 3.9 kg" · "9:20 AM · −0.3 kg since Nov 10", other records with their own title and detail; records now keep the time they were logged), and on an empty day a Boo hint with a title (`BooHint title="All good."`, "Next: {task} for {pet} {when}."). "Today", "Tomorrow" and "Later this week" sections are gone. Happened has no count (the Figma "2 of 5 done" there is a copy of To do's).
+The day under the calendar is built from existing parts: the day's title (SB/Title), **To do** (Task rows, "{done} of {total} done"; overdue first, then open, then done; on a past day "Cleo · Tue 12 PM" in rose), **Happened** (List rows with the pet photo: "Cleo weighs 3.9 kg" · "9:20 AM · −0.3 kg since Nov 10", other records with their own title and detail; records now keep the time they were logged), and on an empty day a Boo hint with a title (`BooHint title="All good."`, "Next: {task} for {pet} {when}."). "Today", "Tomorrow" and "Later this week" sections are gone. Happened has no count (the Figma "2 of 5 done" there is a copy of To do's).
 
 Settled by the audit (§18): no Semibold, radius 16, Month rows 12 apart. Not built: the small rose dot on Nov 1 in the Month mockup (its meaning isn't specified).
 
@@ -445,3 +445,33 @@ Figma: ★ Screens → "Welcome & empty states" → Empty · Schedule, frame "We
 The empty Schedule also drops the "Wednesday, Nov 25" day heading (Figma) and the calendar's big month row (`Calendar monthRow="none"`): the month shows once, as the quiet "November 2026" line over the title, with ‹ › on its right (Anna's pick, variant B). It uses Boo bubble · Compact.
 
 **Boo bubble spacing (both layouts):** Boo is drawn with his soft oval shadow (`look="full"`, 88 × 96 or 121 × 132), then 8, then the tail's 10, then the bubble — 26 from Boo to the card, as in Figma (it was 8).
+
+## 32. Design parity pass (built, Nov 25, 2026)
+
+From comparing every ★ Screens board with the app.
+
+| Component | File | What changes |
+|---|---|---|
+| **Nav bar** | `ui.tsx` `StackScreen` | The title is centred on the screen, Body medium `text/primary` (Figma "Nav bar"), between Back and the action; was left-aligned Body L |
+| **Segmented control** | `SegmentedControl.tsx` | New `tone="quiet"` (Settings → Appearance): a `surface/subtle` track and a white `surface/card` thumb with the card shadow. Schedule's Week / Month stays `accent` |
+| **Colour swatches** | `ColorSwatches.tsx` | `allowNone`: a 7th circle, **No frame** (Figma 14 and A2) — the pet's photo without the flower (`Pet.noFrame`, honoured by `PetAvatar`) |
+| **Next up** | `Today.tsx` | A pet's vaccines due the same day are one Next up: "Rabies & DHPP", "Rocky · was due Nov 1 · Dr. Lee" (the detail is no longer in the grey line); Done checks them all |
+| **Done → toast** | `Today.tsx` | Checking something off on Today shows "{Task} — done" with Undo (Figma 4 "Task done") |
+| **Toast** | `Toast.tsx` | Sits at the bottom, just above the tab bar (Figma 3 and 4), not at the top |
+| **All good card** | `Today.tsx` | A soft check chip, "All good." (Body medium) and the next thing (Figma 6h) |
+| **Task row** | `lib/tasks.ts` `rowDetail` | A vaccine's detail (its name) is not repeated after the title ("DHPP booster", not "DHPP booster · DHPP") |
+
+Overdue line in task rows: just when it was due, in rose, as in Figma ("Cleo · 12:00 PM", "Rocky · Nov 6", Schedule "Cleo · Tue 12 PM"); VoiceOver adds "Overdue". PRODUCT.md updated.
+- Section header (Pet folder, Settings): SB/Title 24/32 (was Body L 18), 32 above (Figma: 16 between blocks + 16 section padding), 12 to the card (was ~22: the 44 row of the action link). The link keeps its 44 tap area (-my-6) without making the row taller.
+- Measured audit (Figma text sizes and gaps vs the app at 390, Nov 25), fixed:
+  - Nav bar (`StackScreen`): 44 high, 16 under the status bar (was 56 with none); content 16 under it on every stack screen (Settings, Share, Vaccines, Add pet, Privacy, AI consent, Pet folder).
+  - Pet folder header: name 8 under the photo, the facts line SB/Body S 8 under the name, Share records 24 under it; the Attention card 16 below.
+  - Summary rows (List row with a small label on top: Health, Settings vets): the second line is SB/Caption.
+  - Section link (Search, Edit): SB/Caption, regular. Filter chips: regular.
+  - One-line Attention banner (Vaccines): SB/Body S.
+  - Photo link on Edit profile and Your profile: SB/Body Strong; Your profile circle 112, 8 to the link.
+  - Add your pet: Heading title → line 6, 16 to the step; Species tile a square (84 at 390) with the photo and label centred; step 2 "Add a photo" 12 under the photo, 24 to Name; "Frame colour" label Caption Strong, 8 to the swatches.
+  - Share · Which pets: rows laid out like a Task row (40 photo, 12 between).
+  - Share preview: the paper's lines are SB/Caption.
+  - Schedule: 24 from the title to Week / Month (Figma 28 = 8 + 20; no 20 token).
+- Not fixed: Figma's 20 paddings (Next up, Boo card, Ask Boo field, Schedule block gap) stay 24 until a spacing/20 variable exists; Next up title is Semibold 18 in Figma with no text style (tokens have Regular and Medium only).

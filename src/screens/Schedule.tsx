@@ -13,7 +13,7 @@ import { petById, useApp } from '../data/useApp'
 import { useUi } from '../data/useUi'
 import type { Pet, PetRecord, Task } from '../data/types'
 import { addDays, addMonths, formatDay, formatTime, fromDay, relative, today } from '../lib/dates'
-import { taskMeta, taskState } from '../lib/tasks'
+import { rowDetail, taskMeta, taskState } from '../lib/tasks'
 
 const byTime = (a: Task, b: Task) => (a.date + (a.time ?? '99')).localeCompare(b.date + (b.time ?? '99'))
 // Inside a day: overdue first, then open ones by time, done ones at the end (Figma "Schedule · unified")
@@ -83,7 +83,7 @@ export function Schedule() {
           <Logo />
           <IconButton variant="secondary" icon="settings" label="Settings" onClick={() => navigate('/settings')} className="-mr-2" />
         </div>
-        <div className="flex flex-col gap-8 pt-24 pb-16">
+        <div className="flex flex-col gap-8 pt-24 pb-24">
           {/* Empty Schedule: the quiet month line carries ‹ › (Anna's pick, "B"); the calendar shows no month row */}
           {tasks.length === 0 && (
             <div className="flex items-center gap-8">
@@ -133,7 +133,7 @@ export function Schedule() {
           <Section title="To do" trailing={`${doneCount} of ${toDo.length} done`}>
             {toDo.map((x) => {
               const pet = petById(pets, x.petId)
-              return <TaskRow key={x.id} title={x.title} detail={x.detail} meta={taskMeta(x, pet?.name, { weekday: true })} state={taskState(x)} pet={pet} onToggle={() => toggleTask(x.id)} />
+              return <TaskRow key={x.id} title={x.title} detail={rowDetail(x)} meta={taskMeta(x, pet?.name, { weekday: true })} state={taskState(x)} pet={pet} onToggle={() => toggleTask(x.id)} />
             })}
           </Section>
         )}

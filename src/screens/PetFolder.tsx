@@ -88,13 +88,13 @@ export function PetFolder() {
   return (
     <StackScreen title="">
       {/* Header: the photo in its flower, the name, a line of facts and Share records */}
-      <div className="flex flex-col items-center text-center">
+      <div className="mt-16 flex flex-col items-center text-center">
         <PetAvatar pet={pet} size="hero" petals={petColor(pet, pets)} onAddPhoto={pet.photo ? undefined : () => navigate(`/pets/${pet.id}/edit`)} />
-        <h1 className="mt-12 font-display text-display font-medium">{pet.name}</h1>
-        <p className="text-body text-text-secondary">
+        <h1 className="mt-8 font-display text-display font-medium">{pet.name}</h1>
+        <p className="mt-8 text-body-s text-text-secondary">
           {[speciesLabel(pet.species), pet.breed, ageLong(pet.birthDate), lastWeight && weightText(lastWeight.value!)].filter(Boolean).join(' · ')}
         </p>
-        <Button variant="secondary" icon="share" onClick={() => navigate(`/share?pet=${pet.id}`)} className="mt-16">
+        <Button variant="secondary" icon="share" onClick={() => navigate(`/share?pet=${pet.id}`)} className="mt-24">
           Share records
         </Button>
       </div>
@@ -102,7 +102,7 @@ export function PetFolder() {
       {/* Shown while the overdue vaccine tasks are open; Mark done closes them (the vaccine records stay as the
           papers say until a new paper comes in) */}
       {vax.attention && overdueVaxTasks.length > 0 && (
-        <div className="mt-24">
+        <div className="mt-16">
           <AttentionCard
             icon="syringe"
             title={vax.attention}

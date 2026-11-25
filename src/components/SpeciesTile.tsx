@@ -26,7 +26,7 @@ export function SpeciesTile({ species, label, color, selected = false, onSelect,
       onClick={onSelect}
       disabled={disabled}
       data-state={state}
-      className={`press flex min-h-control-44 disabled:opacity-40 w-full flex-col items-center gap-4 rounded-16 px-4 pt-12 pb-8 ring-1 ring-inset ${
+      className={`press flex min-h-control-44 disabled:opacity-40 aspect-square w-full flex-col items-center justify-center gap-4 rounded-16 px-4 ring-1 ring-inset ${
         selected
           ? 'bg-accent-primary-subtle ring-accent-primary active:bg-accent-primary-soft data-[state=pressed]:bg-accent-primary-soft'
           : 'bg-surface-card ring-border-card active:bg-surface-subtle data-[state=pressed]:bg-surface-subtle'
