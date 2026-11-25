@@ -8,6 +8,7 @@ import type { Pet } from '../data/types'
 import { addDays, formatDay, fromDay, weekOf } from '../lib/dates'
 import { DayTile } from './DayTile'
 import { IconButton } from './IconButton'
+import { WeekStrip } from './WeekStrip'
 
 type CalendarProps = {
   view: 'week' | 'month'
@@ -22,6 +23,11 @@ type CalendarProps = {
   onSelect: (day: string) => void
   onPrev: () => void
   onNext: () => void
+  /** Week view only: `strip` draws the week as one Week strip card (Figma empty Schedule) instead of Day tiles. */
+  look?: 'tiles' | 'strip'
+  /** The month row: `title` (Figma S1: "November 2026", SB/Title, with ‹ ›) or `none` (the screen shows the month
+   *  and the arrows elsewhere, e.g. the empty Schedule's header). */
+  monthRow?: 'title' | 'none'
 }
 
 /** All weeks that touch the month, Monday first; days outside the month are null. */
@@ -35,7 +41,7 @@ function monthWeeks(month: string): (string | null)[][] {
   return weeks
 }
 
-export function Calendar({ view, anchor, selected, today, petsByDay, countByDay, onSelect, onPrev, onNext }: CalendarProps) {
+export function Calendar({ view, anchor, selected, today, petsByDay, countByDay, onSelect, onPrev, onNext, look = 'tiles', monthRow = 'title' }: CalendarProps) {
   const weeks = view === 'month' ? monthWeeks(anchor) : [weekOf(anchor)]
   // The title follows the month the user is looking at: the shown month, or the selected day's month in Week
   const titleDay = view === 'month' ? anchor : selected
@@ -58,31 +64,39 @@ export function Calendar({ view, anchor, selected, today, petsByDay, countByDay,
 
   return (
     <div className="flex flex-col gap-12">
-      <div className="flex items-center gap-8 pl-4">
-        <h2 className="flex-1 font-display text-title font-medium">
-          {fromDay(titleDay).toLocaleDateString('en-US', { month: 'long' })} <span className="text-text-tertiary">{fromDay(titleDay).getFullYear()}</span>
-        </h2>
-        <div className="-my-12 -mr-12 flex">
-          <IconButton variant="plain" icon="chevron-left" label={`Previous ${unit}`} onClick={onPrev} />
-          <IconButton variant="plain" icon="chevron-right" label={`Next ${unit}`} onClick={onNext} />
-        </div>
-      </div>
-
-      <div className="grid grid-cols-7 gap-6" aria-hidden="true">
-        {weekOf(anchor).map((d, i) => (
-          <span key={d} className={`text-center text-caption ${i === selectedColumn ? 'font-medium text-text-primary' : 'text-text-secondary'}`}>
-            {formatDay(d, { weekday: 'short' })}
-          </span>
-        ))}
-      </div>
-
-      <div role="group" aria-label={view === 'month' ? 'Days of the month' : 'Days of the week'} className="grid grid-cols-7 gap-6">
-        {weeks.map((week, i) => (
-          <div key={i} className="contents">
-            {week.map((day, j) => (day ? <div key={day}>{tile(day)}</div> : <span key={j} />))}
+      {monthRow !== 'none' && (
+        <div className="flex items-center gap-8 pl-4">
+          <h2 className="flex-1 font-display text-title font-medium">
+            {fromDay(titleDay).toLocaleDateString('en-US', { month: 'long' })} <span className="text-text-tertiary">{fromDay(titleDay).getFullYear()}</span>
+          </h2>
+          <div className="-my-12 -mr-12 flex">
+            <IconButton variant="plain" icon="chevron-left" label={`Previous ${unit}`} onClick={onPrev} />
+            <IconButton variant="plain" icon="chevron-right" label={`Next ${unit}`} onClick={onNext} />
           </div>
-        ))}
-      </div>
+        </div>
+      )}
+
+      {view === 'week' && look === 'strip' ? (
+        <WeekStrip days={weekOf(anchor)} selected={selected} today={today} onSelect={onSelect} />
+      ) : (
+        <>
+          <div className="grid grid-cols-7 gap-6" aria-hidden="true">
+            {weekOf(anchor).map((d, i) => (
+              <span key={d} className={`text-center text-caption ${i === selectedColumn ? 'font-medium text-text-primary' : 'text-text-secondary'}`}>
+                {formatDay(d, { weekday: 'short' })}
+              </span>
+            ))}
+          </div>
+
+          <div role="group" aria-label={view === 'month' ? 'Days of the month' : 'Days of the week'} className="grid grid-cols-7 gap-6">
+            {weeks.map((week, i) => (
+              <div key={i} className="contents">
+                {week.map((day, j) => (day ? <div key={day}>{tile(day)}</div> : <span key={j} />))}
+              </div>
+            ))}
+          </div>
+        </>
+      )}
     </div>
   )
 }

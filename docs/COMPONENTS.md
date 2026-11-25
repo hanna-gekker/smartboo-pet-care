@@ -425,3 +425,23 @@ From the design chat's hand-off (Figma ★ Screens and Design system).
 | **Summary row · Sparkline** | `PetFolder.tsx` | The weight sparkline is a true 56 × 24 drawing (not stretched) with a dot on the latest weight |
 | Screen background | `base.css` | Flat `surface/canvas` in dark too (Figma N2, `lavender/940`): no gradient, haze or glows. The top scroll fade is gone (it washed out the wordmark) |
 | Schedule header | `Schedule.tsx` | The "November 2026" eyebrow shows only on an empty Schedule; the month is already above the calendar |
+
+## 30. Boo bubble · Compact (built, Nov 25, 2026)
+
+Figma: Design system → "Boo hint" (377:11903), Layout=Compact.
+
+| Component | File | What it is |
+|---|---|---|
+| **Boo bubble** | `BooBubble.tsx` | New `compact`: the same stage as Centered, but Boo 88 (was 121), stage padding-top 16 (was 24), the glow a 140 circle (`border/panel-edge` 35%, blur 50), the sparkles 20 higher with Boo. Bubble, tail and actions unchanged. Used only on the empty Schedule, so "Snap a vet paper" sits fully above the tab bar on an iPhone 17 Pro with the month eyebrow kept; empty Search stays Centered |
+
+## 31. Week strip (built, Nov 25, 2026)
+
+Figma: ★ Screens → "Welcome & empty states" → Empty · Schedule, frame "Week strip".
+
+| Component | File | What it is |
+|---|---|---|
+| **Week strip** *(new)* | `WeekStrip.tsx`, via `Calendar` `look="strip"` | The week as one panel card (radius 24, padding 12, the `.panel-card` gradient, edge and shadow): 7 pill columns 44 × 72, each a button with the short weekday (Caption, `text/secondary`), the date (Body, medium, `text/primary`) and up to 3 dots 4px (`status/waiting-dot` overdue, `status/due-dot` due). The chosen day is the whole pill: `accent/primary-subtle`, a 1.5px `accent/primary` edge inside, weekday and date in `accent/primary`. Used on the empty Schedule (Week), under the month row with ‹ ›; the filled Schedule keeps the Day tiles with pet photos (Figma S1) |
+
+The empty Schedule also drops the "Wednesday, Nov 25" day heading (Figma) and the calendar's big month row (`Calendar monthRow="none"`): the month shows once, as the quiet "November 2026" line over the title, with ‹ › on its right (Anna's pick, variant B). It uses Boo bubble · Compact.
+
+**Boo bubble spacing (both layouts):** Boo is drawn with his soft oval shadow (`look="full"`, 88 × 96 or 121 × 132), then 8, then the tail's 10, then the bubble — 26 from Boo to the card, as in Figma (it was 8).

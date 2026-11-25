@@ -84,8 +84,16 @@ export function Schedule() {
           <IconButton variant="secondary" icon="settings" label="Settings" onClick={() => navigate('/settings')} className="-mr-2" />
         </div>
         <div className="flex flex-col gap-8 pt-24 pb-16">
-          {/* The month already shows above the calendar; the eyebrow stays only on an empty Schedule (Figma) */}
-          {tasks.length === 0 && <p className="text-body-s text-text-secondary">{fromDay(selected).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</p>}
+          {/* Empty Schedule: the quiet month line carries ‹ › (Anna's pick, "B"); the calendar shows no month row */}
+          {tasks.length === 0 && (
+            <div className="flex items-center gap-8">
+              <p className="flex-1 text-body-s text-text-secondary">{fromDay(selected).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</p>
+              <div className="-my-12 -mr-12 flex">
+                <IconButton variant="plain" icon="chevron-left" label={view === 'month' ? 'Previous month' : 'Previous week'} onClick={() => shift(-1)} />
+                <IconButton variant="plain" icon="chevron-right" label={view === 'month' ? 'Next month' : 'Next week'} onClick={() => shift(1)} />
+              </div>
+            </div>
+          )}
           <h1 className="font-display text-display font-medium">Schedule</h1>
         </div>
       </header>
@@ -114,9 +122,12 @@ export function Schedule() {
           onSelect={setSelected}
           onPrev={() => shift(-1)}
           onNext={() => shift(1)}
+          look={tasks.length === 0 ? 'strip' : 'tiles'}
+          monthRow={tasks.length === 0 ? 'none' : 'title'}
         />
 
-        <h2 className="mt-8 pl-4 font-display text-title font-medium">{formatDay(selected, { weekday: 'long', month: 'short', day: 'numeric' })}</h2>
+        {/* The day's heading; an empty Schedule has none (Figma) */}
+        {tasks.length > 0 && <h2 className="mt-8 pl-4 font-display text-title font-medium">{formatDay(selected, { weekday: 'long', month: 'short', day: 'numeric' })}</h2>}
 
         {toDo.length > 0 && (
           <Section title="To do" trailing={`${doneCount} of ${toDo.length} done`}>
@@ -140,6 +151,7 @@ export function Schedule() {
         {/* Nothing planned at all (Figma "Empty · Schedule"): Boo says where reminders come from */}
         {tasks.length === 0 && happened.length === 0 && (
           <BooBubble
+            compact
             pose="sleeping"
             action={
               <Button full size="large" icon="camera" onClick={() => openBoo('snap')}>
