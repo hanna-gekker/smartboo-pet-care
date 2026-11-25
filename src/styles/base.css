@@ -26,6 +26,8 @@
   --color-border-control: var(--border-control);
   --color-accent-primary: var(--accent-primary);
   --color-accent-primary-soft: var(--accent-primary-soft);
+  --color-ai-spark-pink: var(--ai-spark-pink);
+  --color-border-panel-edge: var(--border-panel-edge);
   --color-accent-primary-subtle: var(--accent-primary-subtle);
   --color-status-waiting-bg: var(--status-waiting-bg);
   --color-status-waiting-dot: var(--status-waiting-dot);
@@ -245,9 +247,8 @@ select.picker-select[data-touched]:focus-visible {
   border-radius: var(--radius-24);
 }
 
-/* Screen background (Figma "S1 v2"), pinned to the screen, not to the page, so a long screen
-   doesn't stretch it. Light: plain surface/canvas. Dark: a soft gradient with a haze and three glows
-   in the top-right corner (surface/canvas-*, surface/haze, surface/glow-*). */
+/* Screen background, pinned to the screen, not to the page, so a long screen doesn't stretch it.
+   Plain surface/canvas in both themes (Figma "N2", Nov 25: dark is a flat lavender/940, no gradient or glows). */
 body::after {
   content: "";
   position: fixed;
@@ -256,42 +257,7 @@ body::after {
   background: var(--surface-canvas);
   pointer-events: none;
 }
-:root[data-theme="dark"] body::after {
-  background:
-    radial-gradient(40% 11% at 100% 0%, var(--surface-glow-1), color-mix(in srgb, var(--surface-glow-1) 45%, transparent) 50%, transparent),
-    radial-gradient(30% 10% at 103% 10%, color-mix(in srgb, var(--surface-glow-2) 95%, transparent), color-mix(in srgb, var(--surface-glow-2) 42%, transparent) 50%, transparent),
-    radial-gradient(22% 8% at 104% 19%, color-mix(in srgb, var(--surface-glow-3) 90%, transparent), color-mix(in srgb, var(--surface-glow-3) 35%, transparent) 50%, transparent),
-    radial-gradient(80% 35% at 90% 95%, color-mix(in srgb, var(--surface-haze) 60%, transparent), transparent),
-    linear-gradient(to bottom, var(--surface-canvas-top) 0%, var(--surface-canvas-mid) 45%, var(--surface-canvas-bottom) 100%);
-}
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) body::after {
-    background:
-      radial-gradient(40% 11% at 100% 0%, var(--surface-glow-1), color-mix(in srgb, var(--surface-glow-1) 45%, transparent) 50%, transparent),
-      radial-gradient(30% 10% at 103% 10%, color-mix(in srgb, var(--surface-glow-2) 95%, transparent), color-mix(in srgb, var(--surface-glow-2) 42%, transparent) 50%, transparent),
-      radial-gradient(22% 8% at 104% 19%, color-mix(in srgb, var(--surface-glow-3) 90%, transparent), color-mix(in srgb, var(--surface-glow-3) 35%, transparent) 50%, transparent),
-      radial-gradient(80% 35% at 90% 95%, color-mix(in srgb, var(--surface-haze) 60%, transparent), transparent),
-      linear-gradient(to bottom, var(--surface-canvas-top) 0%, var(--surface-canvas-mid) 45%, var(--surface-canvas-bottom) 100%);
-  }
-}
 
-/* Top scroll edge (as in iOS 26): no colour band, the background runs under the clock;
-   content that scrolls up there gets a light blur that fades out downwards. */
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0 0 auto;
-  height: calc(env(safe-area-inset-top) + var(--space-16));
-  -webkit-backdrop-filter: blur(6px);
-  backdrop-filter: blur(6px);
-  -webkit-mask-image: linear-gradient(to bottom, #000 0, #000 env(safe-area-inset-top), transparent 100%);
-  mask-image: linear-gradient(to bottom, #000 0, #000 env(safe-area-inset-top), transparent 100%);
-  z-index: 20;
-  pointer-events: none;
-}
-body:has(.bg-welcome)::before {
-  display: none;
-}
 
 /* Figma "Card" shadow on panels and section cards: a soft drop shadow (glass/shadow) and a 1px top highlight
    inside (glass/highlight). No background blur on cards (it is costly in the iOS web view). */
