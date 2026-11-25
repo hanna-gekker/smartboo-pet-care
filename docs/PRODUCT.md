@@ -106,7 +106,7 @@ Tab bar: a floating capsule with **Today · Schedule · Pets**, and **Boo** to t
    - **Next up** — the single most urgent item with actions [Done] / [Book vet];
    - **Coming up** — the next few items (vaccines, med courses, lab rechecks, insurance deadlines), overdue on top, with "See schedule"; daily chores only if the owner set them up. Works like a checklist: a task done today stays in place, checked and crossed out;
    - **Your pack** — avatars with a dot when a pet has something due soon;
-   - empty day: "All good. Next: Rocky's rabies in 3 weeks." + one Boo hint about a gap ("I don't know Milo's shots yet. Snap his last vet paper?"); "Not now" hides it for a week.
+   - empty day: "All good. Next: Bordetella in 5 months." + one Boo hint about a gap ("I don't know Milo's shots yet. Snap his last vet paper?"); "Not now" hides it for a week.
 3. **Schedule** — a calendar on top and the selected day below:
    - Week / Month switch; Week is a strip of day tiles, Month the same tiles in a 7-column grid. A tile shows the date and up to two pet photos of that day (or one photo and "+N"); today has the date in a blue circle;
    - the selected day's title, e.g. "Wednesday, Nov 4";

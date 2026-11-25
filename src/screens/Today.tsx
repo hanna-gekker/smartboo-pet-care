@@ -104,14 +104,14 @@ export function Today() {
             }
           />
         ) : noShots ? null : (
-          // Figma 6h "All good card": a soft check, "All good." and what comes next
+          // Figma 6h "All good card": a 48 soft check, "All good." and what comes next ("Next: Bordetella in 5 months.")
           <Card className="flex items-center gap-16 p-24">
-            <span className="flex size-control-40 shrink-0 items-center justify-center rounded-full bg-accent-primary-subtle text-accent-on-subtle" aria-hidden="true">
-              <Icon name="check" size={20} />
+            <span className="flex size-avatar-48 shrink-0 items-center justify-center rounded-full bg-accent-primary-subtle text-accent-on-subtle" aria-hidden="true">
+              <Icon name="check" size={24} />
             </span>
             <div className="flex min-w-0 flex-col gap-2">
               <p className="text-body font-medium text-text-primary">All good.</p>
-              <p className="text-body-s text-text-secondary">{nextBig ? `Next: ${petById(pets, nextBig.petId)?.name}'s ${nextBig.title.toLowerCase()} ${relative(nextBig.date)}.` : 'Nothing due soon.'}</p>
+              <p className="text-body-s text-text-secondary">{nextBig ? `Next: ${nextBig.title} ${relative(nextBig.date)}.` : 'Nothing due soon.'}</p>
             </div>
           </Card>
         )}
