@@ -25,7 +25,7 @@ export type Pet = {
   allergies: string[]
   microchip?: string
   insurance?: string
-  vet?: { name: string; phone: string }
+  vet?: Vet
 }
 
 export type RecordType = 'health' | 'meds' | 'vaccine' | 'weight' | 'document' | 'note'
@@ -83,10 +83,25 @@ export type PetDocument = {
   fileName?: string
 }
 
+/** A vet: the one in a pet's profile, or one added in Settings (emergency or specialist). */
+export type Vet = { name: string; clinic?: string; phone: string }
+
+/** Settings → Your profile (Figma 18a). */
+export type Owner = { name: string; phone: string; email?: string; photo?: string }
+
+export type Theme = 'system' | 'light' | 'dark'
+
 export type Settings = {
   remindDaysBefore: number
   booConsent: boolean
   gapHintHiddenUntil?: string // YYYY-MM-DD
+  owner?: Owner
+  /** Vets added in Settings → "Add a vet" (the primary vet comes from the pets' profiles). */
+  vets?: Vet[]
+  /** Daily tasks summary time, HH:mm, or 'off'. Missing = 8:00 AM (Figma 18). */
+  dailyTime?: string
+  /** Appearance. Missing = follow the phone. */
+  theme?: Theme
 }
 
 export type AppData = {

@@ -3,7 +3,8 @@
 // Text: title with an optional subtitle; or, like Summary row, a small label above the title.
 // Trailing: a chevron (opens something), an action pill like "Call", or a value on the right.
 // The whole row is the tap target: a link (href, e.g. tel:) or a button (onClick). Rows have no fill and no dividers.
-// The leading icon is a category chip (a meaning icon): a diagonal icon/category-chip-* gradient with a white icon.
+// The leading icon is a category chip (a meaning icon): a diagonal icon/category-chip-* gradient with a white icon
+// (iconTone="accent"), or a soft pale circle with an accent outline icon for action rows like Settings ("soft").
 
 import type { ReactNode } from 'react'
 import type { Pet } from '../data/types'
@@ -18,8 +19,10 @@ type ListRowProps = {
   label?: string
   /** Text at the right end (Figma "Value"), e.g. a date or "—". */
   value?: ReactNode
-  /** Leading icon in a soft circle. */
+  /** Leading icon in a circle. */
   icon?: IconName
+  /** accent: the filled category chip (default); soft: accent-primary-subtle with an accent-on-subtle icon (Figma 18 Settings). */
+  iconTone?: 'accent' | 'soft'
   /** Leading pet photo (48). */
   pet?: Pet
   /** Leading emoji, e.g. for the share sets. */
@@ -31,11 +34,15 @@ type ListRowProps = {
   'data-state'?: ShowState
 }
 
-export function ListRow({ title, subtitle, label, value, icon, pet, emoji, trailing, href, onClick, 'data-state': state }: ListRowProps) {
+export function ListRow({ title, subtitle, label, value, icon, iconTone = 'accent', pet, emoji, trailing, href, onClick, 'data-state': state }: ListRowProps) {
   const content = (
     <>
       {icon && (
-        <span className="chip-category flex size-control-40 shrink-0 items-center justify-center rounded-full text-icon-category-on-chip">
+        <span
+          className={`flex size-control-40 shrink-0 items-center justify-center rounded-full ${
+            iconTone === 'soft' ? 'bg-accent-primary-subtle text-accent-on-subtle' : 'chip-category text-icon-category-on-chip'
+          }`}
+        >
           <Icon name={icon} size={20} />
         </span>
       )}

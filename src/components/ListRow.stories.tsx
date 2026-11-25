@@ -22,6 +22,8 @@ export const Overdue: Story = {
 }
 export const WithEmoji: Story = { args: { icon: undefined, emoji: '🩺', title: 'New vet', subtitle: 'Everything: history, vaccines, meds, documents' } }
 export const WithAction: Story = { args: { icon: 'stethoscope', label: 'Vet', title: 'Bayside Animal Clinic', subtitle: undefined, trailing: { label: 'Call', icon: 'phone' }, href: 'tel:+14155550123' } }
+/** Settings rows (Figma 18): a soft circle for action rows. */
+export const SoftIcon: Story = { args: { icon: 'user', iconTone: 'soft', title: 'Anna', subtitle: '(415) 555-0193' } }
 export const WithValue: Story = { args: { icon: undefined, title: 'Microchip', subtitle: undefined, value: '—', trailing: undefined, onClick: undefined } }
 export const Pressed: Story = { parameters: { pseudo: { active: true } } }
 export const Focus: Story = { parameters: { pseudo: { focusVisible: ['button', 'a'] } } }

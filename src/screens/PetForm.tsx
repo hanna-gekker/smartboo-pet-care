@@ -79,8 +79,8 @@ export function PetForm() {
             <TextField label="Allergies (comma-separated)" value={allergies} onChange={(e) => setAllergies(e.target.value)} />
             <TextField label="Microchip" value={pet.microchip ?? ''} onChange={(e) => set({ microchip: e.target.value })} />
             <TextField label="Insurance" value={pet.insurance ?? ''} onChange={(e) => set({ insurance: e.target.value })} />
-            <TextField label="Vet name" value={pet.vet?.name ?? ''} onChange={(e) => set({ vet: { name: e.target.value, phone: pet.vet?.phone ?? '' } })} />
-            <TextField label="Vet phone" type="tel" value={pet.vet?.phone ?? ''} onChange={(e) => set({ vet: { name: pet.vet?.name ?? '', phone: e.target.value } })} />
+            <TextField label="Vet name" value={pet.vet?.name ?? ''} onChange={(e) => set({ vet: { ...pet.vet, name: e.target.value, phone: pet.vet?.phone ?? '' } })} />
+            <TextField label="Vet phone" type="tel" value={pet.vet?.phone ?? ''} onChange={(e) => set({ vet: { ...pet.vet, name: pet.vet?.name ?? '', phone: e.target.value } })} />
           </>
         )}
 

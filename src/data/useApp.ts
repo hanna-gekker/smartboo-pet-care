@@ -110,16 +110,16 @@ useApp.subscribe((s) => {
   if (s.loaded) void saveData(dataOf(s))
 })
 
-// Keep iOS reminders in step with the tasks: rebuilt a moment after tasks, pets or the "remind me before" setting
+// Keep iOS reminders in step with the tasks: rebuilt a moment after tasks, pets or the reminder settings
 // change (and once after loading). Only when notifications are allowed; it never asks.
 let reminderTimer: ReturnType<typeof setTimeout> | undefined
 const resync = (s: AppState) => {
   clearTimeout(reminderTimer)
-  reminderTimer = setTimeout(() => void syncReminders(s.tasks, s.pets, s.settings.remindDaysBefore).catch(() => {}), 400)
+  reminderTimer = setTimeout(() => void syncReminders(s.tasks, s.pets, s.settings).catch(() => {}), 400)
 }
 useApp.subscribe((s, prev) => {
   if (!s.loaded) return
-  if (!prev.loaded || s.tasks !== prev.tasks || s.pets !== prev.pets || s.settings.remindDaysBefore !== prev.settings.remindDaysBefore) resync(s)
+  if (!prev.loaded || s.tasks !== prev.tasks || s.pets !== prev.pets || s.settings.remindDaysBefore !== prev.settings.remindDaysBefore || s.settings.dailyTime !== prev.settings.dailyTime) resync(s)
 })
 
 export const petById = (pets: Pet[], id: string) => pets.find((p) => p.id === id)

@@ -6,10 +6,13 @@
 
 import { Capacitor } from '@capacitor/core'
 import { LocalNotifications } from '@capacitor/local-notifications'
-import type { Pet, Task, TaskKind } from '../data/types'
-import { addDays, formatDay, formatTime, fromDay } from './dates'
+import type { Pet, Settings, Task, TaskKind } from '../data/types'
+import { addDays, formatDay, formatTime, fromDay, toDay } from './dates'
 
 export type Permission = 'granted' | 'denied' | 'prompt'
+
+/** The settings reminders depend on (Settings → Reminders). */
+export type ReminderSettings = Pick<Settings, 'remindDaysBefore' | 'dailyTime'>
 
 export type PlannedReminder = {
   /** iOS needs a number; ids are given in time order. */
@@ -29,6 +32,11 @@ const MORNING = '09:00'
 /** iOS keeps at most 64 pending local notifications per app; the soonest ones win. */
 const LIMIT = 60
 const TEST_ID = 9999
+/** Daily tasks summary (Settings → Reminders → Daily tasks): on by default at 8:00 AM, for the next week. */
+export const DAILY_DEFAULT = '08:00'
+const DAILY_DAYS = 7
+/** How many task names the daily summary lists before "+N more". */
+const DAILY_NAMES = 2
 
 export const isNative = () => Capacitor.isNativePlatform()
 
@@ -48,9 +56,36 @@ const at = (day: string, time: string) => {
 /** "Rabies booster" → "rabies booster" after a name; a product name like "Revolution Plus" keeps its capitals. */
 const lower = (s: string) => (/[A-Z]/.test(s.slice(1)) ? s : s[0].toLowerCase() + s.slice(1))
 
+/** The daily summary's time: HH:mm, or undefined when it is off. */
+export const dailyTimeOf = (s: ReminderSettings) => (s.dailyTime === 'off' ? undefined : (s.dailyTime ?? DAILY_DEFAULT))
+
 /** Every reminder the open tasks should have right now, soonest first. */
-export function planReminders(tasks: Task[], pets: Pet[], daysBefore: number, now = new Date()): PlannedReminder[] {
+export function planReminders(tasks: Task[], pets: Pet[], settings: ReminderSettings, now = new Date()): PlannedReminder[] {
+  const daysBefore = settings.remindDaysBefore
   const out: Omit<PlannedReminder, 'id'>[] = []
+
+  // Daily tasks summary: one push a day at the chosen time, only on days with something to do (chores too).
+  // "SmartBoo · Today: Rocky's ear drops, Milo's walk +2 more." Tap opens Today.
+  const daily = dailyTimeOf(settings)
+  if (daily) {
+    const first = toDay(now)
+    for (let i = 0; i < DAILY_DAYS; i++) {
+      const day = addDays(first, i)
+      // Two doses of the same med are one line: "Rocky's ear drops"
+      const names = [...new Set(tasks
+        .filter((t) => !t.doneAt && t.date === day)
+        .sort((a, b) => (a.time ?? '99').localeCompare(b.time ?? '99'))
+        .flatMap((t) => {
+          const pet = pets.find((p) => p.id === t.petId)
+          return pet ? [t.kind === 'insurance' ? t.title : `${pet.name}'s ${lower(t.title)}`] : []
+        }))]
+      if (!names.length) continue
+      const more = names.length - DAILY_NAMES
+      const body = `Today: ${names.slice(0, DAILY_NAMES).join(', ')}${more > 0 ? ` +${more} more` : ''}.`
+      out.push({ title: 'SmartBoo', body, at: at(day, daily), day, path: '/' })
+    }
+  }
+
   for (const t of tasks) {
     if (t.doneAt || t.kind === 'chore') continue
     const pet = pets.find((p) => p.id === t.petId)
@@ -108,8 +143,8 @@ export async function askPermission(): Promise<Permission> {
 
 /** Replaces all pending reminders with the plan. Never asks for permission: without it, schedules nothing.
  *  Returns how many reminders are set (in the browser: how many would be). */
-export async function syncReminders(tasks: Task[], pets: Pet[], daysBefore: number): Promise<number> {
-  const plan = planReminders(tasks, pets, daysBefore)
+export async function syncReminders(tasks: Task[], pets: Pet[], settings: ReminderSettings): Promise<number> {
+  const plan = planReminders(tasks, pets, settings)
   if (!isNative()) return plan.length
   if ((await checkPermission()) !== 'granted') return 0
   const { notifications } = await LocalNotifications.getPending()
@@ -148,12 +183,12 @@ export function onReminderTap(open: (path: string) => void): () => void {
 
 /** Settings → For testing: one reminder in a minute, for the soonest open task (so tapping it opens a real day).
  *  Asks for permission if it was never asked. */
-export async function sendTestReminder(tasks: Task[], pets: Pet[], daysBefore: number): Promise<Permission> {
+export async function sendTestReminder(tasks: Task[], pets: Pet[], settings: ReminderSettings): Promise<Permission> {
   let permission = await checkPermission()
   if (permission === 'prompt') permission = await askPermission()
   if (permission !== 'granted' || !isNative()) return permission
   // The test shows the Figma push (a vaccine) when there is one, else the next reminder
-  const plan = planReminders(tasks, pets, daysBefore)
+  const plan = planReminders(tasks, pets, settings)
   const next = plan.find((r) => r.path.startsWith('/pets/')) ?? plan[0]
   await LocalNotifications.schedule({
     notifications: [
