@@ -23,6 +23,9 @@ import { Chip } from '../components/ui'
 import { NextUpCard } from '../components/NextUpCard'
 import { PetAvatar } from '../components/PetAvatar'
 import { SegmentedControl } from '../components/SegmentedControl'
+import { PhotoPick } from '../components/PhotoPick'
+import { PickerRow } from '../components/PickerRow'
+import { Switch } from '../components/Switch'
 import { StatusPill } from '../components/StatusPill'
 import { AskBooInput } from '../components/AskBooInput'
 import { TabBar, type Tab } from '../components/TabBar'
@@ -323,6 +326,31 @@ function Board({ theme }: { theme: 'light' | 'dark' }) {
         </Card>
       </Section>
 
+      <Section title="List row · soft icon, Picker row" note="Settings rows: soft icon · Picker row (opens the iPhone picker) · pressed · focus">
+        <Card variant="list" className="overflow-hidden">
+          <ListRow icon="user" iconTone="soft" title="Anna" subtitle="(415) 555-0193" trailing="chevron" onClick={() => {}} />
+          <PickerRowDemo />
+          <PickerRow icon="calendar" title="Daily tasks" options={[{ value: '08:00', label: '8:00 AM' }]} value="08:00" onChange={() => {}} data-state="pressed" />
+          <PickerRow icon="calendar" title="Daily tasks" options={[{ value: '08:00', label: '8:00 AM' }]} value="08:00" onChange={() => {}} data-state="focus" />
+        </Card>
+      </Section>
+
+      <Section title="Switch" note="Off · On (tap to switch) · Pressed · Focus · Disabled">
+        <SwitchDemo />
+        <Card className="flex flex-col gap-8">
+          <Switch label="Pressed" checked onChange={() => {}} data-state="pressed" />
+          <Switch label="Focus" checked={false} onChange={() => {}} data-state="focus" />
+          <Switch label="Disabled" checked onChange={() => {}} disabled />
+        </Card>
+      </Section>
+
+      <Section title="Photo pick" note="Empty · Focus (Your profile)">
+        <div className="flex gap-24">
+          <PhotoPick onPick={() => {}} />
+          <PhotoPick onPick={() => {}} data-state="focus" />
+        </div>
+      </Section>
+
       <Section title="Segmented control" note="Week chosen · Month chosen (tap to switch) · Month pressed · Month focus">
         <SegmentedDemo />
         <SegmentedControl label="View" options={[{ value: 'week', label: 'Week' }, { value: 'month', label: 'Month' }]} value="week" onChange={() => {}} data-state="pressed" />
@@ -343,6 +371,28 @@ function Board({ theme }: { theme: 'light' | 'dark' }) {
         <TabBar active="today" onBoo={() => {}} docked={false} data-state="focus" />
       </Section>
     </div>
+  )
+}
+
+function PickerRowDemo() {
+  const [v, setV] = useState('14')
+  return (
+    <PickerRow
+      icon="bell"
+      title="Vaccines & rechecks"
+      options={[3, 7, 14, 30].map((d) => ({ value: String(d), label: `${d} days before` }))}
+      value={v}
+      onChange={setV}
+    />
+  )
+}
+
+function SwitchDemo() {
+  const [on, setOn] = useState(false)
+  return (
+    <Card>
+      <Switch label="Let Boo read papers and phrases" hint="Sent to an AI service to be read, never kept." checked={on} onChange={setOn} />
+    </Card>
   )
 }
 

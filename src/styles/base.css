@@ -212,10 +212,14 @@ button {
    [data-state="focus"] shows the same outline on /components and in Storybook. */
 /* Text fields show focus on their own box (TextField), so the outline skips them. Only things you can tap
    get it: Storybook's "focus" switch marks every element, and boxes like text and icons must stay clean. */
-:where(button, a[href], [role="button"], [tabindex]:not([tabindex="-1"]), summary):focus-visible,
+:where(button, a[href], [role="button"], [tabindex]:not([tabindex="-1"]), summary, select.picker-select):focus-visible,
 [data-state="focus"]:not(div) {
   outline: 2px solid var(--accent-primary);
   outline-offset: 2px;
+}
+/* Picker row: a select tapped with a finger shows no outline (iOS marks it focus-visible anyway). */
+select.picker-select[data-touched]:focus-visible {
+  outline: none;
 }
 /* A field-like button (Ask Boo input): focus shows as the whole field's 2px accent/primary border, not an outline. */
 .field-focus:focus-visible {

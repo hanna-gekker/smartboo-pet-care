@@ -328,3 +328,19 @@ Figma: Design system → "Boo / Character" (15 states × Light / Dark), Logo pag
 | **Logo** | `Logo.tsx` | The word "SmartBoo" alone (Figma "Logo", Type=Wordmark, Color=Blue — the app header): "Smart" in `text/primary`, "Boo" in `accent/primary`; in dark "Smart" is light and "Boo" lavender. Two sharp 3× pictures exported in the Light and Dark modes (the Figma letters are a traced shape, ~240 KB) |
 | App icon | `ios/App/App/Assets.xcassets/AppIcon.appiconset`, `public/` | From Figma "Logo / App icon" |
 | Cards | `Card.tsx`, section cards | A soft top-to-bottom gradient `surface/panel` → `surface/panel-end` and a light `border/panel-edge` hairline (new Figma Variables); the screen background `surface/canvas` changed in both themes |
+
+## 22. Settings and Your profile (built, Nov 25, 2026)
+
+Figma: ★ Screens → "18 · Settings", "18a · Your profile", "18b · Settings · Dark".
+
+| Component | File | What changes |
+|---|---|---|
+| **List row** | `ListRow.tsx` | New `iconTone`: **soft** (a pale accent circle with an outline icon — every Settings row in Figma) or **accent** (the filled chip; the primary vet). Settings action rows stay neutral, as the icon-chip rule says |
+| **Picker row** *(new)* | `PickerRow.tsx` | A List row whose value opens the iPhone's own picker: a list ("Vaccines & rechecks · 2 weeks before": 3 days, 1 week, 2 weeks, 1 month) or a time wheel ("Daily tasks · 8:00 AM", with Off). Under the row sits an invisible native `select` / time field with the row's label, so VoiceOver and Switch Control work as with any field. No new sheet to design |
+| **Switch** *(new)* | `Switch.tsx` | The iOS-style on/off toggle for "AI consent" (today a checkbox). States: on, off, pressed, focus, disabled. Track `accent/primary` when on, `surface/subtle` when off; thumb `surface/card` |
+| **Photo pick** *(new)* | `PhotoPick.tsx` | Figma 18a: a 110 circle on `surface/card` with a camera icon and "Add a photo" under it; with a photo, the photo and "Change photo". Takes over the same picker in `PetForm` and `AddPet` later (not in this change) |
+| **Segmented control** | `SegmentedControl.tsx` | Used with three options for Appearance: System · Light · Dark |
+
+Appearance is saved with the data and sets `<html data-theme>`; on the iPhone the status bar follows it (`@capacitor/status-bar`).
+
+Screens built from these: **Settings** (profile row, Vets, Reminders, Appearance, About, For testing), **Your profile** (Name, Phone, Email optional, photo, Save), **Add a vet** (Name, Clinic, Phone, Save), **Privacy** and **AI consent** (a text and the Switch).
