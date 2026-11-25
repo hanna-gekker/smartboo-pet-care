@@ -8,6 +8,7 @@ import { useUi } from '../data/useUi'
 import type { Pet, PetRecord, Task, Vaccine } from '../data/types'
 import { readPaper, understand, type BooResult, type ParsedPaper } from '../lib/boo'
 import { BOO_ERRORS, BooPaperError, type BooErrorCase } from '../lib/booErrors'
+import { askPermission, openAppSettings, syncReminders } from '../lib/reminders'
 import { addDays, formatDay, nowTime, today } from '../lib/dates'
 import { convertWeight } from '../lib/weight'
 import { BottomSheet } from './BottomSheet'
@@ -29,6 +30,7 @@ type Step =
   | { name: 'reading' }
   | { name: 'paper'; paper: ParsedPaper }
   | { name: 'remind'; petId: string; documentId: string; petName: string }
+  | { name: 'notifications-off'; petId: string; petName: string }
   | { name: 'photo'; petId: string; petName: string }
   | { name: 'thinking' }
   | { name: 'result'; result: BooResult }
@@ -272,14 +274,39 @@ function StepView({ step, setStep, text, setText }: { step: Step; setStep: (s: S
             <Button
               full
               size="large"
-              onClick={() => {
-                // On the phone this is where iOS asks for notification permission (step 05).
+              onClick={async () => {
+                // The tasks are saved either way (they show in Schedule); only now does iOS ask for notifications
                 const n = app.remindVaccines(step.petId, step.documentId)
-                showToast(`${n} reminder${n === 1 ? '' : 's'} set`)
-                setStep({ name: 'photo', petId: step.petId, petName: step.petName })
+                const next = { petId: step.petId, petName: step.petName }
+                try {
+                  if ((await askPermission()) !== 'granted') return setStep({ name: 'notifications-off', ...next })
+                  const s = useApp.getState()
+                  await syncReminders(s.tasks, s.pets, s.settings.remindDaysBefore)
+                  showToast(`${n} reminder${n === 1 ? '' : 's'} set`)
+                } catch {
+                  showToast("Couldn't set reminders. They're still in your Schedule.")
+                }
+                setStep({ name: 'photo', ...next })
               }}
             >
               Yes
+            </Button>
+            <Button full variant="ghost" onClick={() => setStep({ name: 'photo', petId: step.petId, petName: step.petName })}>
+              Not now
+            </Button>
+          </div>
+        </div>
+      )
+
+    case 'notifications-off':
+      // Permission denied: the app keeps working, the tasks are in Schedule; a way back to the iPhone Settings
+      return (
+        <div className="flex flex-col gap-16">
+          <SheetHeader title="Notifications are off" pose="oops" />
+          <p className="text-body-l text-text-primary">So I can't remind you. You can turn them on in Settings — your reminders are still in Schedule.</p>
+          <div className="flex flex-col gap-8">
+            <Button full size="large" onClick={openAppSettings}>
+              Open Settings
             </Button>
             <Button full variant="ghost" onClick={() => setStep({ name: 'photo', petId: step.petId, petName: step.petName })}>
               Not now
