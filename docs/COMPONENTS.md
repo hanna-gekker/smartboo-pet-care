@@ -413,3 +413,15 @@ Figma: ★ Screens → "Pets & Share": 15 Pick a set, 16 Pick pets, 17 PDF previ
 | **Attention card** | `AttentionCard.tsx` | Used on Pick pets: "Rocky's rabies is overdue — the boarding may ask for proof." |
 
 Screens: **Who is it for?** (three sets with soft icons, Next · pick pets), **Which pets?** (the set's name above; each pet with its vaccine status; Make PDF · N pets), **Preview** (the SmartBoo wordmark and date, "{Set} record", a block per pet, "Vet & owner"; Share PDF opens the iOS share sheet). One builder (`lib/shareRecord.ts`) makes both the preview and the PDF (`lib/pdf.ts`, jsPDF + `@capacitor/share`).
+
+## 29. Design hand-off, Nov 25 (built, Nov 25, 2026)
+
+From the design chat's hand-off (Figma ★ Screens and Design system).
+
+| Component | File | What changes |
+|---|---|---|
+| **Boo bubble** = Boo hint Layout=Centered | `BooBubble.tsx` | Boo and the bubble sit on a "stage": the Boo card's diagonal gradient (`.bg-ai-card`), a 1px `border/ai-card` edge, the card shadow, padding 24 / 16, gap 8. Boo 121 (was 96) on a soft white glow (150, `border/panel-edge` 55%, blur 36) with three four-point sparkles (`accent/primary-soft` 14 and 10, `ai/spark-pink` 8 at 70%), decoration only. Actions stay under the stage. Radius 24: Figma draws 28, which has no radius token yet |
+| **Filter chip** | `ui.tsx` `Chip` | Selected = F2: `accent/primary-subtle`, a 1.5px `accent/primary` edge inside, `accent/on-subtle` label (was a solid accent pill). Pressed: `accent/primary-soft` |
+| **Summary row · Sparkline** | `PetFolder.tsx` | The weight sparkline is a true 56 × 24 drawing (not stretched) with a dot on the latest weight |
+| Screen background | `base.css` | Flat `surface/canvas` in dark too (Figma N2, `lavender/940`): no gradient, haze or glows. The top scroll fade is gone (it washed out the wordmark) |
+| Schedule header | `Schedule.tsx` | The "November 2026" eyebrow shows only on an empty Schedule; the month is already above the calendar |

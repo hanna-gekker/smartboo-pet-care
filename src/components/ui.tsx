@@ -65,7 +65,8 @@ export function StackScreen({
   )
 }
 
-/** Figma "Filter chip": a pill in a swipeable row; the selected one is accent. A tab (filters) or a radio (one answer). */
+/** Figma "Filter chip": a pill in a swipeable row. Selected = F2 (Nov 25): accent/primary-subtle with a 1.5px
+ *  accent/primary edge inside and an accent/on-subtle label. A tab (filters) or a radio (one answer). */
 export function Chip({
   children,
   active,
@@ -90,7 +91,7 @@ export function Chip({
       onClick={onClick}
       disabled={disabled}
       data-state={state}
-      className={`press min-h-control-44 shrink-0 rounded-full px-16 text-body-s font-medium disabled:opacity-40 ${active ? 'pressable-primary bg-accent-primary text-text-on-accent' : 'bg-surface-card text-text-primary ring-1 ring-inset ring-border-control active:bg-surface-subtle data-[state=pressed]:bg-surface-subtle'}`}
+      className={`press min-h-control-44 shrink-0 rounded-full px-16 text-body-s font-medium disabled:opacity-40 ${active ? 'bg-accent-primary-subtle text-accent-on-subtle ring-[1.5px] ring-inset ring-accent-primary active:bg-accent-primary-soft data-[state=pressed]:bg-accent-primary-soft' : 'bg-surface-card text-text-primary ring-1 ring-inset ring-border-control active:bg-surface-subtle data-[state=pressed]:bg-surface-subtle'}`}
     >
       {children}
     </button>
