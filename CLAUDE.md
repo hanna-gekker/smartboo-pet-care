@@ -44,7 +44,7 @@ When I write «відкрий Storybook» / «открой Storybook» / «open 
 
 When I write «онови iOS» / «update iOS»: run `npm run ios`, build the Xcode project `ios/App/App.xcodeproj` (scheme App) and launch it in the iPhone 17 Pro simulator, then show me a screenshot.
 
-Testing data: the first launch loads sample pets (Rocky, Milo, Cleo, Tank). Settings → "Start fresh" shows the real first launch (Welcome); "Load sample pets" brings them back. Boo is faked in `src/lib/boo.ts` until the Boo spike.
+Testing data: the first launch loads sample pets (Rocky, Milo, Cleo, Tank). Settings → "Start fresh" shows the real first launch (Welcome); "Load sample pets" brings them back. Boo is real: `src/lib/booClient.ts` calls the server function `/api/boo` (Claude). With `npm run dev`, also run `npm run functions` in a second terminal (it serves `/api/boo` on port 8788; the key comes from `.dev.vars`). `VITE_BOO=fake npm run dev` uses the stand-in Boo in `src/lib/boo.ts`; "Try a sample one" in Snap always reads the sample paper without the AI. Test Boo's rules with `node scripts/boo-eval.mjs` (see `evals/boo`).
 
 ## Design
 
