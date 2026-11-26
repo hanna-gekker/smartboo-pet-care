@@ -14,6 +14,7 @@ import { useUi } from '../data/useUi'
 import type { Pet, PetRecord, Task } from '../data/types'
 import { addDays, addMonths, formatDay, formatTime, fromDay, relative, today } from '../lib/dates'
 import { rowDetail, taskMeta, taskState } from '../lib/tasks'
+import { RecordDetail } from './RecordDetail'
 
 const byTime = (a: Task, b: Task) => (a.date + (a.time ?? '99')).localeCompare(b.date + (b.time ?? '99'))
 // Inside a day: overdue first, then open ones by time, done ones at the end (Figma "Schedule · unified")
@@ -31,6 +32,7 @@ export function Schedule() {
   const asked = params.get('day')
   const start = asked && /^\d{4}-\d{2}-\d{2}$/.test(asked) ? asked : t
   const [selected, setSelected] = useState(start)
+  const [openRecord, setOpenRecord] = useState<string | null>(null)
   const [view, setView] = useState<'week' | 'month'>('week')
   const [month, setMonth] = useState(start)
   // Another reminder tapped while Schedule is already open: follow the new day (adjusting state during render)
@@ -143,7 +145,7 @@ export function Schedule() {
             {happened.map((r) => {
               const pet = petById(pets, r.petId)
               const text = recordText(r, pet)
-              return <ListRow key={r.id} pet={pet} title={text.title} subtitle={text.subtitle || undefined} />
+              return <ListRow key={r.id} pet={pet} title={text.title} subtitle={text.subtitle || undefined} onClick={() => setOpenRecord(r.id)} />
             })}
           </Section>
         )}
@@ -166,6 +168,7 @@ export function Schedule() {
           <BooHint title="All good." pose="sleeping">{next ? `Next: ${next.title} for ${nextPet?.name} ${relative(next.date)}.` : 'Nothing due soon.'}</BooHint>
         )}
       </div>
+      <RecordDetail recordId={openRecord} onClose={() => setOpenRecord(null)} />
     </div>
   )
 }

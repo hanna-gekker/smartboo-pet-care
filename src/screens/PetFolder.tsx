@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router'
 import { AttentionCard } from '../components/AttentionCard'
 import { BooBubble } from '../components/BooBubble'
 import { BooHint } from '../components/BooHint'
-import { Icon, type IconName } from '../components/Icon'
+import { Icon } from '../components/Icon'
 import { Button } from '../components/Button'
 import { Card } from '../components/Card'
 import { ListRow } from '../components/ListRow'
@@ -16,6 +16,8 @@ import type { PetRecord, RecordType } from '../data/types'
 import { ageLong, daysBetween, formatDay, today } from '../lib/dates'
 import { petColor } from '../lib/petColors'
 import { vaccineSummary } from '../lib/vaccines'
+import { recordIcon } from '../lib/records'
+import { RecordDetail } from './RecordDetail'
 import { getsVaccines, speciesLabel } from '../lib/species'
 
 const filters: { key: 'all' | RecordType; label: string }[] = [
@@ -27,14 +29,6 @@ const filters: { key: 'all' | RecordType; label: string }[] = [
   { key: 'document', label: 'Documents' },
 ]
 
-const recordIcon: Record<RecordType, IconName> = {
-  health: 'heart-pulse',
-  meds: 'pill',
-  vaccine: 'syringe',
-  weight: 'weight',
-  document: 'file-text',
-  note: 'sparkle-ai',
-}
 
 
 export function PetFolder() {
@@ -44,6 +38,7 @@ export function PetFolder() {
   const [filter, setFilter] = useState<'all' | RecordType>('all')
   const [query, setQuery] = useState('')
   const [searching, setSearching] = useState(false)
+  const [openRecord, setOpenRecord] = useState<string | null>(null)
   const openBoo = useUi((s) => s.openBoo)
   const historyRef = useRef<HTMLDivElement>(null)
   const pet = petById(pets, id)
@@ -213,6 +208,7 @@ export function PetFolder() {
                     unit={pet.weightUnit}
                     clinic={documents.find((d) => d.id === r.documentId)?.clinic}
                     before={r.type === 'weight' ? weights.filter((w) => w.date < r.date).at(-1) : undefined}
+                    onOpen={() => setOpenRecord(r.id)}
                   />
                 ))}
               </ol>
@@ -257,6 +253,7 @@ export function PetFolder() {
           />
         ))}
       </Card>
+      <RecordDetail recordId={openRecord} onClose={() => setOpenRecord(null)} />
     </StackScreen>
   )
 }
@@ -294,7 +291,7 @@ function Sparkline({ values }: { values: number[] }) {
   )
 }
 
-function HistoryItem({ record, unit, clinic, before }: { record: PetRecord; unit: string; clinic?: string; before?: PetRecord }) {
+function HistoryItem({ record, unit, clinic, before, onOpen }: { record: PetRecord; unit: string; clinic?: string; before?: PetRecord; onOpen: () => void }) {
   // Figma "Timeline item": what it is, a grey line saying where it came from, the date on the right
   let title = record.title
   let line = record.detail
@@ -309,17 +306,19 @@ function HistoryItem({ record, unit, clinic, before }: { record: PetRecord; unit
   else if (record.type === 'health' && !record.documentId && record.detail) line = `Health note · ${record.detail}`
   const sameYear = record.date.slice(0, 4) === today().slice(0, 4)
   return (
-    <li className="flex gap-16 px-24 py-16">
-      <span className="chip-category flex size-control-40 shrink-0 items-center justify-center rounded-full text-icon-category-on-chip">
-        <Icon name={recordIcon[record.type]} size={20} />
-      </span>
-      <div className="min-w-0 flex-1">
-        <div className="flex items-baseline justify-between gap-8">
-          <p className="text-body font-medium">{title}</p>
-          <span className="shrink-0 text-caption text-text-secondary">{formatDay(record.date, sameYear ? { month: 'short', day: 'numeric' } : { month: 'short', day: 'numeric', year: 'numeric' })}</span>
+    <li>
+      <button type="button" onClick={onOpen} className="focus-inset flex w-full gap-16 px-24 py-16 text-left active:bg-surface-subtle">
+        <span className="chip-category flex size-control-40 shrink-0 items-center justify-center rounded-full text-icon-category-on-chip">
+          <Icon name={recordIcon[record.type]} size={20} />
+        </span>
+        <div className="min-w-0 flex-1">
+          <div className="flex items-baseline justify-between gap-8">
+            <p className="text-body font-medium">{title}</p>
+            <span className="shrink-0 text-caption text-text-secondary">{formatDay(record.date, sameYear ? { month: 'short', day: 'numeric' } : { month: 'short', day: 'numeric', year: 'numeric' })}</span>
+          </div>
+          {line && <p className="text-body-s text-text-secondary">{line}</p>}
         </div>
-        {line && <p className="text-body-s text-text-secondary">{line}</p>}
-      </div>
+      </button>
     </li>
   )
 }

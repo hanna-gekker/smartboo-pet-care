@@ -20,6 +20,7 @@ type AppState = AppData & {
   updatePet: (id: string, patch: Partial<Pet>) => void
   addRecord: (record: PetRecord) => void
   removeRecord: (id: string) => void
+  updateRecord: (id: string, patch: Partial<PetRecord>) => void
   addPaper: (input: {
     pet: Pet
     isNewPet: boolean
@@ -73,6 +74,8 @@ export const useApp = create<AppState>((set, get) => ({
   addRecord: (record) => set((s) => ({ records: [...s.records, record] })),
 
   removeRecord: (id) => set((s) => ({ records: s.records.filter((r) => r.id !== id) })),
+
+  updateRecord: (id, patch) => set((s) => ({ records: s.records.map((r) => (r.id === id ? { ...r, ...patch } : r)) })),
 
   addPaper: ({ pet, isNewPet, document, vaccines, records }) =>
     set((s) => ({

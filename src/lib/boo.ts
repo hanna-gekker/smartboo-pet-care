@@ -253,3 +253,12 @@ export async function understandFake(
 }
 
 export const RED_FLAG_NOTE = 'Boo keeps your pet’s records. It isn’t a vet.'
+
+/** A symptom's follow-up answers (Boo sheet review card and the record sheet): one choice per row. */
+export const SYMPTOM_CHOICES: string[][] = [
+  ['Once', 'More than once'],
+  ['Eating fine', 'Not eating'],
+]
+
+/** The picked answers as a record's detail line: "once, eating fine". */
+export const answersLine = (answers: string[]) => answers.map((a) => a.toLowerCase()).join(', ')
