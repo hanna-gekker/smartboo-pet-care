@@ -3,11 +3,13 @@
 
 import { useEffect, useRef, useState, type ChangeEvent, type ReactNode } from 'react'
 import { useNavigate } from 'react-router'
+import { Capacitor } from '@capacitor/core'
 import { newId, petById, useApp } from '../data/useApp'
 import { useUi } from '../data/useUi'
 import { SPECIES, type Pet, type PetRecord, type Species, type Task, type Vaccine } from '../data/types'
 import { howOften, samplePaper, type BooResult, type PaperMed, type ParsedPaper } from '../lib/boo'
 import { readPaper, understand } from '../lib/booClient'
+import { canListen, listen } from '../lib/speech'
 import { BOO_ERRORS, BooPaperError, type BooErrorCase } from '../lib/booErrors'
 import { askPermission, openAppSettings, syncReminders } from '../lib/reminders'
 import { addDays, ageShort, formatDay, nowTime, today } from '../lib/dates'
@@ -281,7 +283,7 @@ function StepView({ step, setStep, text, setText, sendNow }: { step: Step; setSt
       )
 
     case 'talk':
-      return <Talk onDone={(t) => (t ? send(t) : setStep({ name: 'menu' }))} onNotHeard={() => setStep({ name: 'error', kind: 'not-heard' })} />
+      return <Talk onDone={(t) => (t ? send(t) : setStep({ name: 'menu' }))} onNotHeard={() => setStep({ name: 'error', kind: 'not-heard' })} onMicOff={() => setStep({ name: 'error', kind: 'mic-off' })} />
 
     case 'error': {
       const e = BOO_ERRORS[step.kind]
@@ -293,6 +295,7 @@ function StepView({ step, setStep, text, setText, sendNow }: { step: Step; setSt
         'camera-off': [() => window.open('app-settings:'), snap],
         offline: [closeBoo, addByHand],
         'not-heard': [() => setStep({ name: 'talk' }), () => setStep({ name: 'type' })],
+        'mic-off': [openAppSettings, () => setStep({ name: 'type' })],
         limit: [addByHand, closeBoo],
         failed: [step.retry ?? closeBoo, addByHand],
       }
@@ -986,65 +989,31 @@ function ReviewShell({ pets, kind, title, children, onConfirm }: { pets: Pet[]; 
   )
 }
 
-/** Talk: on the iPhone this uses on-device speech (step 05). In the browser: Web Speech API where available. */
-function Talk({ onDone, onNotHeard }: { onDone: (text: string) => void; onNotHeard: () => void }) {
+/** Talk: listens until Done (lib/speech.ts: the iPhone's speech recognition, or the browser's). */
+function Talk({ onDone, onNotHeard, onMicOff }: { onDone: (text: string) => void; onNotHeard: () => void; onMicOff: () => void }) {
   const [heard, setHeard] = useState('')
-  const [supported, setSupported] = useState(() => Boolean(speechRecognition()))
+  const [supported, setSupported] = useState(canListen)
   const recRef = useRef<{ stop: () => void } | null>(null)
-  // The recogniser starts once; it reads the latest callback through a ref
-  const notHeard = useRef(onNotHeard)
+  // Listening starts once; it reads the latest callbacks through a ref
+  const events = useRef({ onNotHeard, onMicOff })
   useEffect(() => {
-    notHeard.current = onNotHeard
-  }, [onNotHeard])
+    events.current = { onNotHeard, onMicOff }
+  }, [onNotHeard, onMicOff])
 
-  // Listens until Done or Cancel, through pauses. Browsers still end a session now and then
-  // (after a long silence, or on their own time limit); Boo then starts a new one and keeps
-  // what was already said in front of it.
   useEffect(() => {
-    const Rec = speechRecognition()
-    if (!Rec) return
-    let stopped = false
-    let kept = '' // said in the sessions before this one
-    let current = '' // said in this session
-    const rec = new Rec()
-    rec.lang = 'en-US'
-    rec.interimResults = true
-    rec.continuous = true
-    rec.onresult = (e) => {
-      current = Array.from(e.results).map((r) => r[0].transcript).join(' ')
-      setHeard([kept, current].filter(Boolean).join(' ').trim())
-    }
-    rec.onerror = (e) => {
-      if (stopped || e?.error === 'aborted') return
-      // A long silence before anything was said → Boo says so (Figma 8i); after something was said, just listen on
-      if (e?.error === 'no-speech') {
-        if (!kept && !current) {
-          stopped = true
-          notHeard.current()
-        }
-        return
-      }
-      // Anything else (no microphone access, no speech service) means this browser can't listen
-      stopped = true
-      setSupported(false)
-    }
-    rec.onend = () => {
-      if (stopped) return
-      kept = [kept, current].filter(Boolean).join(' ').trim()
-      current = ''
-      try {
-        rec.start()
-      } catch {
-        // Already listening again
-      }
-    }
-    rec.start()
-    recRef.current = {
-      stop: () => {
-        stopped = true
-        rec.stop()
+    // Pet names help the phone hear "Milo" rather than "my low"
+    const names = useApp.getState().pets.map((p) => p.name)
+    recRef.current = listen(
+      {
+        onText: setHeard,
+        onNothing: () => events.current.onNotHeard(),
+        onDenied: () => events.current.onMicOff(),
+        // In the iPhone app this is a passing failure (the audio didn't start): "I didn't catch that", try again.
+        // A browser without speech recognition says it can't listen.
+        onUnavailable: () => (Capacitor.isNativePlatform() ? events.current.onNotHeard() : setSupported(false)),
       },
-    }
+      names,
+    )
     return () => recRef.current?.stop()
   }, [])
 
@@ -1081,20 +1050,4 @@ function Talk({ onDone, onNotHeard }: { onDone: (text: string) => void; onNotHea
       )}
     </div>
   )
-}
-
-function speechRecognition() {
-  const w = window as unknown as Record<string, unknown>
-  return (w.SpeechRecognition ?? w.webkitSpeechRecognition) as (new () => SpeechRec) | undefined
-}
-
-type SpeechRec = {
-  lang: string
-  interimResults: boolean
-  continuous: boolean
-  onresult: (e: { results: ArrayLike<ArrayLike<{ transcript: string }>> }) => void
-  onerror: (e?: { error?: string }) => void
-  onend: () => void
-  start: () => void
-  stop: () => void
 }

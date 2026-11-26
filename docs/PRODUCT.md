@@ -94,10 +94,9 @@ Same sheet as a Boo answer: what you gave Boo (a small thumbnail of the paper, o
 | Camera access off | "Camera access is off. You can turn it on in Settings, or pick a photo instead." | Open Settings (the app's iOS settings) · Choose a photo |
 | Offline | "You're offline. I'll read this paper as soon as you're back online." The photo waits on the phone and is read when the connection is back. | Got it · Add by hand |
 | Didn't catch that (voice) | "Sorry, I didn't catch that. Want to try again?" | Talk again · Type instead |
+| Microphone access off | "Microphone access is off. You can turn it on in Settings, or type instead." | Open Settings (the app's iOS settings) · Type instead |
 | Boo's daily limit is used up | "That's all I can read today. I'll be back tomorrow — or add it by hand." | Add by hand · Got it |
 | Boo's server didn't answer | "Something went wrong on my side. Try again in a minute?" | Try again · Add by hand |
-
-Microphone access off can reuse the same pattern later.
 
 ## Screens in the first version
 
