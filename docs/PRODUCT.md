@@ -71,6 +71,8 @@ Boo takes three kinds of input:
 - 🟢 **Saved right away + "Saved · Undo" toast (5 s):** weight (the toast shows a comparison, e.g. "−30 g since last week"), marking something done, a note, a photo, feeding, a walk.
 - 🟡 **Review card → Looks right:** anything extracted from a document; a new medication or course; a symptom (+ one question like "Once? Is he eating?"); a new reminder or plan; a new pet.
 - ❓ **Question:** nothing is saved; an answer + a link to the record.
+- **Every record opens.** Tap it in a pet's History or in Schedule → Happened: a sheet with what it is, the pet and when, **What you said** (your words to Boo, word for word, "Told Boo · Oct 30, 8:41 AM"), **Boo asked** (the follow-up question and your answers, which you can change), **Details**, **From a vet paper** (opens the paper), and **Share** / **Delete** ("Deleted from Rocky’s history" + Undo).
+- A symptom's follow-up answers are chips: **Once** · **More than once**, **Eating fine** · **Not eating**.
 - If it's unclear which pet is meant, Boo doesn't guess — it asks: [Milo] [Cleo] [Both].
 
 ### Voice and rules

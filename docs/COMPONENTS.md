@@ -475,3 +475,17 @@ Overdue line in task rows: just when it was due, in rose, as in Figma ("Cleo · 
   - Share preview: the paper's lines are SB/Caption.
   - Schedule: 24 from the title to Week / Month (Figma 28 = 8 + 20; no 20 token).
 - Not fixed: Figma's 20 paddings (Next up, Boo card, Ask Boo field, Schedule block gap) stay 24 until a spacing/20 variable exists; Next up title is Semibold 18 in Figma with no text style (tokens have Regular and Medium only).
+
+## 33. Record sheet (approved Nov 26, 2026)
+
+Figma: ✏️ Drafts → "Record detail sheet · draft · 2026-11-26" (Health note from Talk, Vet visit from a vet paper). Inspired by journal apps where a day opens into its full story.
+
+| Component | File | What it is |
+|---|---|---|
+| **Record sheet** *(new)* | `RecordSheet.tsx` (inside `BottomSheet`) | One record, opened by tapping it in a pet's History or in Schedule → Happened. Top: the category chip (Timeline item icon), the kind (Body S, `accent/primary`) and the title (Title). The pet row (photo 48, name, day and time). **What you said** (Caption Strong label): the owner's words to Boo, word for word, on `surface/canvas`, radius 16, with "Told Boo · {day}, {time}" (Caption). **Boo asked**: Boo's follow-up question and the answer chips (`Chip role="radio"`, one choice per row, can be changed here). **Details**: the record's detail line. **From a vet paper**: a List row (file icon, the paper's title, clinic · date, chevron) that opens the paper's own record. Bottom: Share (Secondary, Large, share icon) and Delete (Ghost) — deleting shows a toast with Undo. Each block shows only when there is something in it. |
+
+Props: `icon` · `kind` · `title` · `pet` · `when` · `said` (+ `saidWhen`) · `question` + `choices` (rows of two) + `answers` + `onAnswer` · `details` · `source` ({ title, subtitle, onOpen }) · `onShare` · `onDelete`.
+
+Symptom review card (Boo sheet): the "Once" / "Eating fine" chips become answers the owner taps (Once · More than once, Eating fine · Not eating; nothing picked at first), and the title can be corrected before Looks right. The picked answers are saved with the record (shown as its detail, e.g. "Health note · once, eating fine").
+
+Data: `PetRecord` gains `said` (the owner's words to Boo), `question` and `answers`. Older records have none, and their sheet simply has no "What you said".

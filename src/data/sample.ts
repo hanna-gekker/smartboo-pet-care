@@ -115,7 +115,7 @@ export function sampleData(): AppData {
       { id: 'r1', petId: 'rocky', type: 'weight', date: d(-170), title: 'Weight', value: 25.3 },
       { id: 'r2', petId: 'rocky', type: 'weight', date: d(-80), title: 'Weight', value: 25.0 },
       { id: 'r3', petId: 'rocky', type: 'weight', date: d(-36), title: 'Weight', value: 24.6 },
-      { id: 'r4', petId: 'rocky', type: 'health', date: d(-26), time: '08:40', title: 'Threw up after breakfast', detail: 'once, eating fine' },
+      { id: 'r4', petId: 'rocky', type: 'health', date: d(-26), time: '08:40', title: 'Threw up after breakfast', detail: 'once, eating fine', said: 'Rocky threw up after breakfast. Just once, he’s eating fine.', question: 'Just once? Is Rocky eating normally?', answers: ['Once', 'Eating fine'] },
       { id: 'r5', petId: 'rocky', type: 'health', date: d(-28), title: 'Vet visit · ear infection', detail: 'Dr. Lee · Apoquel 16 mg for 30 days', documentId: 'doc-rocky-2' },
       { id: 'r6', petId: 'rocky', type: 'meds', date: d(-11), title: 'Started Apoquel 16 mg', detail: 'daily for 30 days', documentId: 'doc-rocky-2' },
       { id: 'r7', petId: 'rocky', type: 'document', date: d(-28), title: 'Invoice · $148.00', documentId: 'doc-rocky-2' },

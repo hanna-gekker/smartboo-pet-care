@@ -7,7 +7,7 @@ import { Capacitor } from '@capacitor/core'
 import { newId, petById, useApp } from '../data/useApp'
 import { useUi } from '../data/useUi'
 import { SPECIES, type Pet, type PetRecord, type Species, type Task, type Vaccine } from '../data/types'
-import { howOften, samplePaper, type BooResult, type PaperMed, type ParsedPaper } from '../lib/boo'
+import { answersLine, howOften, samplePaper, type BooResult, type PaperMed, type ParsedPaper } from '../lib/boo'
 import { readPaper, understand } from '../lib/booClient'
 import { canListen, listen } from '../lib/speech'
 import { BOO_ERRORS, BooPaperError, type BooErrorCase } from '../lib/booErrors'
@@ -25,6 +25,7 @@ import { Icon } from './Icon'
 import { IconButton } from './IconButton'
 import { ListRow } from './ListRow'
 import { PetAvatar } from './PetAvatar'
+import { AnswerChips } from './RecordSheet'
 import { TextField } from './TextField'
 
 type Step =
@@ -127,7 +128,7 @@ function StepView({ step, setStep, text, setText, sendNow }: { step: Step; setSt
       } catch (e) {
         return setStep({ name: 'error', kind: e instanceof BooPaperError ? e.kind : 'failed', input: 'voice', retry: () => send(phrase) })
       }
-      if (result.kind === 'weight' || result.kind === 'record') saveSimple(result)
+      if (result.kind === 'weight' || result.kind === 'record') saveSimple(result, phrase)
       else if (result.kind === 'new-pet') setStep({ name: 'new-pet', found: result })
       else setStep({ name: 'result', result, phrase })
     })
@@ -147,7 +148,7 @@ function StepView({ step, setStep, text, setText, sendNow }: { step: Step; setSt
     if (results.every((x) => x.kind === 'record')) {
       const ids = results.map((x) => {
         const id = newId('rec')
-        if (x.kind === 'record') app.addRecord({ id, petId: x.petId, type: x.type, date: today(), time: nowTime(), title: x.title })
+        if (x.kind === 'record') app.addRecord({ id, petId: x.petId, type: x.type, date: today(), time: nowTime(), title: x.title, said: shown })
         return id
       })
       showToast(`Saved to ${named.map((p) => p.name).join(' & ')}’s notes`, () => ids.forEach((id) => app.removeRecord(id)))
@@ -169,18 +170,18 @@ function StepView({ step, setStep, text, setText, sendNow }: { step: Step; setSt
   }, [])
 
   /** Simple records are saved right away, with "Saved · Undo". */
-  const saveSimple = (result: Extract<BooResult, { kind: 'weight' | 'record' }>) => {
+  const saveSimple = (result: Extract<BooResult, { kind: 'weight' | 'record' }>, said: string) => {
     const pet = petById(app.pets, result.petId)!
     const id = newId('rec')
     if (result.kind === 'weight') {
       const last = app.records.filter((r) => r.petId === pet.id && r.type === 'weight').sort((a, b) => b.date.localeCompare(a.date))[0]
       const value = convertWeight(result.value, result.unit, pet.weightUnit)
-      app.addRecord({ id, petId: pet.id, type: 'weight', date: today(), time: nowTime(), title: 'Weight', value })
+      app.addRecord({ id, petId: pet.id, type: 'weight', date: today(), time: nowTime(), title: 'Weight', value, said })
       const diff = last?.value !== undefined ? Math.round((value - last.value) * 10) / 10 : undefined
       const change = diff === undefined ? '' : diff === 0 ? ' · same as last time' : ` · ${diff > 0 ? '+' : '−'}${Math.abs(diff)} ${pet.weightUnit} since ${formatDay(last.date)}`
       showToast(`Saved · ${pet.name}, ${value} ${pet.weightUnit}${change}`, () => app.removeRecord(id))
     } else {
-      app.addRecord({ id, petId: pet.id, type: result.type, date: today(), time: nowTime(), title: result.title })
+      app.addRecord({ id, petId: pet.id, type: result.type, date: today(), time: nowTime(), title: result.title, said })
       showToast(`Saved to ${pet.name}’s notes`, () => app.removeRecord(id))
     }
     navigator.vibrate?.(10)
@@ -814,7 +815,7 @@ function ResultView({ result, phrase, onBack, onPick }: { result: BooResult; phr
               variant="ghost"
               onClick={() => {
                 const id = newId('rec')
-                app.addRecord({ id, petId: pet.id, type: 'health', date: today(), time: nowTime(), title: result.text.replace(/\.$/, '') })
+                app.addRecord({ id, petId: pet.id, type: 'health', date: today(), time: nowTime(), title: result.text.replace(/\.$/, ''), said: phrase || result.text })
                 showToast(`Saved to ${pet.name}’s notes`, () => app.removeRecord(id))
                 closeBoo()
               }}
@@ -876,27 +877,7 @@ function ResultView({ result, phrase, onBack, onPick }: { result: BooResult; phr
 
   if (result.kind === 'symptom') {
     const pet = petById(app.pets, result.petId)!
-    return (
-      <div className="flex flex-col gap-16 pt-8">
-        {said}
-        <ReviewShell
-          pets={[pet]}
-          kind="Symptom"
-          title={result.title}
-          onConfirm={() => {
-            app.addRecord({ id: newId('rec'), petId: pet.id, type: 'health', date: today(), time: nowTime(), title: result.title })
-            showToast(`Saved to ${pet.name}'s history`)
-            closeBoo()
-          }}
-        >
-          <p className="mt-12 text-body">{result.question}</p>
-          <div className="mt-8 flex gap-8">
-            <span className="rounded-full bg-surface-canvas px-12 py-4 text-body-s ring-1 ring-surface-subtle">Once</span>
-            <span className="rounded-full bg-surface-canvas px-12 py-4 text-body-s ring-1 ring-surface-subtle">Eating fine</span>
-          </div>
-        </ReviewShell>
-      </div>
-    )
+    return <SymptomReview key={result.title} pet={pet} result={result} phrase={phrase} said={said} />
   }
 
   if (result.kind === 'meds') {
@@ -920,6 +901,7 @@ function ResultView({ result, phrase, onBack, onPick }: { result: BooResult; phr
                 petId: pet.id,
                 type: 'meds',
                 date: today(),
+                said: phrase || undefined,
                 title: `Started ${result.name}`,
                 detail: `${result.dose} for ${result.days} days`,
               })
@@ -963,7 +945,46 @@ function PetTile({ pets, label, onClick }: { pets: Pet[]; label: string; onClick
   )
 }
 
-function ReviewShell({ pets, kind, title, children, onConfirm }: { pets: Pet[]; kind: string; title: string; children: ReactNode; onConfirm: () => void }) {
+/** A symptom (Figma 9 · Review card): Boo's follow-up question with answers to tap, and a title that can be corrected. */
+function SymptomReview({ pet, result, phrase, said }: { pet: Pet; result: Extract<BooResult, { kind: 'symptom' }>; phrase: string; said: ReactNode }) {
+  const app = useApp()
+  const { closeBoo, showToast } = useUi()
+  const [title, setTitle] = useState(result.title)
+  const [answers, setAnswers] = useState<(string | undefined)[]>([])
+  const picked = answers.filter(Boolean) as string[]
+  return (
+    <div className="flex flex-col gap-16 pt-8">
+      {said}
+      <ReviewShell
+        pets={[pet]}
+        kind="Symptom"
+        title={title}
+        onTitle={setTitle}
+        confirmDisabled={!title.trim()}
+        onConfirm={() => {
+          app.addRecord({
+            id: newId('rec'),
+            petId: pet.id,
+            type: 'health',
+            date: today(),
+            time: nowTime(),
+            title: title.trim(),
+            said: phrase || undefined,
+            question: result.question,
+            ...(picked.length > 0 && { answers: picked, detail: answersLine(picked) }),
+          })
+          showToast(`Saved to ${pet.name}'s history`)
+          closeBoo()
+        }}
+      >
+        <p className="mt-12 text-body">{result.question}</p>
+        <AnswerChips answers={answers} onAnswer={setAnswers} />
+      </ReviewShell>
+    </div>
+  )
+}
+
+function ReviewShell({ pets, kind, title, onTitle, confirmDisabled, children, onConfirm }: { pets: Pet[]; kind: string; title: string; /** The title can be corrected before saving */ onTitle?: (title: string) => void; confirmDisabled?: boolean; children: ReactNode; onConfirm: () => void }) {
   return (
     <div className="pt-4">
       <div className="flex items-center gap-12">
@@ -974,14 +995,23 @@ function ReviewShell({ pets, kind, title, children, onConfirm }: { pets: Pet[]; 
             </span>
           ))}
         </span>
-        <div>
+        <div className="min-w-0 flex-1">
           <p className="text-body-s font-medium text-accent-primary">{kind}</p>
-          <h2 className="font-display text-title font-medium">{title}</h2>
+          {onTitle ? (
+            <input
+              aria-label="Title"
+              value={title}
+              onChange={(e) => onTitle(e.target.value)}
+              className="w-full border-b border-border-control bg-transparent py-4 font-display text-title font-medium text-text-primary outline-none focus-visible:border-accent-primary"
+            />
+          ) : (
+            <h2 className="font-display text-title font-medium">{title}</h2>
+          )}
         </div>
       </div>
       {children}
       <div className="mt-16">
-        <Button full icon="check" onClick={onConfirm}>
+        <Button full icon="check" onClick={onConfirm} disabled={confirmDisabled}>
           Looks right
         </Button>
       </div>

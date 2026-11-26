@@ -43,6 +43,11 @@ export type PetRecord = {
   detail?: string
   value?: number // weight
   documentId?: string // a record extracted from a document links back to it
+  /** What the owner told Boo, word for word (Talk or Type). Older records have none. */
+  said?: string
+  /** Boo's follow-up question (a symptom) and the answers the owner picked. */
+  question?: string
+  answers?: string[]
 }
 
 export type Vaccine = {
