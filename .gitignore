@@ -13,3 +13,6 @@ dist/
 
 *storybook.log
 storybook-static
+
+# Rendered Boo test papers (made by evals/boo/make-papers.mjs)
+evals/boo/out/

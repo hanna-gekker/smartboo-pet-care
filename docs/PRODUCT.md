@@ -78,6 +78,7 @@ Boo takes three kinds of input:
 - English. Short and warm: "Got it — Cleo, 950 g. That's 30 g less than last week."
 - Replies as text in the sheet + a light haptic on save. Spoken replies come later.
 - Never makes things up: missing data stays empty or becomes a question.
+- Medications are medicines only: tablets, liquids, drops, injections, flea / tick / heartworm products. Food and prescription diets are not medications, so they get no course and no reminders (decided Nov 25).
 - No diagnoses, no medication or dose advice. For red-flag signs from a fixed list: "That sounds worth a call to your vet today" + a button to call the vet.
 - Boo says plainly that it isn't a vet: on the first-use screen and in Settings → About ("Boo keeps your pet's records. It isn't a vet.").
 - There is always a non-AI path: manual add and edit.
