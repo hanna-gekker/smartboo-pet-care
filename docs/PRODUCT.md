@@ -151,6 +151,17 @@ Without these the app would be a website; here they are the core of the flows:
 - **Phone call** — call the vet from the folder and from a warning.
 - Later: "Share → SmartBoo" from Mail and Files (share extension).
 
+Permission texts (iOS asks once, the first time; approved Nov 25):
+
+| Access | Text |
+|---|---|
+| Camera | SmartBoo uses the camera so you can snap vet papers and photos of your pets. |
+| Photos | SmartBoo opens your photos so you can add vet papers and pet photos. |
+| Microphone | SmartBoo uses the microphone so you can tell Boo things by voice. |
+| Speech recognition | SmartBoo turns what you say into text so Boo can file it. |
+
+Notifications use the standard iOS prompt (no text of ours).
+
 ## Data
 
 - **Until the demo everything lives on the phone**, with no account and no sign-in. Storage goes through a single module so that after the demo we can move to a server (Supabase) by rewriting only that module.
