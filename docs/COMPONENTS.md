@@ -489,3 +489,9 @@ Props: `icon` · `kind` · `title` · `pet` · `when` · `said` (+ `saidWhen`) �
 Symptom review card (Boo sheet): the "Once" / "Eating fine" chips become answers the owner taps (Once · More than once, Eating fine · Not eating; nothing picked at first), and the title can be corrected before Looks right. The picked answers are saved with the record (shown as its detail, e.g. "Health note · once, eating fine").
 
 Data: `PetRecord` gains `said` (the owner's words to Boo), `question` and `answers`. Older records have none, and their sheet simply has no "What you said".
+
+## 34. Intro (approved Nov 26, 2026)
+
+| Component | File | What it is |
+|---|---|---|
+| **Intro** *(new)* | `Intro.tsx`, shown by `App.tsx` | A short hello when the app starts on the iPhone, right after the launch screen. It begins exactly like the launch screen (`surface/canvas`, Boo idle at 180 in the centre), then Boo waves — the idle and wave pictures take turns three times — while the SmartBoo logo fades in under him; after about 1.7 s it fades into the app. A tap skips it. With Reduce Motion on, Boo just shows the wave pose and the intro fades out. Only on a cold start in the iPhone app (not when coming back to it); in a browser only with `?intro` in the address, for checking. Props: `onDone`. |
