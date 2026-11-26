@@ -16,3 +16,7 @@ storybook-static
 
 # Rendered Boo test papers (made by evals/boo/make-papers.mjs)
 evals/boo/out/
+
+# Local secrets for wrangler pages dev
+.dev.vars
+.wrangler/
