@@ -913,19 +913,55 @@ function Talk({ onDone, onNotHeard }: { onDone: (text: string) => void; onNotHea
     notHeard.current = onNotHeard
   }, [onNotHeard])
 
+  // Listens until Done or Cancel, through pauses. Browsers still end a session now and then
+  // (after a long silence, or on their own time limit); Boo then starts a new one and keeps
+  // what was already said in front of it.
   useEffect(() => {
     const Rec = speechRecognition()
     if (!Rec) return
+    let stopped = false
+    let kept = '' // said in the sessions before this one
+    let current = '' // said in this session
     const rec = new Rec()
     rec.lang = 'en-US'
     rec.interimResults = true
-    rec.continuous = false
-    rec.onresult = (e) => setHeard(Array.from(e.results).map((r) => r[0].transcript).join(' '))
-    // Nothing heard → Boo says so (Figma 8i); any other error means the browser can't listen
-    rec.onerror = (e) => (e?.error === 'no-speech' ? notHeard.current() : setSupported(false))
+    rec.continuous = true
+    rec.onresult = (e) => {
+      current = Array.from(e.results).map((r) => r[0].transcript).join(' ')
+      setHeard([kept, current].filter(Boolean).join(' ').trim())
+    }
+    rec.onerror = (e) => {
+      if (stopped || e?.error === 'aborted') return
+      // A long silence before anything was said → Boo says so (Figma 8i); after something was said, just listen on
+      if (e?.error === 'no-speech') {
+        if (!kept && !current) {
+          stopped = true
+          notHeard.current()
+        }
+        return
+      }
+      // Anything else (no microphone access, no speech service) means this browser can't listen
+      stopped = true
+      setSupported(false)
+    }
+    rec.onend = () => {
+      if (stopped) return
+      kept = [kept, current].filter(Boolean).join(' ').trim()
+      current = ''
+      try {
+        rec.start()
+      } catch {
+        // Already listening again
+      }
+    }
     rec.start()
-    recRef.current = rec
-    return () => rec.stop()
+    recRef.current = {
+      stop: () => {
+        stopped = true
+        rec.stop()
+      },
+    }
+    return () => recRef.current?.stop()
   }, [])
 
   return (
@@ -974,6 +1010,7 @@ type SpeechRec = {
   continuous: boolean
   onresult: (e: { results: ArrayLike<ArrayLike<{ transcript: string }>> }) => void
   onerror: (e?: { error?: string }) => void
+  onend: () => void
   start: () => void
   stop: () => void
 }
