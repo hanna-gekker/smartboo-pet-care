@@ -36,6 +36,7 @@ Run them in the project folder. The first time, run `npm install`.
 - `npm run preview` — opens the finished app from `dist/` to check the build before shipping.
 - `npm run lint` — looks for common mistakes in the code (oxlint).
 - `npm run ios` — builds the app and copies it into the iOS project (`ios/`, Capacitor). Then open it in the iPhone simulator from Xcode or the Claude simulator panel.
+- `npm run assets` — makes the app icon and the launch screen (splash) for iOS from `assets/` (icon-only.png, plus the light and dark splash drawn from the tokens by `scripts/make-splash.cjs`). Run it after changing the icon or the canvas colours, then `npm run ios`.
 - `npm run storybook` — opens Storybook at http://localhost:6006: every component on its own, in every state, with a Light/Dark switch and phone sizes. In the Claude app it starts from the Browser panel ("storybook" in `.claude/launch.json`).
 - `npm run build-storybook` — makes the finished Storybook in `storybook-static/`, for publishing.
 

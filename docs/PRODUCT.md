@@ -186,6 +186,7 @@ What the app needs so Apple approves it and people trust it:
 
 - Name: **SmartBoo**; the assistant is **Boo**.
 - Bundle ID: **`com.hannagekker.smartboo`**
+- Registered with Apple (Nov 25): App ID on developer.apple.com (no extra capabilities) and the app in App Store Connect: https://appstoreconnect.apple.com/apps/6839450986 (iOS, English (U.S.), SKU = bundle ID).
 - UI language: English (US market).
 
 ## Open questions
