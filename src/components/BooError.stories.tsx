@@ -27,3 +27,9 @@ export const CameraAccessOff: Story = story('camera-off')
 export const Offline: Story = story('offline')
 /** Figma 8i */
 export const DidntCatchThat: Story = story('not-heard')
+/** Same pattern as Camera access off (text approved Nov 26) */
+export const MicrophoneAccessOff: Story = story('mic-off')
+/** Boo's server: the daily limit is used up */
+export const DailyLimit: Story = story('limit')
+/** Boo's server didn't answer */
+export const SomethingWentWrong: Story = story('failed')
