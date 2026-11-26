@@ -475,6 +475,15 @@ body::after {
   to { transform: translateY(134px); }
 }
 
+/* Intro (Intro.tsx): the logo rises in under Boo; Boo grows a little as the intro fades into the app. */
+@keyframes intro-logo {
+  from { opacity: 0; translate: -50% 8px; }
+  to { opacity: 1; translate: -50% 0; }
+}
+.animate-intro-logo { animation: intro-logo 400ms 250ms ease-out both; }
+.intro-boo { transition: scale 300ms ease-in; }
+.intro-boo.intro-leave { scale: 1.06; }
+
 .animate-sheet-in { animation: sheet-in 260ms cubic-bezier(0.2, 0.8, 0.2, 1); }
 .animate-fade-in { animation: fade-in 200ms ease; }
 .animate-pulse-dot { animation: pulse-dot 1.2s ease-in-out infinite; }
@@ -483,6 +492,7 @@ body::after {
   .animate-sheet-in,
   .animate-fade-in,
   .animate-pulse-dot,
+  .animate-intro-logo,
   .animate-spin,
   .boo-plush,
   .boo-scan {

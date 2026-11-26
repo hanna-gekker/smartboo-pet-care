@@ -7,6 +7,8 @@ const config: CapacitorConfig = {
   appName: 'SmartBoo',
   webDir: 'dist',
   plugins: {
+    // The launch screen stays until Boo's intro is ready to take over (Intro.tsx hides it), so nothing flashes
+    SplashScreen: { launchAutoHide: false, launchFadeOutDuration: 0 },
     // A reminder that comes while SmartBoo is open still shows as a banner (iOS hides them by default)
     LocalNotifications: { presentationOptions: ['banner', 'list', 'sound'] },
   },

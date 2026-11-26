@@ -1,6 +1,8 @@
-import { lazy, Suspense, useEffect } from 'react'
+import { lazy, Suspense, useCallback, useEffect, useState } from 'react'
+import { Capacitor } from '@capacitor/core'
 import { createBrowserRouter, Navigate, Outlet, RouterProvider, useLocation, useNavigate } from 'react-router'
 import { BooSheet } from './components/BooSheet'
+import { Intro } from './components/Intro'
 import { TabBar, type Tab } from './components/TabBar'
 import { Toast } from './components/Toast'
 import { useApp } from './data/useApp'
@@ -115,6 +117,14 @@ export default function App() {
   // Settings → Appearance
   useEffect(() => applyTheme(theme), [theme])
 
-  if (!loaded) return null
-  return <RouterProvider router={router} />
+  // A short hello from Boo when the iPhone app starts (in a browser: add ?intro to the address)
+  const [intro, setIntro] = useState(() => Capacitor.isNativePlatform() || new URLSearchParams(location.search).has('intro'))
+  const endIntro = useCallback(() => setIntro(false), [])
+
+  return (
+    <>
+      {loaded && <RouterProvider router={router} />}
+      {intro && <Intro onDone={endIntro} />}
+    </>
+  )
 }

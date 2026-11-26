@@ -53,9 +53,11 @@ type BooCharacterProps = {
   /** Sway and pulse on (default). Off draws Boo still. */
   animated?: boolean
   className?: string
+  /** Called as each picture (light and dark) finishes loading — the intro waits for them. */
+  onLoad?: () => void
 }
 
-export function BooCharacter({ pose, state = 'idle', look = 'full', size, animated = true, className = '' }: BooCharacterProps) {
+export function BooCharacter({ pose, state = 'idle', look = 'full', size, animated = true, className = '', onLoad }: BooCharacterProps) {
   const full = look === 'full'
   const width = size ?? (full ? 176 : 60)
   // Figma: a 176 picture and 16 more below it for the shadow
@@ -66,8 +68,8 @@ export function BooCharacter({ pose, state = 'idle', look = 'full', size, animat
       {full && <span className="boo-shadow" />}
       {/* Dark: the same pose with Figma's dark image filters (exposure −0.15, contrast +0.15, highlights −0.2,
           saturation +0.1), so Boo doesn't glow on the dark screen */}
-      <img src={pictures[shown][0]} alt="" draggable={false} className="boo-plush only-light absolute inset-x-0 top-0 aspect-square w-full select-none" />
-      <img src={pictures[shown][1]} alt="" draggable={false} className="boo-plush only-dark absolute inset-x-0 top-0 aspect-square w-full select-none" />
+      <img src={pictures[shown][0]} onLoad={onLoad} alt="" draggable={false} className="boo-plush only-light absolute inset-x-0 top-0 aspect-square w-full select-none" />
+      <img src={pictures[shown][1]} onLoad={onLoad} alt="" draggable={false} className="boo-plush only-dark absolute inset-x-0 top-0 aspect-square w-full select-none" />
     </span>
   )
 }
