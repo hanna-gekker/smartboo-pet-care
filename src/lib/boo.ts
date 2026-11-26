@@ -1,7 +1,7 @@
 // Boo client — FAKE for now (step 04). It pretends to read papers and phrases so the flows can be clicked through.
 // The Boo spike (week 2) replaces these functions with calls to the server function functions/api/boo.
 
-import type { Pet, PetDocument, PetRecord, Species, Task, Vaccine } from '../data/types'
+import type { Pet, PetDocument, PetRecord, Species, Task, Vaccine, WeightUnit } from '../data/types'
 import { addDays, addMonths, formatDay, relative, today } from './dates'
 
 const wait = (ms: number) => new Promise((r) => setTimeout(r, ms))
@@ -39,7 +39,7 @@ export async function readPaper(): Promise<ParsedPaper> {
 }
 
 export type BooResult =
-  | { kind: 'weight'; petId: string; value: number; unit: 'kg' | 'g'; text: string }
+  | { kind: 'weight'; petId: string; value: number; unit: WeightUnit; text: string }
   | { kind: 'record'; petId: string; type: PetRecord['type']; title: string; text: string }
   | { kind: 'symptom'; petId: string; title: string; question: string }
   | { kind: 'meds'; petId: string; name: string; dose: string; days: number; perDay: number; /** Both (8b): the same course for each. */ petIds?: string[] }
@@ -195,16 +195,13 @@ export async function understand(
   }
   const p = pet!
 
-  // Weight: "Cleo weighs 3.9 kg", "Tank 12 grams"
-  const w = lower.match(/(\d+(?:\.\d+)?)\s*(kg|kilos?|g|grams?|lbs?|pounds?)\b/)
-  if (w && /weigh|weight|kg|grams?|lbs?|pounds?/.test(lower)) {
-    let value = parseFloat(w[1])
-    let unit: 'kg' | 'g' = w[2].startsWith('g') ? 'g' : 'kg'
-    if (w[2].startsWith('lb') || w[2].startsWith('pound')) {
-      value = Math.round(value * 0.4536 * 10) / 10
-      unit = 'kg'
-    }
-    return { kind: 'weight', petId: p.id, value, unit, text }
+  // Weight: "Cleo weighs 3.9 kg", "Tank 12 grams", "Rocky 25 lb". The unit stays as heard;
+  // the sheet converts it once to the pet's unit (converting here too lost a tenth: 25 lb → 24.9 lb).
+  const w = lower.match(/(\d+(?:\.\d+)?)\s*(kg|kilos?|g|grams?|lbs?|pounds?|oz|ounces?)\b/)
+  if (w && /weigh|weight|kg|grams?|lbs?|pounds?|oz|ounces?/.test(lower)) {
+    const u = w[2]
+    const unit: WeightUnit = u.startsWith('k') ? 'kg' : u.startsWith('g') ? 'g' : u.startsWith('o') ? 'oz' : 'lb'
+    return { kind: 'weight', petId: p.id, value: parseFloat(w[1]), unit, text }
   }
 
   // Meds course: "ear drops twice a day for 10 days"
