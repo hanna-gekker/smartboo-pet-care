@@ -11,7 +11,8 @@
     "tokens": "node scripts/figma-to-tokens.mjs && node scripts/build-tokens.mjs",
     "ios": "npm run build && cap sync ios",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "assets": "node scripts/make-splash.cjs && capacitor-assets generate --ios"
   },
   "dependencies": {
     "@capacitor/core": "^8.6.0",
@@ -27,6 +28,7 @@
     "zustand": "^5.1.0"
   },
   "devDependencies": {
+    "@capacitor/assets": "^4.0.0",
     "@capacitor/cli": "^8.6.0",
     "@storybook/addon-a11y": "^10.6.7",
     "@storybook/addon-docs": "^10.6.7",
