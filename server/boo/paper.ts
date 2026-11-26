@@ -25,6 +25,8 @@ const Pet = z.object({
     where: z.enum(['given at the clinic', 'to give at home', 'unclear']),
     dose: z.string().nullable().describe('one dose, from the instructions (e.g. "½ tablet", "2.5 mL"); never a quantity dispensed or billed'),
     instructions: z.string().nullable(),
+    perDay: z.number().nullable().describe('times a day, from the instructions ("twice daily", "every 12 hours" → 2); null if not daily or not written'),
+    days: z.number().nullable().describe('how many days, from the instructions; null if not written'),
   })),
 })
 
@@ -49,6 +51,7 @@ Vaccines and services listed on an invoice or visit summary without a date of th
 Meds: only medicines given, prescribed or dispensed in this visit (tablets, liquids, drops, injections, fluids, flea / tick / heartworm products), with instructions as written. Food, prescription diets and treats are not medicines, even when listed with them. A medicine the pet was already on ("current meds") is not one of this visit's meds. Never add advice.
 For each medicine, "where": "given at the clinic" when the clinic gave it (injections, IV / SQ fluids, a dose given during the visit or stay); "to give at home" when it was dispensed or prescribed for the owner to give; "unclear" when the paper doesn't say.
 "dose" is one dose from the instructions; a quantity dispensed or billed (e.g. "60 mL", "6,000 mg", "Qty 30") is not a dose — leave dose null when there are no instructions.
+"perDay" and "days" only from the instructions as written ("every 12 hours for 7 days" → 2 and 7). A schedule that changes ("twice daily for 14 days, then once daily") → the first part. Monthly or as-needed medicines → null. Never fill them from a medicine's usual schedule.
 If a value is hard to read, give your best reading and list the field in "unsure".`
 
 export const PAPER_MEDIA = ['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'application/pdf'] as const

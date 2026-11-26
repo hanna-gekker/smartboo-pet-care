@@ -8,7 +8,7 @@ import type { Paper } from '../../server/boo/paper.ts'
 import type { Phrase, PhraseContext } from '../../server/boo/phrase.ts'
 import { useApp } from '../data/useApp'
 import type { Pet, Species } from '../data/types'
-import { RED_FLAGS, understandFake, vaccineAnswer, type BooResult, type ParsedPaper } from './boo'
+import { howOften, RED_FLAGS, understandFake, vaccineAnswer, type BooResult, type PaperPet, type ParsedPaper } from './boo'
 import { BooPaperError } from './booErrors'
 import { addDays, addMonths, formatDay, relative, today } from './dates'
 
@@ -58,16 +58,28 @@ export async function readPaper(file: File): Promise<ParsedPaper> {
   const { paper } = await ask<{ paper: Paper }>({ type: 'paper', mediaType, data })
   if (paper.readable === 'too blurry') throw new BooPaperError('blurry')
   if (paper.kind === 'not a vet paper' || !paper.pets.length) throw new BooPaperError('not-paper')
-  const pet = paper.pets[0]
+  const date = paper.visitDate ?? paper.pets.flatMap((p) => p.vaccines).find((v) => v.given)?.given ?? today()
   return {
-    pet: { name: pet.name ?? '', species: (pet.species ?? 'other') as Species, breed: pet.breed ?? '', birthDate: pet.birthDate ?? '' },
+    pets: paper.pets.map((pet, i): PaperPet => ({
+      name: pet.name ?? '',
+      species: (pet.species ?? 'other') as Species,
+      breed: pet.breed ?? '',
+      birthDate: pet.birthDate ?? '',
+      // A vaccine without a "given" date can't be filed; it stays on the paper
+      vaccines: pet.vaccines.filter((v) => v.given).map((v) => ({ name: v.name, given: v.given!, due: v.due ?? '' })),
+      meds: pet.meds.map((m) => ({
+        name: m.name,
+        where: m.where === 'given at the clinic' ? 'clinic' : m.where === 'to give at home' ? 'home' : 'unclear',
+        dose: m.dose ?? '',
+        ...(m.perDay && m.perDay > 0 && { perDay: m.perDay }),
+        ...(m.days && m.days > 0 && { days: m.days }),
+      })),
+      unsure: paper.unsure.filter((f) => f.startsWith(`pets[${i}].`)).map((f) => f.slice(`pets[${i}].`.length)),
+    })),
     title: TITLES[paper.kind],
     clinic: paper.clinic ?? '',
-    date: paper.visitDate ?? pet.vaccines.find((v) => v.given)?.given ?? today(),
-    // A vaccine without a "given" date can't be filed; it stays on the paper
-    vaccines: pet.vaccines.filter((v) => v.given).map((v) => ({ name: v.name, given: v.given!, due: v.due ?? '' })),
+    date,
     amount: paper.amount ?? '',
-    unsure: paper.unsure.map((f) => f.replace(/^pets\[0\]\./, '')),
     source: paper,
   }
 }
@@ -149,8 +161,7 @@ function toResult(p: Phrase, text: string, ctx: Ctx): BooResult {
       // A course needs how often and how long; if the phrase doesn't say, Boo doesn't guess
       if (!p.meds?.perDay || !p.meds.days) return { kind: 'unclear', text }
       const { name, dose, perDay, days } = p.meds
-      const often = perDay === 1 ? 'once a day' : perDay === 2 ? 'twice a day' : `${perDay} times a day`
-      return { kind: 'meds', petId: pet?.id ?? p.petIds[0], name, dose: dose ?? often, days, perDay, ...(p.petIds.length > 1 && { petIds: p.petIds }) }
+      return { kind: 'meds', petId: pet?.id ?? p.petIds[0], name, dose: dose ?? howOften(perDay), days, perDay, ...(p.petIds.length > 1 && { petIds: p.petIds }) }
     }
     case 'question':
       return answer(p, pet!, ctx)

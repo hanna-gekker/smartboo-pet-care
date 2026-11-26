@@ -28,7 +28,10 @@ export function scorePaper(got, want) {
         checks++
         const x = g?.meds.find((y) => norm(y.name).includes(norm(m.name)))
         if (!x) misses.push(`${label} med ${m.name} missing`)
-        else if (m.where) same(`${label} ${m.name}.where`, x.where, m.where)
+        else {
+          if (m.where) same(`${label} ${m.name}.where`, x.where, m.where)
+          for (const k of ['perDay', 'days']) if (k in m) same(`${label} ${m.name}.${k}`, x[k], m[k])
+        }
       }
     }
   }

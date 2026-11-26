@@ -7,16 +7,32 @@ import { addDays, addMonths, formatDay, relative, today } from './dates'
 
 const wait = (ms: number) => new Promise((r) => setTimeout(r, ms))
 
+/** "once a day", "twice a day", "3 times a day" */
+export const howOften = (perDay: number) => (perDay === 1 ? 'once a day' : perDay === 2 ? 'twice a day' : `${perDay} times a day`)
+
+/** A medicine on a paper. Only one to give at home with "how often" and "how long" becomes a course. */
+export type PaperMed = { name: string; where: 'clinic' | 'home' | 'unclear'; dose: string; perDay?: number; days?: number }
+
+/** One pet on a paper, with what was given to it. */
+export type PaperPet = {
+  name: string
+  species: Pet['species']
+  breed: string
+  birthDate: string
+  vaccines: { name: string; given: string; due: string }[]
+  meds: PaperMed[]
+  /** Fields Boo isn't sure about ("birthDate") — highlighted on the review card */
+  unsure: string[]
+}
+
 export type ParsedPaper = {
-  pet: { name: string; species: Pet['species']; breed: string; birthDate: string }
+  /** Every pet the paper is about, in the order they appear */
+  pets: PaperPet[]
   title: string
   clinic: string
   date: string
-  vaccines: { name: string; given: string; due: string }[]
   amount: string
-  /** Fields Boo isn't sure about — highlighted on the review card */
-  unsure: string[]
-  /** Everything the server read (all pets, medicines…), for the review card */
+  /** Everything the server read, as it came */
   source?: Paper
 }
 
@@ -26,18 +42,26 @@ export async function samplePaper(): Promise<ParsedPaper> {
   const t = today()
   const given = addDays(t, -2)
   return {
-    pet: { name: 'Biscuit', species: 'dog', breed: 'Golden Retriever', birthDate: '2024-03-15' },
+    pets: [
+      {
+        name: 'Biscuit',
+        species: 'dog',
+        breed: 'Golden Retriever',
+        birthDate: '2024-03-15',
+        vaccines: [
+          { name: 'Rabies (1-year)', given, due: addMonths(given, 12) },
+          { name: 'DHPP', given, due: addMonths(given, 12) },
+          { name: 'Bordetella', given, due: addMonths(given, 6) },
+          { name: 'Leptospirosis', given, due: addDays(t, 19) },
+        ],
+        meds: [],
+        unsure: ['birthDate'],
+      },
+    ],
     title: 'Vaccine certificate',
     clinic: 'Mission Bay Vet Hospital',
     date: given,
-    vaccines: [
-      { name: 'Rabies (1-year)', given, due: addMonths(given, 12) },
-      { name: 'DHPP', given, due: addMonths(given, 12) },
-      { name: 'Bordetella', given, due: addMonths(given, 6) },
-      { name: 'Leptospirosis', given, due: addDays(t, 19) },
-    ],
     amount: '$142.00',
-    unsure: ['birthDate'],
   }
 }
 

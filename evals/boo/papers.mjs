@@ -110,7 +110,7 @@ export const PAPERS = [
           { name: 'DHPP', given: '2026-10-22', due: '2027-10-22' },
           { name: 'Bordetella', given: '2026-10-22', due: '2027-04-22' },
         ],
-        meds: [{ name: 'Simparica Trio', where: 'to give at home' }],
+        meds: [{ name: 'Simparica Trio', where: 'to give at home', perDay: null, days: null }],
       }],
       clinic: 'Sunset Pet Clinic', visitDate: '2026-10-22', amount: '335.00',
     },
@@ -135,7 +135,7 @@ export const PAPERS = [
       pets: [{
         name: 'Pepper', species: 'cat', breed: 'Siamese mix', birthDate: null, microchip: null,
         vaccines: [],
-        meds: [{ name: 'Cerenia', where: 'to give at home' }],
+        meds: [{ name: 'Cerenia', where: 'to give at home', perDay: 1, days: 4 }],
       }],
       clinic: 'Northside Cat Clinic', visitDate: '2026-11-03', amount: null,
     },
@@ -160,7 +160,7 @@ export const PAPERS = [
       pets: [{
         name: 'Duke', species: 'dog', breed: null, birthDate: null, microchip: null,
         vaccines: [],
-        meds: [{ name: 'Apoquel', where: 'to give at home' }],
+        meds: [{ name: 'Apoquel', where: 'to give at home', perDay: 2, days: 14 }],
       }],
       clinic: 'Riverbend Veterinary', visitDate: '2026-11-12', amount: null,
     },
@@ -297,7 +297,7 @@ export const PAPERS = [
         meds: [
           { name: 'Maropitant', where: 'given at the clinic' },
           { name: 'Lactated Ringer', where: 'given at the clinic' },
-          { name: 'Metronidazole', where: 'to give at home' },
+          { name: 'Metronidazole', where: 'to give at home', perDay: 2, days: 7 },
         ],
       }],
       clinic: 'Bay Area Pet ER', visitDate: '2026-08-09', amount: '612.40',
