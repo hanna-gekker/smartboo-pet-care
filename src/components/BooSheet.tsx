@@ -1,12 +1,12 @@
 // Boo: a bottom sheet over the current screen (not a chat). Talk · Snap a paper · Type → toast, review card or answer.
-// Boo's "brain" is faked in lib/boo.ts until the Boo spike.
+// Boo itself is lib/booClient.ts (the server function); lib/boo.ts holds the sample paper and the stand-in Boo.
 
 import { useEffect, useRef, useState, type ChangeEvent, type ReactNode } from 'react'
 import { useNavigate } from 'react-router'
 import { newId, petById, useApp } from '../data/useApp'
 import { useUi } from '../data/useUi'
 import { SPECIES, type Pet, type PetRecord, type Species, type Task, type Vaccine } from '../data/types'
-import { samplePaper, type BooResult, type ParsedPaper } from '../lib/boo'
+import { howOften, samplePaper, type BooResult, type PaperMed, type ParsedPaper } from '../lib/boo'
 import { readPaper, understand } from '../lib/booClient'
 import { BOO_ERRORS, BooPaperError, type BooErrorCase } from '../lib/booErrors'
 import { askPermission, openAppSettings, syncReminders } from '../lib/reminders'
@@ -33,7 +33,7 @@ type Step =
   | { name: 'talk' }
   | { name: 'reading' }
   | { name: 'paper'; paper: ParsedPaper }
-  | { name: 'remind'; petId: string; documentId: string; petName: string }
+  | { name: 'remind'; documents: { petId: string; documentId: string }[]; petId: string; petName: string }
   | { name: 'notifications-off'; petId: string; petName: string }
   | { name: 'photo'; petId: string; petName: string }
   | { name: 'thinking' }
@@ -320,9 +320,13 @@ function StepView({ step, setStep, text, setText, sendNow }: { step: Step; setSt
       return (
         <PaperReview
           paper={step.paper}
-          onConfirm={(petId, documentId, petName) => {
+          onConfirm={(saved) => {
             navigator.vibrate?.(10)
-            setStep({ name: 'remind', petId, documentId, petName })
+            // The photo question is for the first new pet (or the first pet); reminders only if a vaccine is still ahead
+            const first = saved.find((x) => x.isNew) ?? saved[0]
+            const next = { petId: first.petId, petName: first.petName }
+            const ahead = step.paper.pets.some((p) => p.vaccines.some((v) => v.due && v.due >= today()))
+            setStep(ahead ? { name: 'remind', documents: saved, ...next } : { name: 'photo', ...next })
           }}
         />
       )
@@ -338,7 +342,7 @@ function StepView({ step, setStep, text, setText, sendNow }: { step: Step; setSt
               size="large"
               onClick={async () => {
                 // The tasks are saved either way (they show in Schedule); only now does iOS ask for notifications
-                const n = app.remindVaccines(step.petId, step.documentId)
+                const n = step.documents.reduce((sum, d) => sum + app.remindVaccines(d.petId, d.documentId), 0)
                 const next = { petId: step.petId, petName: step.petName }
                 try {
                   if ((await askPermission()) !== 'granted') return setStep({ name: 'notifications-off', ...next })
@@ -611,25 +615,52 @@ function NewPetReview({ found, onConfirm }: { found: Extract<BooResult, { kind: 
   )
 }
 
-/** Review card for a paper: everything Boo found, uncertain fields highlighted, "Looks right". */
-function PaperReview({ paper, onConfirm }: { paper: ParsedPaper; onConfirm: (petId: string, documentId: string, petName: string) => void }) {
+type SavedPet = { petId: string; petName: string; documentId: string; isNew: boolean }
+
+/** Review card for a paper: every pet on it with its vaccines and medicines, uncertain fields highlighted, "Looks right". */
+function PaperReview({ paper, onConfirm }: { paper: ParsedPaper; onConfirm: (saved: SavedPet[]) => void }) {
   const app = useApp()
-  const [name, setName] = useState(paper.pet.name)
-  const [breed, setBreed] = useState(paper.pet.breed)
-  const [birthDate, setBirthDate] = useState(paper.pet.birthDate)
-  const existing = app.pets.find((p) => p.name.toLowerCase() === name.trim().toLowerCase())
+  const [forms, setForms] = useState(paper.pets.map((p) => ({ name: p.name, breed: p.breed, birthDate: p.birthDate })))
+  const edit = (i: number, patch: Partial<(typeof forms)[number]>) => setForms((fs) => fs.map((f, j) => (j === i ? { ...f, ...patch } : f)))
+  const existingOf = (name: string) => app.pets.find((p) => p.name.toLowerCase() === name.trim().toLowerCase())
 
   const confirm = () => {
-    const petId = existing?.id ?? newId('pet')
-    const pet: Pet = existing ?? { id: petId, name: name.trim(), species: paper.pet.species, breed, birthDate, weightUnit: 'kg', allergies: [] }
-    const documentId = newId('doc')
-    const vaccines: Vaccine[] = paper.vaccines.map((v) => ({ id: newId('vax'), petId, documentId, ...v }))
-    const records: PetRecord[] = [
-      { id: newId('rec'), petId, type: 'document', date: paper.date, title: paper.title, detail: `${paper.clinic} · ${paper.amount}`, documentId },
-      { id: newId('rec'), petId, type: 'vaccine', date: paper.date, title: `${paper.vaccines.map((v) => shortVaccine(v.name)).join(', ')} given`, documentId },
-    ]
-    app.addPaper({ pet, isNewPet: !existing, document: { id: documentId, petId, title: paper.title, clinic: paper.clinic, date: paper.date }, vaccines, records })
-    onConfirm(petId, documentId, pet.name)
+    const saved = paper.pets.map((found, i): SavedPet => {
+      const form = forms[i]
+      const existing = existingOf(form.name)
+      const petId = existing?.id ?? newId('pet')
+      const pet: Pet = existing ?? { id: petId, name: form.name.trim(), species: found.species, breed: form.breed, birthDate: form.birthDate, weightUnit: 'kg', allergies: [] }
+      const documentId = newId('doc')
+      const vaccines: Vaccine[] = found.vaccines.map((v) => ({ id: newId('vax'), petId, documentId, ...v }))
+      const records: PetRecord[] = [
+        { id: newId('rec'), petId, type: 'document', date: paper.date, title: paper.title, detail: [paper.clinic, paper.amount].filter(Boolean).join(' · '), documentId },
+      ]
+      if (vaccines.length)
+        records.push({ id: newId('rec'), petId, type: 'vaccine', date: paper.date, title: `${found.vaccines.map((v) => shortVaccine(v.name)).join(', ')} given`, documentId })
+      const clinic = found.meds.filter((m) => m.where === 'clinic')
+      if (clinic.length)
+        records.push({ id: newId('rec'), petId, type: 'meds', date: paper.date, title: `Given at the clinic: ${clinic.map((m) => m.name).join(', ')}`, documentId })
+      // A medicine to give at home with "how often" and "how long" becomes a course from the visit day; the days
+      // still ahead get reminders. Without them (or if the course is over) it is filed as a record.
+      const courses: Parameters<typeof app.addMed>[] = []
+      for (const m of found.meds.filter((x) => x.where !== 'clinic')) {
+        const until = m.perDay && m.days && m.where === 'home' ? addDays(paper.date, m.days - 1) : undefined
+        if (until && until >= today()) {
+          const tasks: Task[] = []
+          for (let day = paper.date > today() ? paper.date : today(); day <= until; day = addDays(day, 1))
+            for (const time of courseTimes(m.perDay!)) tasks.push({ id: newId('task'), petId, kind: 'med', title: m.name, date: day, time })
+          courses.push([
+            { id: newId('med'), petId, name: m.name, dose: m.dose || howOften(m.perDay!), start: paper.date, until },
+            tasks,
+            { id: newId('rec'), petId, type: 'meds', date: paper.date, title: `Started ${m.name}`, detail: medLine(m), documentId },
+          ])
+        } else records.push({ id: newId('rec'), petId, type: 'meds', date: paper.date, title: m.name, detail: medLine(m) || undefined, documentId })
+      }
+      app.addPaper({ pet, isNewPet: !existing, document: { id: documentId, petId, title: paper.title, clinic: paper.clinic, date: paper.date }, vaccines, records })
+      for (const c of courses) app.addMed(...c)
+      return { petId, petName: pet.name, documentId, isNew: !existing }
+    })
+    onConfirm(saved)
   }
 
   return (
@@ -638,51 +669,89 @@ function PaperReview({ paper, onConfirm }: { paper: ParsedPaper; onConfirm: (pet
       <h2 className="font-display text-title font-medium">
         {paper.title} · {formatDay(paper.date)}
       </h2>
-      <p className="text-body-s text-text-secondary">{paper.clinic}</p>
-
-      {existing ? (
-        <p className="mt-16 rounded-16 bg-accent-primary-subtle p-12 text-body-s text-accent-primary">This goes into {existing.name}’s folder.</p>
-      ) : (
-        <p className="mt-16 text-body-s text-text-secondary">New pet — I’ll create a folder.</p>
+      {paper.clinic && <p className="text-body-s text-text-secondary">{paper.clinic}</p>}
+      {paper.pets.length > 1 && (
+        <p className="mt-16 text-body-s text-text-primary">
+          This paper has {paper.pets.length} pets: {paper.pets.map((p) => p.name || 'no name').join(', ')}.
+        </p>
       )}
 
-      <div className="mt-12 grid grid-cols-2 gap-8">
-        <TextField label="Name" value={name} onChange={(e) => setName(e.target.value)} />
-        <TextField label="Species" value={paper.pet.species} readOnly />
-        <TextField label="Breed" value={breed} onChange={(e) => setBreed(e.target.value)} />
-        <TextField label="Born" type="date" value={birthDate} onChange={(e) => setBirthDate(e.target.value)} needsCheck={paper.unsure.includes('birthDate')} />
-      </div>
+      {paper.pets.map((found, i) => {
+        const existing = existingOf(forms[i].name)
+        const home = found.meds.filter((m) => m.where !== 'clinic')
+        const clinic = found.meds.filter((m) => m.where === 'clinic')
+        return (
+          <section key={i} aria-label={forms[i].name || undefined} className={i > 0 ? 'mt-24 border-t border-border-card pt-16' : ''}>
+            {existing ? (
+              <p className="mt-16 rounded-16 bg-accent-primary-subtle p-12 text-body-s text-accent-primary">This goes into {existing.name}’s folder.</p>
+            ) : (
+              <p className="mt-16 text-body-s text-text-secondary">New pet — I’ll create a folder.</p>
+            )}
 
-      <Card variant="list" className="mt-12 overflow-hidden">
-        <table className="w-full text-body-s">
-          <thead className="text-caption font-medium text-text-secondary">
-            <tr>
-              <th className="px-16 pt-12 pb-4 text-left font-medium">Vaccine</th>
-              <th className="pt-12 pb-4 text-right font-medium">Given</th>
-              <th className="px-16 pt-12 pb-4 text-right font-medium">Due</th>
-            </tr>
-          </thead>
-          <tbody>
-            {paper.vaccines.map((v) => (
-              <tr key={v.name} className="border-t border-surface-subtle">
-                <td className="px-16 py-8 font-medium">{v.name}</td>
-                <td className="py-8 text-right whitespace-nowrap text-text-secondary">{formatDay(v.given)}</td>
-                <td className="px-16 py-8 text-right whitespace-nowrap">{formatDay(v.due, { month: 'short', day: 'numeric', year: 'numeric' })}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </Card>
+            <div className="mt-12 grid grid-cols-2 gap-8">
+              <TextField label="Name" value={forms[i].name} onChange={(e) => edit(i, { name: e.target.value })} />
+              <TextField label="Species" value={found.species} readOnly />
+              <TextField label="Breed" value={forms[i].breed} onChange={(e) => edit(i, { breed: e.target.value })} />
+              <TextField label="Born" type="date" value={forms[i].birthDate} onChange={(e) => edit(i, { birthDate: e.target.value })} needsCheck={found.unsure.includes('birthDate')} />
+            </div>
+
+            {found.vaccines.length > 0 && (
+              <Card variant="list" className="mt-12 overflow-hidden">
+                <table className="w-full text-body-s">
+                  <thead className="text-caption font-medium text-text-secondary">
+                    <tr>
+                      <th className="px-16 pt-12 pb-4 text-left font-medium">Vaccine</th>
+                      <th className="pt-12 pb-4 text-right font-medium">Given</th>
+                      <th className="px-16 pt-12 pb-4 text-right font-medium">Due</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {found.vaccines.map((v, j) => (
+                      <tr key={j} className="border-t border-surface-subtle">
+                        <td className="px-16 py-8 font-medium">{v.name}</td>
+                        <td className="py-8 text-right whitespace-nowrap text-text-secondary">{formatDay(v.given)}</td>
+                        <td className="px-16 py-8 text-right whitespace-nowrap">{v.due ? formatDay(v.due, { month: 'short', day: 'numeric', year: 'numeric' }) : '—'}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </Card>
+            )}
+
+            {home.length > 0 && (
+              <Card variant="list" className="mt-12 overflow-hidden">
+                <p className="px-16 pt-12 pb-4 text-caption font-medium text-text-secondary">Medicines to give at home</p>
+                <ul className="text-body-s">
+                  {home.map((m, j) => (
+                    <li key={j} className="border-t border-surface-subtle px-16 py-8">
+                      <p className="font-medium text-text-primary">{m.name}</p>
+                      {medLine(m) && <p className="text-text-secondary">{medLine(m)}</p>}
+                    </li>
+                  ))}
+                </ul>
+              </Card>
+            )}
+            {clinic.length > 0 && <p className="mt-8 text-body-s text-text-secondary">Given at the clinic: {clinic.map((m) => m.name).join(', ')}.</p>}
+          </section>
+        )
+      })}
+
       {paper.amount && <p className="mt-8 text-body-s text-text-secondary">Amount: {paper.amount}</p>}
 
       <div className="mt-16">
-        <Button full icon="check" onClick={confirm} disabled={!name.trim()}>
+        <Button full icon="check" onClick={confirm} disabled={forms.some((f) => !f.name.trim())}>
           Looks right
         </Button>
       </div>
     </div>
   )
 }
+
+/** Times of day for a course of meds. */
+const courseTimes = (perDay: number) => (perDay === 1 ? ['08:00'] : perDay === 2 ? ['08:00', '20:00'] : ['08:00', '14:00', '20:00'])
+
+/** "½ tablet · twice a day · 10 days" — only what the paper says. */
+const medLine = (m: PaperMed) => [m.dose, m.perDay && howOften(m.perDay), m.days && `${m.days} day${m.days === 1 ? '' : 's'}`].filter(Boolean).join(' · ')
 
 /** Figma 8b / 10 / 8c: a short conversation — your phrase on the right, Boo's reply under it, then what to do. */
 function YouSaid({ children }: { children: ReactNode }) {
@@ -838,7 +907,7 @@ function ResultView({ result, phrase, onBack, onPick }: { result: BooResult; phr
           kind="New course of meds"
           title={result.name}
           onConfirm={() => {
-            const times = result.perDay === 1 ? ['08:00'] : result.perDay === 2 ? ['08:00', '20:00'] : ['08:00', '14:00', '20:00']
+            const times = courseTimes(result.perDay)
             for (const pet of pets) {
               const tasks: Task[] = []
               for (let i = 0; i < result.days; i++)
