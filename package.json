@@ -12,7 +12,8 @@
     "ios": "npm run build && cap sync ios",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "assets": "node scripts/make-splash.cjs && capacitor-assets generate --ios"
+    "assets": "node scripts/make-splash.cjs && capacitor-assets generate --ios",
+    "functions": "npm run build && wrangler pages dev --port 8788"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^1.14.0",
@@ -32,6 +33,7 @@
   "devDependencies": {
     "@capacitor/assets": "^4.0.0",
     "@capacitor/cli": "^8.6.0",
+    "@cloudflare/workers-types": "^5.20261125.1",
     "@storybook/addon-a11y": "^10.6.7",
     "@storybook/addon-docs": "^10.6.7",
     "@storybook/react-vite": "^10.6.7",
@@ -46,6 +48,7 @@
     "style-dictionary": "5.7.1",
     "tailwindcss": "^4.3.5",
     "typescript": "~7.0.2",
-    "vite": "^8.3.6"
+    "vite": "^8.3.6",
+    "wrangler": "^4.168.0"
   }
 }

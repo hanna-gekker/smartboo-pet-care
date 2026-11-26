@@ -1,0 +1,12 @@
+# Cloudflare Pages project "smartboo-pet-care": the web version (dist/) and Boo's server function (functions/).
+# This file is the source of truth for the project's bindings. Secrets are not here:
+# ANTHROPIC_API_KEY is set in the dashboard (Settings → Variables and Secrets) and, for local runs, in .dev.vars.
+name = "smartboo-pet-care"
+pages_build_output_dir = "dist"
+compatibility_date = "2026-11-01"
+compatibility_flags = ["nodejs_compat"]
+
+# Daily request counters for Boo (per device and in total); nothing else is stored
+[[kv_namespaces]]
+binding = "BOO_LIMITS"
+id = "61a9f3760de348289d8a59ebadd31751"

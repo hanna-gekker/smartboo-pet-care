@@ -110,7 +110,7 @@ export const PAPERS = [
           { name: 'DHPP', given: '2026-10-22', due: '2027-10-22' },
           { name: 'Bordetella', given: '2026-10-22', due: '2027-04-22' },
         ],
-        meds: [{ name: 'Simparica Trio' }],
+        meds: [{ name: 'Simparica Trio', where: 'to give at home' }],
       }],
       clinic: 'Sunset Pet Clinic', visitDate: '2026-10-22', amount: '335.00',
     },
@@ -135,7 +135,7 @@ export const PAPERS = [
       pets: [{
         name: 'Pepper', species: 'cat', breed: 'Siamese mix', birthDate: null, microchip: null,
         vaccines: [],
-        meds: [{ name: 'Cerenia' }],
+        meds: [{ name: 'Cerenia', where: 'to give at home' }],
       }],
       clinic: 'Northside Cat Clinic', visitDate: '2026-11-03', amount: null,
     },
@@ -160,7 +160,7 @@ export const PAPERS = [
       pets: [{
         name: 'Duke', species: 'dog', breed: null, birthDate: null, microchip: null,
         vaccines: [],
-        meds: [{ name: 'Apoquel' }],
+        meds: [{ name: 'Apoquel', where: 'to give at home' }],
       }],
       clinic: 'Riverbend Veterinary', visitDate: '2026-11-12', amount: null,
     },
@@ -272,5 +272,35 @@ export const PAPERS = [
         --------------------------------<br><div style="text-align:left">TOTAL &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 21.53</div>THANK YOU
       </div>`),
     expected: { kind: 'not a vet paper' },
+  },
+  {
+    file: '12-er-invoice.pdf',
+    note: 'Emergency visit: shots and fluids given at the clinic, one medicine to give at home; quantity is not a dose',
+    html: page(`
+      ${header('Bay Area Pet ER', '3200 Crow Canyon Rd, San Ramon, CA 94583', '(925) 555-0119')}
+      <div class="row" style="margin-top:20px"><div><b>INVOICE #ER-55730</b><br>08/09/2026</div><div><b>Client:</b> K. Larsen</div><div><b>Patient:</b> Mango<br>Canine · Labradoodle · 3 yr · 31.2 kg</div></div>
+      <table style="margin-top:24px"><tr><th>Description</th><th>Qty</th><th class="right">Amount</th></tr>
+        <tr><td>Emergency exam — Dr. Ana Ruiz</td><td>1</td><td class="right">$185.00</td></tr>
+        <tr><td>Abdominal radiographs, 2 views</td><td>1</td><td class="right">$298.00</td></tr>
+        <tr><td>Maropitant 10 mg/mL injection, SQ (in hospital)</td><td>3.1 mL</td><td class="right">$46.80</td></tr>
+        <tr><td>Lactated Ringer's, SQ fluids (in hospital)</td><td>500 mL</td><td class="right">$52.60</td></tr>
+        <tr><td>Metronidazole 250 mg tablets — dispensed</td><td>14</td><td class="right">$30.00</td></tr>
+        <tr><td colspan="2" class="right"><b>Total</b></td><td class="right"><b>$612.40</b></td></tr></table>
+      <h2>Discharge instructions</h2>
+      <p><b>Metronidazole 250 mg:</b> Give 1 tablet by mouth every 12 hours for 7 days, with food.</p>
+      <p>Bland diet for 3 days. Recheck with your regular vet if vomiting returns.</p>`),
+    expected: {
+      kind: 'invoice', readable: 'clear',
+      pets: [{
+        name: 'Mango', species: 'dog', breed: 'Labradoodle', birthDate: null, microchip: null,
+        vaccines: [],
+        meds: [
+          { name: 'Maropitant', where: 'given at the clinic' },
+          { name: 'Lactated Ringer', where: 'given at the clinic' },
+          { name: 'Metronidazole', where: 'to give at home' },
+        ],
+      }],
+      clinic: 'Bay Area Pet ER', visitDate: '2026-08-09', amount: '612.40',
+    },
   },
 ]
