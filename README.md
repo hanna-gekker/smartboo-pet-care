@@ -4,6 +4,8 @@
 
 SmartBoo is an iOS app for US pet owners that keeps everything about your pets in one place. Hand Boo, the built-in assistant, a paper from the vet or tell it what happened. Boo files it in the right pet's folder, remembers what's due and when, and pulls up the record you need in seconds — ready to share as a PDF.
 
+**Try it:** [smartboo-pet-care.pages.dev](https://smartboo-pet-care.pages.dev) — the web version with sample pets, best at phone width (Boo is simulated for now). On iPhone: TestFlight (invite only).
+
 Building in the [UX Hero](https://uxhero.design) Design Engineer cohort.
 
 ## Why
