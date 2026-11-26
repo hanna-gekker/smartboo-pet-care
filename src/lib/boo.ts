@@ -1,6 +1,7 @@
-// Boo client — FAKE for now (step 04). It pretends to read papers and phrases so the flows can be clicked through.
-// The Boo spike (week 2) replaces these functions with calls to the server function functions/api/boo.
+// Boo's shared shapes and helpers, plus the stand-in Boo (no AI): "Try a sample one" and runs without the server.
+// The real Boo is src/lib/booClient.ts, which calls the server function functions/api/boo.
 
+import type { Paper } from '../../server/boo/paper.ts'
 import type { Pet, PetDocument, PetRecord, Species, Task, Vaccine, WeightUnit } from '../data/types'
 import { addDays, addMonths, formatDay, relative, today } from './dates'
 
@@ -15,10 +16,12 @@ export type ParsedPaper = {
   amount: string
   /** Fields Boo isn't sure about — highlighted on the review card */
   unsure: string[]
+  /** Everything the server read (all pets, medicines…), for the review card */
+  source?: Paper
 }
 
-/** Pretends to read a vet paper. Always returns the same sample certificate. */
-export async function readPaper(): Promise<ParsedPaper> {
+/** The sample certificate ("No paper at hand? Try a sample one"). No AI. */
+export async function samplePaper(): Promise<ParsedPaper> {
   await wait(2600)
   const t = today()
   const given = addDays(t, -2)
@@ -106,7 +109,7 @@ export function parseNewPet(text: string, pets: Pet[]): Omit<Extract<BooResult, 
   return { name, species: species ?? 'other', breed: breed?.[0] === 'Labrador' ? 'Labrador Retriever' : breed?.[0], birthDate }
 }
 
-const RED_FLAGS = ['seizure', 'not breathing', 'collapsed', 'bleeding', 'poison', 'ate chocolate', 'bloated', "can't pee", 'cannot pee']
+export const RED_FLAGS = ['seizure', 'not breathing', 'collapsed', 'bleeding', 'poison', 'ate chocolate', 'bloated', "can't pee", 'cannot pee']
 
 function findPets(text: string, pets: Pet[]): Pet[] {
   const lower = text.toLowerCase()
@@ -131,8 +134,8 @@ export function vaccineAnswer(petName: string, vaccine: string, due: string): st
   return `${petName}'s ${vaccineWord(vaccine)} is due on ${when} — ${relative(due)}.`
 }
 
-/** Pretends to understand a phrase. Simple patterns only. */
-export async function understand(
+/** The stand-in Boo: simple patterns only (VITE_BOO=fake, Storybook). */
+export async function understandFake(
   text: string,
   ctx: { pets: Pet[]; vaccines: Vaccine[]; records: PetRecord[]; documents?: PetDocument[]; tasks?: Task[] },
 ): Promise<BooResult> {

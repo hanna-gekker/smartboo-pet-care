@@ -107,6 +107,8 @@ export type Settings = {
   dailyTime?: string
   /** Appearance. Missing = follow the phone. */
   theme?: Theme
+  /** An anonymous id made once, sent to Boo's server only for its daily limit. */
+  deviceId?: string
 }
 
 export type AppData = {

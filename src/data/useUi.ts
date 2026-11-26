@@ -21,6 +21,9 @@ type UiState = {
   /** A paper picked while offline: Boo reads it as soon as the phone is back online. */
   paperWaiting: boolean
   setPaperWaiting: (waiting: boolean) => void
+  /** The paper being read (kept so it can be read again after going offline or a failed try). None = the sample. */
+  paperFile?: File
+  setPaperFile: (file?: File) => void
 }
 
 export const useUi = create<UiState>((set) => ({
@@ -34,4 +37,5 @@ export const useUi = create<UiState>((set) => ({
   hideToast: () => set({ toast: undefined }),
   paperWaiting: false,
   setPaperWaiting: (paperWaiting) => set({ paperWaiting }),
+  setPaperFile: (paperFile) => set({ paperFile }),
 }))

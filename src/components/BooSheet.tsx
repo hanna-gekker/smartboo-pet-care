@@ -6,7 +6,8 @@ import { useNavigate } from 'react-router'
 import { newId, petById, useApp } from '../data/useApp'
 import { useUi } from '../data/useUi'
 import { SPECIES, type Pet, type PetRecord, type Species, type Task, type Vaccine } from '../data/types'
-import { readPaper, understand, type BooResult, type ParsedPaper } from '../lib/boo'
+import { samplePaper, type BooResult, type ParsedPaper } from '../lib/boo'
+import { readPaper, understand } from '../lib/booClient'
 import { BOO_ERRORS, BooPaperError, type BooErrorCase } from '../lib/booErrors'
 import { askPermission, openAppSettings, syncReminders } from '../lib/reminders'
 import { addDays, ageShort, formatDay, nowTime, today } from '../lib/dates'
@@ -38,7 +39,7 @@ type Step =
   | { name: 'thinking' }
   | { name: 'new-pet'; found: Extract<BooResult, { kind: 'new-pet' }> }
   | { name: 'result'; result: BooResult; phrase: string }
-  | { name: 'error'; kind: BooErrorCase }
+  | { name: 'error'; kind: BooErrorCase; input?: 'paper' | 'voice'; retry?: () => void }
 
 export function BooSheet() {
   const { booOpen, booSession, closeBoo, openBoo, paperWaiting, setPaperWaiting } = useUi()
@@ -80,8 +81,9 @@ function StepView({ step, setStep, text, setText, sendNow }: { step: Step; setSt
     else setStep({ name: 'consent', then: action })
   }
 
-  const startReading = () =>
+  const startReading = (file?: File) =>
     withConsent(() => {
+      useUi.getState().setPaperFile(file)
       if (!navigator.onLine) {
         setPaperWaiting(true)
         setStep({ name: 'error', kind: 'offline' })
@@ -93,13 +95,14 @@ function StepView({ step, setStep, text, setText, sendNow }: { step: Step; setSt
   useEffect(() => {
     if (!reading) return
     let live = true
-    readPaper()
+    const file = useUi.getState().paperFile
+    ;(file ? readPaper(file) : samplePaper())
       .then((paper) => live && setStep({ name: 'paper', paper }))
       .catch((e: unknown) => {
         if (!live) return
         if (e instanceof BooPaperError) {
           if (e.kind === 'offline') setPaperWaiting(true)
-          setStep({ name: 'error', kind: e.kind })
+          setStep({ name: 'error', kind: e.kind, retry: () => setStep({ name: 'reading' }) })
         } else setStep({ name: 'error', kind: 'not-paper' })
       })
     return () => {
@@ -116,7 +119,12 @@ function StepView({ step, setStep, text, setText, sendNow }: { step: Step; setSt
     if (!phrase.trim()) return
     withConsent(async () => {
       setStep({ name: 'thinking' })
-      const result = await understand(phrase, app)
+      let result: BooResult
+      try {
+        result = await understand(phrase, app)
+      } catch (e) {
+        return setStep({ name: 'error', kind: e instanceof BooPaperError ? e.kind : 'failed', input: 'voice', retry: () => send(phrase) })
+      }
       if (result.kind === 'weight' || result.kind === 'record') saveSimple(result)
       else if (result.kind === 'new-pet') setStep({ name: 'new-pet', found: result })
       else setStep({ name: 'result', result, phrase })
@@ -128,7 +136,12 @@ function StepView({ step, setStep, text, setText, sendNow }: { step: Step; setSt
   const sendFor = async (petIds: string[], phrase: string, shown: string) => {
     setStep({ name: 'thinking' })
     const named = petIds.map((id) => petById(app.pets, id)!).filter(Boolean)
-    const results = await Promise.all(named.map((p) => understand(`${p.name} ${phrase}`, app)))
+    let results: BooResult[]
+    try {
+      results = await Promise.all(named.map((p) => understand(`${p.name} ${phrase}`, app)))
+    } catch (e) {
+      return setStep({ name: 'error', kind: e instanceof BooPaperError ? e.kind : 'failed', input: 'voice', retry: () => void sendFor(petIds, phrase, shown) })
+    }
     if (results.every((x) => x.kind === 'record')) {
       const ids = results.map((x) => {
         const id = newId('rec')
@@ -261,7 +274,7 @@ function StepView({ step, setStep, text, setText, sendNow }: { step: Step; setSt
             <FilePick icon="image" label="Photo library" accept="image/*" onPick={startReading} />
             <FilePick icon="file-text" label="PDF from Files" accept="application/pdf" onPick={startReading} />
           </div>
-          <Button full variant="ghost" onClick={startReading} className="!text-accent-on-subtle">
+          <Button full variant="ghost" onClick={() => startReading()} className="!text-accent-on-subtle">
             No paper at hand? Try a sample one
           </Button>
         </div>
@@ -280,9 +293,11 @@ function StepView({ step, setStep, text, setText, sendNow }: { step: Step; setSt
         'camera-off': [() => window.open('app-settings:'), snap],
         offline: [closeBoo, addByHand],
         'not-heard': [() => setStep({ name: 'talk' }), () => setStep({ name: 'type' })],
+        limit: [addByHand, closeBoo],
+        failed: [step.retry ?? closeBoo, addByHand],
       }
       const [primary, secondary] = actions[step.kind]
-      return <BooError input={e.input} message={e.message} primary={{ label: e.primary, onClick: primary }} secondary={{ label: e.secondary, onClick: secondary }} />
+      return <BooError input={step.input ?? e.input} message={e.message} primary={{ label: e.primary, onClick: primary }} secondary={{ label: e.secondary, onClick: secondary }} />
     }
 
     case 'reading':
@@ -658,7 +673,7 @@ function PaperReview({ paper, onConfirm }: { paper: ParsedPaper; onConfirm: (pet
           </tbody>
         </table>
       </Card>
-      <p className="mt-8 text-body-s text-text-secondary">Amount: {paper.amount}</p>
+      {paper.amount && <p className="mt-8 text-body-s text-text-secondary">Amount: {paper.amount}</p>}
 
       <div className="mt-16">
         <Button full icon="check" onClick={confirm} disabled={!name.trim()}>
